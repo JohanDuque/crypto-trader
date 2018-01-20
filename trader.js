@@ -2,9 +2,10 @@ const Gdax = require('gdax');
 const publicClient = new Gdax.PublicClient();
 const SELL = 'sell';
 const BUY = 'buy';
+const AMOUNT_TO_TRADE= 1;//0.01;//ETH
 
 let iteration = 0;
-let profits=950;
+let profits = 1000;
 let buyAverage=0;
 let lastBuyPrice=0;
 let sellAverage=0;
@@ -18,16 +19,16 @@ let lastAction = SELL;
 let buy=(price) =>{
   lastBuyPrice=price;
   lastAction=BUY;
-  profits -= price;
-  console.log("\n              ------- Buying at: "+price);
+  profits -= calculateTransactionAmount(price);
+  console.log("\n   ------- ------- ------- Buying at: "+price +" ------- ");
   console.log("Profits: "+profits);
 };
 
 let sell=(price) =>{
   lastSellPrice=price;
   lastAction=SELL;
-  profits += price;
-  console.log("\n              +++++++ Selling at: "+price);
+  profits += calculateTransactionAmount(price);
+  console.log("\n   +++++++ +++++++ +++++++ Selling at: "+price +" +++++++ ");
   console.log("Profits: "+profits);
 };
 
@@ -37,7 +38,9 @@ let getAverage = (bids) =>{
   }, 0);
 
 	return sumBids/bids.length;
-}
+};
+
+let calculateTransactionAmount = (price) => {return price * AMOUNT_TO_TRADE};
 
 let askForInfo = ()=>{
   publicClient.getProductOrderBook('ETH-EUR', { level: 2 })
@@ -115,14 +118,14 @@ let doTrade=() => {
 
   askForInfo(); 
 
-  console.log("\n    " + new Date() + " - " + " Iteration: " + iteration);
-  console.log("\nProfits: " +  profits);
-  console.log("lastBuyPrice: " +  lastBuyPrice);
-  console.log("lastSellPrice: " +  lastSellPrice);
+  console.log("\n    " + new Date() + " - " + " Iteration #" + iteration);
+  console.log("\nTrader Profits: " +  profits);
+  console.log("Last Buy Price: " +  lastBuyPrice);
+  console.log("Last Sell Price: " +  lastSellPrice);
   console.log("");
 
   if(profits <= 0){
-    console.log("\n   !!!!!!!!  BANKRUPT  !!!!!!!!\n");
+    console.log("\n   !!!!!!!!  SORRY MAN, YOUR BANKRUPT.  !!!!!!!!\n");
     clearInterval(nIntervId);
   }
 };
