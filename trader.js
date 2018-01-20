@@ -1,16 +1,15 @@
 const Gdax = require('gdax');
+const { TRADE_INTERVAL_SECS,
+        AMOUNT_TO_TRADE,
+        INVESTMENT,
+        ERROR_TOLERANCE,
+        PRODUCT_TYPE,
+        TRADE_SAMPLE_SIZE
+      } = require('./params');
+
 const publicClient = new Gdax.PublicClient();
 const SELL = 'sell';
 const BUY = 'buy';
-
-const TRADE_INTERVAL_SECS=7;
-
-const AMOUNT_TO_TRADE = 0.01;//ETH
-const INVESTMENT=10;//EUR
-
-const ERROR_TOLERANCE=50;
-const PRODUCT_TYPE='ETH-EUR';
-const TRADE_SAMPLE_SIZE=9;
 
 const TRADER_ID=TRADE_INTERVAL_SECS+"s|"+AMOUNT_TO_TRADE +"eth|"+INVESTMENT+"eur";
 
@@ -163,7 +162,7 @@ let printReport= ()=>{
   console.log("");
 
   if(profits <= 0){
-    console.log("\n   !!!!!!!!  SORRY MAN, YOUR BANKRUPT.  !!!!!!!!\n");
+    console.log("\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
     clearInterval(nIntervId);
   }
 
