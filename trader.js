@@ -3,8 +3,10 @@ const publicClient = new Gdax.PublicClient();
 const SELL = 'sell';
 const BUY = 'buy';
 const AMOUNT_TO_TRADE = 0.01;//ETH
-const TRADE_INTERVAL_MILLIS=9000;//Must be greater than 5 secs
-const TRADER_ID=1;
+const TRADE_INTERVAL_MILLIS=7000;//Must be greater than 5 secs
+
+const TRADER_ID=TRADE_INTERVAL_MILLIS;
+const ERROR_TOLERANCE=50;
 
 let profits = 10;
 
@@ -19,6 +21,7 @@ let nIntervId;
 let lastAction = SELL;
 let buyTimes=0;
 let sellTimes=0;
+let errors=0;
 
 let buy=(price) =>{
   buyTimes++;
@@ -57,7 +60,8 @@ let askForInfo = ()=>{
     console.log("Sell Average: " +sellAverage +'');
   })
   .catch(error => {
-    console.error(".... handle the error");
+    errors++;
+    //TODO handle error
     console.log(error);
   });
 
@@ -69,7 +73,8 @@ let askForInfo = ()=>{
     console.log("Current Price: " + currentPrice);
   })
   .catch(error => {
-    console.error(".... handle the error");
+    errors++;
+    //TODO handle error
     console.log(error);
   });
 
@@ -83,7 +88,8 @@ let askForInfo = ()=>{
     console.log('Sellers: ' + sells);
   })
   .catch(error => {
-    console.error(".... handle the error");
+    errors++;
+    //TODO handle error
     console.log(error);
   });  
 
@@ -97,7 +103,8 @@ let gdaxTime = () =>{
     console.log(data);
   })
   .catch(error => {
-    console.error(".... handle the error");
+    errors++;
+    //TODO handle error
     console.log(error);
   });
 }
@@ -126,16 +133,22 @@ let doTrade=() => {
 
 let printReport= ()=>{
   console.log("\n" + new Date() + " - " + "Iteration #" + iteration);
-  console.log("\nTrader #"+TRADER_ID+" Profits: " +  profits);
+  console.log("\nTrader #"+TRADER_ID+" >>> Profits: " +  profits+" (EUR)");
   console.log("Buy Times: " + buyTimes);
   console.log("Sell Times: " + sellTimes);
   console.log("Last Buy Price: " +  lastBuyPrice);
   console.log("Last Sell Price: " +  lastSellPrice);
+  console.log("Errors: " + errors);
   console.log("");
 
   if(profits <= 0){
     console.log("\n   !!!!!!!!  SORRY MAN, YOUR BANKRUPT.  !!!!!!!!\n");
     clearInterval(nIntervId);
+  }
+
+  if(errors > ERROR_TOLERANCE){
+    console.log("\n   !!!!!!!!  ERROR_TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
+    clearInterval(nIntervId); 
   }
 }
 
