@@ -11,25 +11,26 @@ let lastBuyPrice=0;
 let sellAverage=0;
 let lastSellPrice=0;
 let currentPrice=0;
-let buys =0;
-let sells =0;
+let buys, sells =0;
 let nIntervId;
 let lastAction = SELL;
+let buyTimes=0;
+let sellTimes=0;
 
 let buy=(price) =>{
+  buyTimes++;
   lastBuyPrice=price;
   lastAction=BUY;
   profits -= calculateTransactionAmount(price);
-  console.log("\n   ------- ------- ------- Buying at: "+price +" ------- ");
-  console.log("Profits: "+profits);
+  console.log("\n------- -------  Buying at: "+price +"  -------  Buy Times: "+buyTimes);
 };
 
 let sell=(price) =>{
+  sellTimes++;
   lastSellPrice=price;
   lastAction=SELL;
   profits += calculateTransactionAmount(price);
-  console.log("\n   +++++++ +++++++ +++++++ Selling at: "+price +" +++++++ ");
-  console.log("Profits: "+profits);
+  console.log("\n+++++++ +++++++  Selling at: "+price +"  +++++++  Sell Times: "+sellTimes);
 };
 
 let getAverage = (bids) =>{
