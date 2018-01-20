@@ -2,21 +2,23 @@ const Gdax = require('gdax');
 const publicClient = new Gdax.PublicClient();
 const SELL = 'sell';
 const BUY = 'buy';
-const AMOUNT_TO_TRADE = 0.01;//ETH
-const TRADE_INTERVAL_MILLIS=7000;//Must be greater than 5 secs
 
-const TRADER_ID=TRADE_INTERVAL_MILLIS;
+const AMOUNT_TO_TRADE = 0.01;//ETH
+const TRADE_INTERVAL_SECS=5;
+const INVESTMENT=10;//EUR
 const ERROR_TOLERANCE=50;
 
-let profits = 10;
+const TRADER_ID=TRADE_INTERVAL_SECS+"s|"+AMOUNT_TO_TRADE +"eth|"+INVESTMENT+"eur";
 
+let profits = INVESTMENT;
 let iteration = 0;
 let buyAverage=0;
 let lastBuyPrice=0;
 let sellAverage=0;
 let lastSellPrice=0;
 let currentPrice=0;
-let buys, sells =0;
+let buys=0;
+let sells =0;
 let nIntervId;
 let lastAction = SELL;
 let buyTimes=0;
@@ -94,7 +96,7 @@ let askForInfo = ()=>{
   });  
 
   //gdaxTime();
-}
+};
 
 let gdaxTime = () =>{
   publicClient.getTime()
@@ -107,13 +109,12 @@ let gdaxTime = () =>{
     //TODO handle error
     console.log(error);
   });
-}
+};
 
 let makeChoice = () =>{
   if(iteration == 1){
      buy(buyAverage); // I assuming first action will be to Buy
    }
-
    if(sells > buys && lastAction!==BUY && lastSellPrice >= buyAverage){
     buy(buyAverage);
   }
@@ -133,7 +134,7 @@ let doTrade=() => {
 
 let printReport= ()=>{
   console.log("\n" + new Date() + " - " + "Iteration #" + iteration);
-  console.log("\nTrader #"+TRADER_ID+" >>> Profits: " +  profits+" (EUR)");
+  console.log("Trader_id: "+TRADER_ID+"  >>> Profits: " +  profits+" (EUR)");
   console.log("Buy Times: " + buyTimes);
   console.log("Sell Times: " + sellTimes);
   console.log("Last Buy Price: " +  lastBuyPrice);
@@ -150,16 +151,7 @@ let printReport= ()=>{
     console.log("\n   !!!!!!!!  ERROR_TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
     clearInterval(nIntervId); 
   }
-}
+};
 
 askForInfo();
-nIntervId = setInterval(doTrade, TRADE_INTERVAL_MILLIS);
-
-
-
-
-
-
-
-
-
+nIntervId = setInterval(doTrade, TRADE_INTERVAL_SECS*1000);
