@@ -1,5 +1,5 @@
 # crypto-trader
-Simple script for crypto currencies trading
+Simple script for crypto currencies trading simulation
 
 installation:
 `npm install`

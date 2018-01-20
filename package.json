@@ -6,7 +6,7 @@
     "start": "node trader.js"
   },
   "name": "crypto-trader",
-  "description": "Simple script for crypto currencies trading",
+  "description": "Simple script for crypto currencies trading simulation",
   "version": "1.0.0",
   "main": "trader.js",
   "devDependencies": {},
