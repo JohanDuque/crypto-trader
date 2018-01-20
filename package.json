@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "gdax": "*"
+  },
+  "scripts": {
+    "start": "node trader.js"
+  },
+  "name": "crypto-trader",
+  "description": "Simple script for crypto currencies trading",
+  "version": "1.0.0",
+  "main": "trader.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohanDuque/crypto-trader.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JohanDuque/crypto-trader/issues"
+  },
+  "homepage": "https://github.com/JohanDuque/crypto-trader#readme"
+}
