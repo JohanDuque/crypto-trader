@@ -3,20 +3,24 @@ const publicClient = new Gdax.PublicClient();
 const SELL = 'sell';
 const BUY = 'buy';
 
+const TRADE_INTERVAL_SECS=7;
+
 const AMOUNT_TO_TRADE = 0.01;//ETH
-const TRADE_INTERVAL_SECS=5;
 const INVESTMENT=10;//EUR
+
 const ERROR_TOLERANCE=50;
+const PRODUCT_TYPE='ETH-EUR';
+const TRADE_SAMPLE_SIZE=9;
 
 const TRADER_ID=TRADE_INTERVAL_SECS+"s|"+AMOUNT_TO_TRADE +"eth|"+INVESTMENT+"eur";
 
 let profits = INVESTMENT;
 let iteration = 0;
-let buyAverage=0;
+let bidsAverage=0;
 let lastBuyPrice=0;
-let sellAverage=0;
+let asksAverage=0;
 let lastSellPrice=0;
-let currentPrice=0;
+let currentMarketPrice=0;
 let buys=0;
 let sells =0;
 let nIntervId;
@@ -41,25 +45,41 @@ let sell=(price) =>{
   console.log("\n +++++++ Selling at: "+price +"(EUR) +++++++ Sell Times: "+sellTimes);
 };
 
-let getAverage = (bids) =>{
-	var sumBids = bids.reduce((accumulator, bid) => {
-    return accumulator + parseInt(bid[0]);
+let getAverage = (items) =>{
+	var sumItems = items.reduce((accumulator, item) => {
+                //"item": [ price, size, num-orders ] 
+    return accumulator + parseInt(item[0]);
   }, 0);
 
-	return sumBids/bids.length;
+	return sumItems/items.length;
+};
+
+let getPreciseAverage = (items) =>{
+  var size = items.reduce((accumulator, item) => {
+                //"item": [ price, size, num-orders ] 
+    return accumulator + parseInt(item[2]);
+  }, 0);
+
+  var sumItems = items.reduce((accumulator, item) => {
+                //"item": [ price, size, num-orders ] 
+    return accumulator + parseInt(item[0]);
+  }, 0);
+
+  return sumItems/size;
 };
 
 let calculateTransactionAmount = (price) => {return price * AMOUNT_TO_TRADE};
 
 let askForInfo = ()=>{
-  publicClient.getProductOrderBook('ETH-EUR', { level: 2 })
+  publicClient.getProductOrderBook(PRODUCT_TYPE, { level: 2 })
   .then(data => {
     //console.log("...............// Get the order book at the default level of detail.");
     //console.log(data);
-    buyAverage = getAverage(data.bids);
-    console.log("Buy Average: " +buyAverage +'');
-    sellAverage = getAverage(data.asks);
-    console.log("Sell Average: " +sellAverage +'');
+    bidsAverage = getAverage(data.bids);
+    console.log("Bids Average: " +bidsAverage +'');
+
+    asksAverage = getAverage(data.asks);
+    console.log("Asks Average: " +asksAverage +'');
   })
   .catch(error => {
     errors++;
@@ -67,12 +87,11 @@ let askForInfo = ()=>{
     console.log(error);
   });
 
-  publicClient.getProductTicker('ETH-EUR')
+  publicClient.getProductTicker(PRODUCT_TYPE)
   .then(data => {
-    //console.log("// publicClient.getProductTicker('ETH-EUR'");
+    //console.log("// publicClient.getProductTicker(PRODUCT_TYPE");
     //console.log(data);
-    currentPrice = data.price;
-    console.log("Current Price: " + currentPrice);
+    currentMarketPrice = data.price;
   })
   .catch(error => {
     errors++;
@@ -80,7 +99,7 @@ let askForInfo = ()=>{
     console.log(error);
   });
 
-  publicClient.getProductTrades('ETH-EUR', {limit:10})
+  publicClient.getProductTrades(PRODUCT_TYPE, {limit:TRADE_SAMPLE_SIZE})
   .then(data => {
     //console.log("// To make paginated requests, include page parameters");
     //console.log(data);
@@ -113,13 +132,13 @@ let gdaxTime = () =>{
 
 let makeChoice = () =>{
   if(iteration == 1){
-     buy(buyAverage); // I assuming first action will be to Buy
+     buy(bidsAverage); // I assuming first action will be to Buy
    }
-   if(sells > buys && lastAction!==BUY && lastSellPrice >= buyAverage){
-    buy(buyAverage);
+  if(sells > buys && lastAction!==BUY && lastSellPrice >= bidsAverage){
+    buy(bidsAverage);
   }
-  if(buys > sells && lastAction!==SELL && sellAverage > lastBuyPrice){
-    sell(sellAverage);
+  if(buys > sells && lastAction!==SELL && asksAverage > lastBuyPrice){
+    sell(asksAverage);
   }
 }
 
@@ -137,6 +156,7 @@ let printReport= ()=>{
   console.log("Trader_id: "+TRADER_ID+"  >>> Profits: " +  profits+" (EUR)");
   console.log("Buy Times: " + buyTimes);
   console.log("Sell Times: " + sellTimes);
+  console.log("Current Price: " + currentMarketPrice);
   console.log("Last Buy Price: " +  lastBuyPrice);
   console.log("Last Sell Price: " +  lastSellPrice);
   console.log("Errors: " + errors);
