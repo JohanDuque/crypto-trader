@@ -157,7 +157,7 @@ let printReport= ()=>{
   console.log("\n--------------------------------------------------------------");
   console.log("  "+new Date()+"   "+"Iteration #"+iteration);
   console.log("  Trader# "+traderId+"                Errors: "+ errors);    
-  console.log("  Last Buy     :  "+lastBuyPrice+"("+toCurrency+")"+"               Buy Times: "+ buyTimes); 
+  console.log("  Last Buy     :  "+lastBuyPrice+"("+toCurrency+")"+"                Buy Times: "+ buyTimes); 
   console.log("  Last Sell    :  "+lastSellPrice+"("+toCurrency+")"+"               Sell Times: "+ sellTimes);
   console.log("  Current Price:  "+ currentMarketPrice+"("+toCurrency+")");
   console.log("  Profits      :  "+profits+"("+toCurrency+")");
