@@ -1,12 +1,7 @@
 const Gdax = require('gdax');
-const { pollingInterval,
-  amountToTrade,
-  investment,
-  errorTolerance,
-  productType,
-  tradeSampleSize,
-  orderFillError,
-  verbose
+const { pollingInterval, amountToTrade, investment,
+  errorTolerance, productType, tradeSampleSize,
+  orderFillError, verbose
 } = require('./params');
 
 const publicClient = new Gdax.PublicClient();
@@ -35,7 +30,7 @@ let lastAction = sell;
 let buyTimes=0;
 let sellTimes=0;
 let errors=0;
-let wasLastOrderFilled = false;
+let lastOrderWasFilled = false;
 let fills=0;
 
 let doSell=(price) =>{
@@ -81,7 +76,7 @@ let askForInfo = ()=>{
     .catch(error => {
       //TODO handle error
       errors++;
-      console.log(error);
+      if(verbose)console.log(error);
     });
 
 
@@ -93,7 +88,7 @@ let askForInfo = ()=>{
   .catch(error => {
     //TODO handle error
     errors++;
-    console.log(error);
+    if(verbose)console.log(error);
   });
 
   publicClient.getProductTrades(productType, {limit:tradeSampleSize})
@@ -111,7 +106,7 @@ let askForInfo = ()=>{
     .catch(error => {
       //TODO handle error
       errors++;
-      console.log(error);
+      if(verbose)console.log(error);
   });  
 };
 
@@ -125,16 +120,16 @@ let checkFills=(tradeHistory)=>{
     // console.log(element.price +" - "+test + " - " + isOrNot);
     // });
 
-    if(!wasLastOrderFilled){
+    if(!lastOrderWasFilled){
       if(lastAction === buy){
         filteredArray = tradeHistory.filter((data) => {return Math.abs(lastBuyPrice - data.price) <= orderFillError});
       }else{
         filteredArray = tradeHistory.filter((data) => {return Math.abs(lastSellPrice - data.price) <= orderFillError});
       }
   
-      wasLastOrderFilled = filteredArray.length > 0;
+      lastOrderWasFilled = filteredArray.length > 0;
       
-      if(wasLastOrderFilled){
+      if(lastOrderWasFilled){
         fills++;
         printReport();
       };
@@ -142,19 +137,18 @@ let checkFills=(tradeHistory)=>{
 };
 
 let makeAChoice = () =>{
-  if(sells > buys && lastAction!==buy && lastSellPrice >= bidsAverage){
+  if(sells > buys && lastAction!==buy && lastSellPrice >= bidsAverage && lastOrderWasFilled){
     doBuy(bidsAverage);
-    wasLastOrderFilled = false;
+    lastOrderWasFilled = false;
   }
-  if(buys > sells && lastAction!==sell && asksAverage > lastBuyPrice){
+  if(buys > sells && lastAction!==sell && asksAverage > lastBuyPrice && lastOrderWasFilled){
     doSell(asksAverage);
-    wasLastOrderFilled = false;
+    lastOrderWasFilled = false;
   }
   if(iteration == 1){
     doBuy(bidsAverage);//I'm assuming first action will be to Buy, could be buggy!
   }
 }
-
 
 //******************* MAIN ********************//
 let doTrade=() => {
