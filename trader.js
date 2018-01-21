@@ -4,7 +4,9 @@ const { pollingInterval,
   investment,
   errorTolerance,
   productType,
-  tradeSampleSize
+  tradeSampleSize,
+  orderFillError,
+  verbose
 } = require('./params');
 
 const publicClient = new Gdax.PublicClient();
@@ -16,7 +18,8 @@ const toCurrency=productType.split('-')[1];
 const traderId=pollingInterval+"s|"
 +amountToTrade +fromCurrency+"|"
 +investment+toCurrency+"|"
-+tradeSampleSize;
++tradeSampleSize+"|"+orderFillError;
+
 
 let profits = investment;
 let iteration = 0;
@@ -32,13 +35,16 @@ let lastAction = sell;
 let buyTimes=0;
 let sellTimes=0;
 let errors=0;
+let wasLastOrderFilled = false;
+let fills=0;
 
 let doSell=(price) =>{
   sellTimes++;
   lastSellPrice=price;
   lastAction=sell;
   profits += calculateTransactionAmount(price);
-  console.log("\n +++++++ Selling at: "+price +"("+toCurrency+") +++++++ Sell Times: "+sellTimes);
+
+  verbose ? console.log("\n +++++++ Selling at: "+price +"("+toCurrency+") +++++++ Sell Times: "+sellTimes) : printReport();
 };
 
 let doBuy=(price) =>{
@@ -46,49 +52,37 @@ let doBuy=(price) =>{
   lastBuyPrice=price;
   lastAction=buy;
   profits -= calculateTransactionAmount(price);
-  console.log("\n ------- Buying at: "+price+"("+toCurrency+") ------- Buy Times: "+buyTimes);
+
+  verbose ? console.log("\n ------- Buying at: "+price+"("+toCurrency+") ------- Buy Times: "+buyTimes) : printReport();
 };
 
-let getAverage = (items) =>{
+let getAverage=(items) =>{
 	var sumItems = items.reduce((accumulator, item) => {
                 //"item": [ price, size, num-orders ] 
                 return accumulator + parseInt(item[0]);
               }, 0);
-
 	return sumItems/items.length;
 };
 
-let getPreciseAverage = (items) =>{
-  var size = items.reduce((accumulator, item) => {
-                //"item": [ price, size, num-orders ] 
-                return accumulator + parseInt(item[2]);
-              }, 0);
-
-  var sumItems = items.reduce((accumulator, item) => {
-                //"item": [ price, size, num-orders ] 
-                return accumulator + parseInt(item[0]);
-              }, 0);
-
-  return sumItems/size;
-};
-
-let calculateTransactionAmount = (price) => {return price * amountToTrade};
+let calculateTransactionAmount=(price) => {return price * amountToTrade};
 
 let askForInfo = ()=>{
-
   publicClient.getProductOrderBook(productType, { level: 2 })
-  .then(data => {
-    //console.log(data);
-    bidsAverage = getAverage(data.bids);
-    asksAverage = getAverage(data.asks);
-    console.log("Bids Average: " +bidsAverage +'');
-    console.log("Asks Average: " +asksAverage +'');
-  })
-  .catch(error => {
-    //TODO handle error
-    errors++;
-    console.log(error);
-  });
+    .then(data => {
+      //console.log(data);
+      bidsAverage = getAverage(data.bids);
+      asksAverage = getAverage(data.asks);
+  
+      if(verbose){
+        console.log("Bids Average: " +bidsAverage +'');
+        console.log("Asks Average: " +asksAverage +'');      
+      }
+    })
+    .catch(error => {
+      //TODO handle error
+      errors++;
+      console.log(error);
+    });
 
 
   publicClient.getProductTicker(productType)
@@ -102,65 +96,84 @@ let askForInfo = ()=>{
     console.log(error);
   });
 
-
   publicClient.getProductTrades(productType, {limit:tradeSampleSize})
-  .then(data => {
-    //console.log(data);
-    buys = data.filter(data => data.side === buy).length;
-    sells = data.filter(data => data.side === sell).length;
-    console.log('Buyers: ' + buys);
-    console.log('Sellers: ' + sells);
-  })
-  .catch(error => {
-    //TODO handle error
-    errors++;
-    console.log(error);
+    .then(data => {
+      //console.log(data);
+      checkFills(data);
+      buys = data.filter(data => data.side === buy).length;
+      sells = data.filter(data => data.side === sell).length;
+  
+      if(verbose){
+        console.log('Buyers: ' + buys);
+        console.log('Sellers: ' + sells);
+      }
+    })
+    .catch(error => {
+      //TODO handle error
+      errors++;
+      console.log(error);
   });  
-  //gdaxTime();
 };
 
-let gdaxTime = () =>{
-  publicClient.getTime()
-  .then(data => {
-    console.log("getTime()");
-    console.log(data);
-  })
-  .catch(error => {
-    //TODO handle error
-    errors++;
-    console.log(error);
-  });
+
+let checkFills=(tradeHistory)=>{  
+    let filteredArray;
+    //Debugging
+    // tradeHistory.forEach(function(element) {
+    //   let isOrNot = Math.abs(lastBuyPrice - element.price) <= orderFillError;
+    //   let test = Math.abs(lastBuyPrice - element.price);
+    // console.log(element.price +" - "+test + " - " + isOrNot);
+    // });
+
+    if(!wasLastOrderFilled){
+      if(lastAction === buy){
+        filteredArray = tradeHistory.filter((data) => {return Math.abs(lastBuyPrice - data.price) <= orderFillError});
+      }else{
+        filteredArray = tradeHistory.filter((data) => {return Math.abs(lastSellPrice - data.price) <= orderFillError});
+      }
+  
+      wasLastOrderFilled = filteredArray.length > 0;
+      
+      if(wasLastOrderFilled){
+        fills++;
+        printReport();
+      };
+    }
 };
 
 let makeAChoice = () =>{
-  if(iteration == 1){
-     doBuy(bidsAverage); // I'm assuming first action will be to Buy
-   }
-   if(sells > buys && lastAction!==buy && lastSellPrice >= bidsAverage){
+  if(sells > buys && lastAction!==buy && lastSellPrice >= bidsAverage){
     doBuy(bidsAverage);
+    wasLastOrderFilled = false;
   }
   if(buys > sells && lastAction!==sell && asksAverage > lastBuyPrice){
     doSell(asksAverage);
+    wasLastOrderFilled = false;
+  }
+  if(iteration == 1){
+    doBuy(bidsAverage);//I'm assuming first action will be to Buy, could be buggy!
   }
 }
 
+
+//******************* MAIN ********************//
 let doTrade=() => {
   iteration++;
 
   makeAChoice();
-  askForInfo(); 
+  askForInfo();
 
-  printReport();
+  if(verbose) printReport();
 };
 
 let printReport= ()=>{
   console.log("\n--------------------------------------------------------------");
   console.log("  "+new Date()+"   "+"Iteration #"+iteration);
   console.log("  Trader# "+traderId+"                Errors: "+ errors);    
-  console.log("  Last Buy     :  "+lastBuyPrice+"("+toCurrency+")"+"                Buy Times: "+ buyTimes); 
-  console.log("  Last Sell    :  "+lastSellPrice+"("+toCurrency+")"+"               Sell Times: "+ sellTimes);
+  console.log("  Last Buy     :  "+lastBuyPrice+"("+toCurrency+")                Buy Times: "+ buyTimes); 
+  console.log("  Last Sell    :  "+lastSellPrice+"("+toCurrency+")               Sell Times: "+ sellTimes);
+  console.log("  Profits      :  "+profits+"("+toCurrency+")            Fills: "+fills);
   console.log("  Current Price:  "+ currentMarketPrice+"("+toCurrency+")");
-  console.log("  Profits      :  "+profits+"("+toCurrency+")");
   console.log("-------------------------------------------------------------\n");
 
   if(profits <= 0){
