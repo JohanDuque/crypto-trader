@@ -1,0 +1,6 @@
+{
+    "SELL": "sell",
+    "BUY": "buy",
+    "TRADE_INTERVAL_MILLIS": 9000,
+    "CECK_INTERVAL_MILLIS": 9000
+}
