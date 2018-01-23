@@ -1,9 +1,10 @@
 {
   "dependencies": {
-    "gdax": "*"
+    "gdax": "*",
+    "lodash": "*"
   },
   "scripts": {
-    "start": "node trader.js"
+    "start": "node trader.js 1"
   },
   "name": "crypto-trader",
   "description": "Simple script for crypto currencies trading simulation",

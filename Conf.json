@@ -1,0 +1,11 @@
+{
+    "verbose": false,
+    "productType": "ETH-EUR",
+    "amountToTrade": 25,
+    "investment": 10,
+    "errorTolerance": 300,
+
+    "pollingInterval": 5,
+    "tradeSampleSize": 20,
+    "orderFillError": 1
+}

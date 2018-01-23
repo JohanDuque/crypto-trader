@@ -1,7 +1,11 @@
 console.log('-----------------');
 console.log('V0.2');
+console.log('Strategy' + process.argv.slice(2)[0]);
+const ConfG = require('./Conf');
+const ConfS = require('./Strategies/Strategy' + process.argv.slice(2)[0] +'/Conf');
+const conf = Object.assign(ConfG, ConfS);
 const Account = require('./Account');
-const Strategy = require('./Strategies/Strategy1');
-let account = new Account({ startAmountToTrade: 25 });
-let strategy = new Strategy({ account: account });
+const Strategy = require('./Strategies/Strategy' + process.argv.slice(2)[0] + '/Strategy');
+let account = new Account(conf);
+let strategy = new Strategy({ account: account , conf : conf});
 strategy.start();
