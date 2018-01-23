@@ -10,6 +10,12 @@ const buy = 'buy';
 const fromCurrency=productType.split('-')[0];
 const toCurrency=productType.split('-')[1];
 
+const strategies=new Map();
+strategies.set('V1', function() { makeAChoice_V1()});
+strategies.set('V2', function() { makeAChoice_V2()});
+strategies.set('V3', function() { makeAChoice_V3()});
+strategies.set('V4', function() { makeAChoice_V4()});
+
 const traderId=strategy+"|"+pollingInterval+"s|"
 +amountToTrade +fromCurrency+"|"
 +investment+toCurrency+"|"
@@ -32,6 +38,7 @@ let sellTimes=0;
 let errors=0;
 let lastOrderWasFilled = true;
 let fills=0;
+
 
 let doSell=(price) =>{
   sellTimes++;
@@ -150,7 +157,7 @@ let askForInfo = ()=>{
   getTradeHistory();
 };
 
-let makeAChoice =()=>{strategy==='V1'? makeAChoice_V1() : (strategy==='V2'? makeAChoice_V2() : makeAChoice_V3());};
+let makeAChoice =()=>{strategies.get(strategy)};
 
 let makeAChoice_V1 = () =>{
   if(sells > buys && lastAction!==buy && lastSellPrice >= bidsAverage && lastOrderWasFilled){
