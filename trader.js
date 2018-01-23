@@ -111,9 +111,6 @@ let getTradeHistory =()=>{
     }
 
     checkFills(data);
-    //buys = data.filter(data => data.side === buy).length;
-    //sells = data.filter(data => data.side === sell).length;
-
     sells= data.filter(data => data.side === buy).length;
     buys= data.filter(data => data.side === sell).length;
 
@@ -131,13 +128,6 @@ let getTradeHistory =()=>{
 
 let checkFills=(tradeHistory)=>{  
   let filteredArray;
-    //Debugging
-    // tradeHistory.forEach(function(element) {
-    //   let isOrNot = Math.abs(lastBuyPrice - element.price) <= orderFillError;
-    //   let test = Math.abs(lastBuyPrice - element.price);
-    // console.log(element.price +" - "+test + " - " + isOrNot);
-    // });
-
     if(!lastOrderWasFilled){
       if(lastAction === buy){
         filteredArray = tradeHistory.filter((data) => {return Math.abs(lastBuyPrice - data.price) <= orderFillError});
