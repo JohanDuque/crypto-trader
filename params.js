@@ -3,10 +3,10 @@ const productType	  = 'ETH-EUR';
 const amountToTrade   = 0.01;//ETH
 const investment	  = 10;//EUR
 const errorTolerance  = 300;
-const strategy 		  ='V1';
 
+const strategy 		  ='V3';
 const pollingInterval = 5;
-const tradeSampleSize = 5;
+const tradeSampleSize = 11;
 const orderFillError  = 1.1;
 
 exports.pollingInterval = pollingInterval;
