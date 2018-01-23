@@ -1,7 +1,7 @@
 const Gdax = require('gdax');
 const { pollingInterval, amountToTrade, investment,
   errorTolerance, productType, tradeSampleSize,
-  orderFillError, verbose
+  orderFillError, verbose, strategy
 } = require('./params');
 
 const publicClient = new Gdax.PublicClient();
@@ -10,7 +10,7 @@ const buy = 'buy';
 const fromCurrency=productType.split('-')[0];
 const toCurrency=productType.split('-')[1];
 
-const traderId=pollingInterval+"s|"
+const traderId=strategy+"|"+pollingInterval+"s|"
 +amountToTrade +fromCurrency+"|"
 +investment+toCurrency+"|"
 +tradeSampleSize+"|"+orderFillError;
@@ -75,7 +75,7 @@ let getOrderBook =()=> {
     bidsAverage = getAverage(data.bids);
     asksAverage = getAverage(data.asks);
 
-    if(!verbose){
+    if(verbose){
       console.log("Bids Average: " +bidsAverage +'');
       console.log("Asks Average: " +asksAverage +'');      
     }
@@ -114,7 +114,7 @@ let getTradeHistory =()=>{
     buys = data.filter(data => data.side === buy).length;
     sells = data.filter(data => data.side === sell).length;
 
-    if(!verbose){
+    if(verbose){
       console.log('Current Buyers: ' + buys);
       console.log('Current Sellers: ' + sells);
     }
@@ -157,6 +157,7 @@ let checkFills=(tradeHistory)=>{
   getTradeHistory();
 };
 
+let makeAChoice =()=>{strategy==='V1'? makeAChoice_V1() : makeAChoice_V2();};
 
 let makeAChoice_V1 = () =>{
   if(sells > buys && lastAction!==buy && lastSellPrice >= bidsAverage && lastOrderWasFilled){
@@ -172,34 +173,27 @@ let makeAChoice_V1 = () =>{
   }
 };
 
-let makeAChoice = () =>{
+let makeAChoice_V2 = () =>{
   let betterAverage = currentMarketPrice;
 
   if(sells > buys && lastAction!==buy && lastSellPrice >= currentMarketPrice && lastOrderWasFilled){
     betterAverage = (bidsAverage + currentMarketPrice) / 2;
-    console.log("Improved Average: "+betterAverage);
+    if(verbose)console.log("Improved Average: "+betterAverage);
 
     doBuy(betterAverage);
     lastOrderWasFilled = false;
   }
   if(buys > sells && lastAction!==sell && lastBuyPrice < currentMarketPrice && lastOrderWasFilled){
     betterAverage = (asksAverage + currentMarketPrice) / 2;
-    console.log("Improved Average: "+betterAverage);
+    if(verbose)console.log("Improved Average: "+betterAverage);
 
     doSell(betterAverage);
     lastOrderWasFilled = false;
   }
 
-  betterAverage = (bidsAverage + currentMarketPrice) / 2;
-  console.log("Improved Buy Average: "+betterAverage);
-
-  betterAverage = (asksAverage + currentMarketPrice) / 2;
-  console.log("Improved Sell Average: "+betterAverage);
-
   if(iteration == 1){
     lastSellPrice = currentMarketPrice;//This is only to give a starting point
   }
-  
 };
 
 //******************* MAIN ********************//
@@ -209,13 +203,13 @@ let doTrade=() => {
   makeAChoice();
   askForInfo();
 
-  if(!verbose) printReport();
+  if(verbose) printReport();
 };
 
 let printReport= ()=>{
   console.log("\n--------------------------------------------------------------");
   console.log("  "+new Date()+"   "+"Iteration #"+iteration);
-  console.log("  Trader# "+traderId+"            Errors: "+ errors);    
+  console.log("  Trader# "+traderId+"         Errors: "+ errors);    
   console.log("  Last Buy Order : "+lastBuyPrice+"("+toCurrency+")        Buy Orders: "+ buyTimes); 
   console.log("  Last Sell Order: "+lastSellPrice+"("+toCurrency+")       Sell Orders: "+ sellTimes);
   console.log("  Profits        : "+profits+"("+toCurrency+")   Filled Orders: "+fills);
