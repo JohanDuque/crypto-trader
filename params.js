@@ -6,7 +6,7 @@ const errorTolerance  = 300;
 
 const strategy 		  ='V3';
 const pollingInterval = 5;
-const tradeSampleSize = 11;
+const tradeSampleSize = 13;
 const orderFillError  = 1.1;
 
 exports.pollingInterval = pollingInterval;
