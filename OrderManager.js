@@ -13,6 +13,7 @@ module.exports = class OrderManager {
         this.buyTimes = 0;
         this.sellTimes = 0;
         this.fills = 0;
+        this.eventManager = params.eventManager;
     }
 
     buy(price) {
@@ -20,7 +21,7 @@ module.exports = class OrderManager {
         this.lastBuyPrice = price;
         this.lastAction = C.BUY;
         this.orderInPending = true;
-        Conf.verbose ?  this.exchangeManager.printReport() :console.log("\n ------- Buying at: " + price + "(" + this.account.toCurrency + ") ------- Buy Times: " + this.buyTimes);
+        Conf.verbose ?  this.eventManager.emit('printReport') :console.log("\n ------- Buying at: " + price + "(" + this.account.toCurrency + ") ------- Buy Times: " + this.buyTimes);
         this.startWaitingExecution();
     }
 
@@ -37,7 +38,7 @@ module.exports = class OrderManager {
         this.lastSellPrice = price;
         this.lastAction = C.SELL;
         this.orderInPending = true;
-        Conf.verbose ?  this.exchangeManager.printReport() : console.log("\n +++++++ Selling at: " + price + "(" + this.account.toCurrency + ") +++++++ Sell Times: " + this.sellTimes);
+        Conf.verbose ?  this.eventManager.emit('printReport') : console.log("\n +++++++ Selling at: " + price + "(" + this.account.toCurrency + ") +++++++ Sell Times: " + this.sellTimes);
         this.startWaitingExecution();
     };
 
@@ -114,7 +115,7 @@ module.exports = class OrderManager {
                 }
                 if (lastOrderWasFilled) {
                     me.fills++;
-                    this.exchangeManager.printReport();
+                    me.eventManager.emit('printReport');
                 };
                 resolve();
             }

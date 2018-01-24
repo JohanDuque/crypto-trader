@@ -6,7 +6,6 @@ module.exports = class GdaxManager {
     constructor(params) {
         Conf = params.conf;
         this.account = params.account;
-        this.orderManager = params.orderManager;
         this.publicClient = new Gdax.PublicClient();
         this.bidsAverage = null;
         this.marketCanSellAt = null;
@@ -16,7 +15,6 @@ module.exports = class GdaxManager {
         this.buys = null;
         this.sells = null;
         this.tradeHistory = {};
-        this.limitBuySellBook = Conf.limitBuySellBook;
         this.errors = 0;
     }
 
@@ -56,14 +54,14 @@ module.exports = class GdaxManager {
                         me.sells = allData.filter(data => data.side === C.SELL).length;
                     }
                     if (Conf.verbose) {
-                        console.log("Trade History:");
+                        console.log("[GDAX MANAGER] Trade History:");
                         console.log(allData);
                         console.log("\n");
                     }
                     resolve();
                 })
                 .catch(error => {
-                    console.error(".... handle the error");
+                    console.error("[GDAX MANAGER] .... handle the error");
                     me.errors++;
                     if(Conf.verbose)console.log(error);
                     reject(error);
@@ -78,7 +76,7 @@ module.exports = class GdaxManager {
             me.publicClient.getProductOrderBook(Conf.productType, { level: 2 })
                 .then(data => {
                     if (Conf.verbose) {
-                        console.log("Order Book:");
+                        console.log("[GDAX MANAGER] Order Book:");
                         console.log(data);
                         console.log("\n");
                     }
@@ -87,42 +85,32 @@ module.exports = class GdaxManager {
                     me.asksAverage = getAverage(data.asks);
 
                     if (Conf.verbose) {
-                        console.log("Bids Average: " + me.bidsAverage + '');
-                        console.log("Asks Average: " + me.asksAverage + '');
+                        console.log("[GDAX MANAGER] Bids Average: " + me.bidsAverage + '');
+                        console.log("[GDAX MANAGER] Asks Average: " + me.asksAverage + '');
                     }
                 })
                 .catch(error => {
                     //TODO handle error
                     me.errors++;
-                    if (Conf.verbose) console.log(error);
+                    if (Conf.verbose) console.log('[GDAX MANAGER] ',error);
                 });
         });
     }
 
 
     gdaxTime() {
-        console.log('getTime');
+        console.log('[GDAX MANAGER] getTime');
         this.publicClient.getTime()
             .then(data => {
                 //console.log("getTime()");
                 //console.log(data);
             })
             .catch(error => {
-                console.error(".... handle the error");
+                console.error("[GDAX MANAGER] .... handle the error");
                 console.log(error);
             });
     }
 
-    printReport() {
-        console.log("\n--------------------------------------------------------------");
-        console.log("  " + new Date() + "   " + "Iteration #" + this.iteration);
-        console.log("  Trader# " + this.account.traderId + "         Errors: " + this.errors);
-        console.log("  Last Buy Order : " + this.orderManager.lastBuyPrice + "(" + this.account.toCurrency + ")        Buy Orders: " + this.orderManager.buyTimes);
-        console.log("  Last Sell Order: " + this.orderManager.lastSellPrice + "(" + this.account.toCurrency + ")       Sell Orders: " + this.orderManager.sellTimes);
-        console.log("  Profits        : " + this.account.profits + "(" + this.account.toCurrency + ")   Filled Orders: " + this.orderManager.fills);
-        console.log("  Current price  : " + this.currentMarketPrice + "(" + this.account.toCurrency + ")");
-        console.log("-------------------------------------------------------------\n");
-
-    };
+    
 
 }

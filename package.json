@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "gdax": "*",
-    "lodash": "*"
+    "events": "*"
   },
   "scripts": {
     "start": "node trader.js 1"

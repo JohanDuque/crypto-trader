@@ -1,14 +1,11 @@
-const OrderManager = require('../../OrderManager');
-const GdaxManager = require('../../GdaxManager');
 const C = require('../../Constants');
 let Conf;
 module.exports = class Strategy {
     constructor(params) {
-        this.gdaxManager = new GdaxManager(params);
-        params.exchangeManager = this.gdaxManager;
-        this.orderManager = new OrderManager(params);
-        this.gdaxManager.orderManager = this.orderManager;
+        this.exchangeManager = params.exchangeManager;
+        this.orderManager = params.orderManager;
         this.account = params.account;
+        this.eventManager = params.eventManager;
         this.iteration = 0;
         this.tradeCycleTimer = null;
         Conf = params.conf;
@@ -16,11 +13,11 @@ module.exports = class Strategy {
 
     start() {
         var me = this;
-        me.gdaxManager.askForInfo().then(() => {
-            me.orderManager.buy(me.gdaxManager.marketCanSellAt);
+        me.exchangeManager.askForInfo().then(() => {
+            me.orderManager.buy(me.exchangeManager.marketCanSellAt);
             me.tradeCycle();
         }, err => {
-            console.log('VVVVV',err);
+            console.log('%%%%%%%%%%%%%%%%',err);
             setTimeout(function() { me.start(); }, C.TRADE_INTERVAL_MILLIS);
         });
     }
@@ -28,7 +25,7 @@ module.exports = class Strategy {
     tradeCycle() {
         var me = this;
         me.iteration++;
-        me.gdaxManager.askForInfo().then(() => {
+        me.exchangeManager.askForInfo().then(() => {
             if(!me.verifiState()){
                 return;
             }
@@ -37,7 +34,7 @@ module.exports = class Strategy {
             }
             me.tradeCycleTimer = setTimeout(function() { me.tradeCycle() }, C.TRADE_INTERVAL_MILLIS);
             if (Conf.verbose) {
-                me.gdaxManager.printReport();
+                me.eventManager.emit('printReport');
             }
         }, err => {
             me.tradeCycleTimer = setTimeout(function() { me.tradeCycle(); }, C.TRADE_INTERVAL_MILLIS);
@@ -45,15 +42,15 @@ module.exports = class Strategy {
     }
 
     makeChoice() {
-        let betterAverage = this.gdaxManager.currentMarketPrice;
-        if (this.gdaxManager.sells > this.gdaxManager.buys && this.orderManager.lastAction !== C.BUY && this.orderManager.lastSellPrice >= this.gdaxManager.currentMarketPrice) {
-            betterAverage = (this.gdaxManager.bidsAverage + this.gdaxManager.currentMarketPrice) / 2;
+        let betterAverage = this.exchangeManager.currentMarketPrice;
+        if (this.exchangeManager.sells > this.exchangeManager.buys && this.orderManager.lastAction !== C.BUY && this.orderManager.lastSellPrice >= this.exchangeManager.currentMarketPrice) {
+            betterAverage = (this.exchangeManager.bidsAverage + this.exchangeManager.currentMarketPrice) / 2;
             if (Conf.verbose) console.log("Improved Average: " + betterAverage);
             this.orderManager.buy(betterAverage);
         }
 
-        if (this.gdaxManager.buys > this.gdaxManager.sells && this.orderManager.lastAction !== C.SELL && this.orderManager.lastBuyPrice > this.gdaxManager.currentMarketPrice) {
-            betterAverage = (this.gdaxManager.asksAverage + this.gdaxManager.currentMarketPrice) / 2;
+        if (this.exchangeManager.buys > this.exchangeManager.sells && this.orderManager.lastAction !== C.SELL && this.orderManager.lastBuyPrice > this.exchangeManager.currentMarketPrice) {
+            betterAverage = (this.exchangeManager.asksAverage + this.exchangeManager.currentMarketPrice) / 2;
             if (Conf.verbose) console.log("Improved Average: " + betterAverage);
             this.orderManager.sell(betterAverage);
         }
@@ -66,7 +63,7 @@ module.exports = class Strategy {
             return false;
         }
 
-        if (this.gdaxManager.errors > Conf.errorTolerance) {
+        if (this.exchangeManager.errors > Conf.errorTolerance) {
             console.log("\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
             clearInterval(this.tradeCycleTimer);
             return false;

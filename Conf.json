@@ -1,5 +1,5 @@
 {
-    "verbose": false,
+    "verbose": true,
     "productType": "ETH-EUR",
     "amountToTrade": 25,
     "investment": 10,

@@ -6,8 +6,8 @@ module.exports = class Account {
         this.coin = 0;
         this.amount = this.startAmountToTrade;
         this.traderId = params.pollingInterval + "s|" +
-            params.amountToTrade + params.fromCurrency + "|" +
-            params.investment + params.toCurrency + "|" +
+            params.amountToTrade + this.fromCurrency + "|" +
+            params.investment + this.toCurrency + "|" +
             params.tradeSampleSize + "|" + params.orderFillError;
     }
 }
