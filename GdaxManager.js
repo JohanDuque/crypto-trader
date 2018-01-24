@@ -1,11 +1,9 @@
 const Gdax = require('gdax');
 const C = require('./Constants');
-const lodash = require('lodash');
 let Conf;
 module.exports = class GdaxManager {
     constructor(params) {
         Conf = params.conf;
-        this.account = params.account;
         this.publicClient = new Gdax.PublicClient();
         this.bidsAverage = null;
         this.marketCanSellAt = null;

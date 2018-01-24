@@ -15,16 +15,20 @@ const Strategy = require('./Strategies/Strategy' + process.argv.slice(2)[0] + '/
 
 let params = {conf :conf};
 let account = new Account(conf);
-let eventManager = new Events();
 
+
+let eventManager = new Events();
 params.eventManager = eventManager;
+
 let gdaxManager = new GdaxManager(params);
+
+params.account = account;
 params.exchangeManager = gdaxManager;
 let orderManager = new OrderManager(params);
-params.account = account;
 
-params.orderManager = orderManager;
+
 let strategy = new Strategy(params);
+params.orderManager = orderManager;
 params.strategy = strategy;
 let reporting = new Reporting(params);
 strategy.start();

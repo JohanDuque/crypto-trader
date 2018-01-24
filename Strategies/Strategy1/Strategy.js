@@ -3,18 +3,26 @@ let Conf;
 module.exports = class Strategy {
     constructor(params) {
         this.exchangeManager = params.exchangeManager;
-        this.orderManager = params.orderManager;
-        this.account = params.account;
+        this.orderInPending = false;
+        this.lastAction = null;
+        this.lastSellPrice = null;
+        this.lastBuyPrice = null;
+        //this.account = params.account;
         this.eventManager = params.eventManager;
         this.iteration = 0;
         this.tradeCycleTimer = null;
         Conf = params.conf;
+
+        this.eventManager.on('orderInPendingChange', (orderInPending) => this.orderInPending);
+        this.eventManager.on('lastActionChange', (lastAction) => this.lastAction);
+        this.eventManager.on('lastSellPriceChange', (lastSellPrice) => this.lastSellPrice);
+        this.eventManager.on('lastBuyPrice', (lastBuyPrice) => this.lastBuyPrice);
     }
 
     start() {
         var me = this;
         me.exchangeManager.askForInfo().then(() => {
-            me.orderManager.buy(me.exchangeManager.marketCanSellAt);
+            this.eventManager.emit('buy', me.exchangeManager.marketCanSellAt);
             me.tradeCycle();
         }, err => {
             console.log('%%%%%%%%%%%%%%%%',err);
@@ -29,7 +37,7 @@ module.exports = class Strategy {
             if(!me.verifiState()){
                 return;
             }
-            if (!me.orderManager.orderInPending) {
+            if (!me.orderInPending) {
                 me.makeChoice();
             }
             me.tradeCycleTimer = setTimeout(function() { me.tradeCycle() }, C.TRADE_INTERVAL_MILLIS);
@@ -43,16 +51,16 @@ module.exports = class Strategy {
 
     makeChoice() {
         let betterAverage = this.exchangeManager.currentMarketPrice;
-        if (this.exchangeManager.sells > this.exchangeManager.buys && this.orderManager.lastAction !== C.BUY && this.orderManager.lastSellPrice >= this.exchangeManager.currentMarketPrice) {
+        if (this.exchangeManager.sells > this.exchangeManager.buys && this.lastAction !== C.BUY && this.lastSellPrice >= this.exchangeManager.currentMarketPrice) {
             betterAverage = (this.exchangeManager.bidsAverage + this.exchangeManager.currentMarketPrice) / 2;
             if (Conf.verbose) console.log("Improved Average: " + betterAverage);
-            this.orderManager.buy(betterAverage);
+            this.eventManager.emit('buy',betterAverage);
         }
 
-        if (this.exchangeManager.buys > this.exchangeManager.sells && this.orderManager.lastAction !== C.SELL && this.orderManager.lastBuyPrice > this.exchangeManager.currentMarketPrice) {
+        if (this.exchangeManager.buys > this.exchangeManager.sells && this.lastAction !== C.SELL && this.lastBuyPrice > this.exchangeManager.currentMarketPrice) {
             betterAverage = (this.exchangeManager.asksAverage + this.exchangeManager.currentMarketPrice) / 2;
             if (Conf.verbose) console.log("Improved Average: " + betterAverage);
-            this.orderManager.sell(betterAverage);
+            this.eventManager.emit('sell',betterAverage);
         }
     }
 

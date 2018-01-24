@@ -3,7 +3,7 @@ let Conf;
 module.exports = class OrderManager {
     constructor(params) {
         Conf = params.conf;
-        this.orderInPending = params.orderInPending || false;
+        this._orderInPending = params.orderInPending || false;
         this.lastAction = params.lastAction || null;
         this.lastSellPrice = params.lastSellPrice || null;
         this.lastBuyPrice = params.lastBuyPrice || null;
@@ -14,15 +14,51 @@ module.exports = class OrderManager {
         this.sellTimes = 0;
         this.fills = 0;
         this.eventManager = params.eventManager;
-    }
+        var me = this;
 
-    buy(price) {
-        this.buyTimes++;
-        this.lastBuyPrice = price;
-        this.lastAction = C.BUY;
-        this.orderInPending = true;
-        Conf.verbose ?  this.eventManager.emit('printReport') :console.log("\n ------- Buying at: " + price + "(" + this.account.toCurrency + ") ------- Buy Times: " + this.buyTimes);
-        this.startWaitingExecution();
+    this.eventManager.on('buy',function(price) {
+        me.buyTimes++;
+        me.lastBuyPrice = price;
+        me.lastAction = C.BUY;
+        me.orderInPending = true;
+        Conf.verbose ?  me.eventManager.emit('printReport') :console.log("\n ------- Buying at: " + price + "(" + me.account.toCurrency + ") ------- Buy Times: " + me.buyTimes);
+        me.startWaitingExecution();
+    });
+
+    this.eventManager.on('sell',function(price) {
+        me.sellTimes++;
+        me.lastSellPrice = price;
+        me.lastAction = C.SELL;
+        me.orderInPending = true;
+        Conf.verbose ?  me.eventManager.emit('printReport') : console.log("\n +++++++ Selling at: " + price + "(" + me.account.toCurrency + ") +++++++ Sell Times: " + me.sellTimes);
+        me.startWaitingExecution();
+    });
+
+
+    this.eventManager.on('revokeOrder',function() {
+        if (me.lastAction = C.SELL) {
+            me.lastSellPrice = null;
+        } else {
+            me.lastBuyPrice = null;
+        }
+        if (me.orderHistory.length > 0) {
+            me.lastAction = me.orderHistory[me.orderHistory.length - 1].action;
+        } else {
+            me.lastAction = null;
+        }
+        me.orderInPending = false;
+        console.log("\n +++++++ Revoked +++++++ ");
+    });
+
+}
+
+    get orderInPending(){
+        return this._orderInPending;
+    }
+    
+    set orderInPending(value){
+        this._orderInPending = value;
+        this.eventManager.emit('orderInPendingChange', this._orderInPending);
     }
 
     buyExecuted(price) {
@@ -33,14 +69,7 @@ module.exports = class OrderManager {
         console.log("\n ------- Buied ------- ");
     }
 
-    sell(price) {
-        this.sellTimes++;
-        this.lastSellPrice = price;
-        this.lastAction = C.SELL;
-        this.orderInPending = true;
-        Conf.verbose ?  this.eventManager.emit('printReport') : console.log("\n +++++++ Selling at: " + price + "(" + this.account.toCurrency + ") +++++++ Sell Times: " + this.sellTimes);
-        this.startWaitingExecution();
-    };
+    
 
     sellExecuted(price) {
         this.account.profits += price * this.account.coin - this.lastBuyPrice * this.account.coin;
@@ -53,20 +82,7 @@ module.exports = class OrderManager {
         console.log("\n +++++++ Profitto: " + this.account.profits + "(EUR) +++++++");
     }
 
-    revokeOrder() {
-        if (this.lastAction = C.SELL) {
-            this.lastSellPrice = null;
-        } else {
-            this.lastBuyPrice = null;
-        }
-        if (this.orderHistory.length > 0) {
-            this.lastAction = this.orderHistory[this.orderHistory.length - 1].action;
-        } else {
-            this.lastAction = null;
-        }
-        this.orderInPending = false;
-        console.log("\n +++++++ Revoked +++++++ ");
-    }
+   
 
     startWaitingExecution() {
         var me = this;
