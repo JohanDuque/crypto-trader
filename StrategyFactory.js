@@ -1,15 +1,15 @@
 const Configuration = require('./Configuration');
 
-const Strategist_V1 = require('./strategies/Strategist_V1');
-const Strategist_V2 = require('./strategies/Strategist_V2');
-const Strategist_V3 = require('./strategies/Strategist_V3');
+const Strategy_V1 = require('./strategies/Strategy_V1');
+const Strategy_V2 = require('./strategies/Strategy_V2');
+const Strategy_V3 = require('./strategies/Strategy_V3');
 
 const config = new Configuration();
 
 const strategies = new Map();
-strategies.set('V1', new Strategist_V1());
-strategies.set('V2', new Strategist_V2());
-strategies.set('V3', new Strategist_V3());
+strategies.set('V1', new Strategy_V1());
+strategies.set('V2', new Strategy_V2());
+strategies.set('V3', new Strategy_V3());
 
 //module.exports =
  class StrategyFactory {
