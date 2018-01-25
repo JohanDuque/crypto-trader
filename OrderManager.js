@@ -4,9 +4,9 @@ module.exports = class OrderManager {
     constructor(params) {
         Conf = params.conf;
         this._orderInPending = params.orderInPending || false;
-        this.lastAction = params.lastAction || null;
-        this.lastSellPrice = params.lastSellPrice || null;
-        this.lastBuyPrice = params.lastBuyPrice || null;
+        this._lastAction = params.lastAction || null;
+        this._lastSellPrice = params.lastSellPrice || null;
+        this._lastBuyPrice = params.lastBuyPrice || null;
         this.account = params.account;
         this.exchangeManager = params.exchangeManager;
         this.orderHistory = [];
@@ -21,7 +21,7 @@ module.exports = class OrderManager {
         me.lastBuyPrice = price;
         me.lastAction = C.BUY;
         me.orderInPending = true;
-        Conf.verbose ?  me.eventManager.emit('printReport') :console.log("\n ------- Buying at: " + price + "(" + me.account.toCurrency + ") ------- Buy Times: " + me.buyTimes);
+        console.log("\n ------- Buying at: " + price + "(" + me.account.toCurrency + ") ------- Buy Times: " + me.buyTimes);
         me.startWaitingExecution();
     });
 
@@ -29,8 +29,10 @@ module.exports = class OrderManager {
         me.sellTimes++;
         me.lastSellPrice = price;
         me.lastAction = C.SELL;
+        
         me.orderInPending = true;
-        Conf.verbose ?  me.eventManager.emit('printReport') : console.log("\n +++++++ Selling at: " + price + "(" + me.account.toCurrency + ") +++++++ Sell Times: " + me.sellTimes);
+
+        console.log("\n +++++++ Selling at: " + price + "(" + me.account.toCurrency + ") +++++++ Sell Times: " + me.sellTimes);
         me.startWaitingExecution();
     });
 
@@ -61,12 +63,39 @@ module.exports = class OrderManager {
         this.eventManager.emit('orderInPendingChange', this._orderInPending);
     }
 
+    get lastAction(){
+        return this._lastAction;
+    }
+    
+    set lastAction(value){
+        this._lastAction = value;
+        this.eventManager.emit('lastActionChange', this._lastAction);
+    }
+
+    get lastSellPrice(){
+        return this._lastSellPrice;
+    }
+    
+    set lastSellPrice(value){
+        this._lastSellPrice = value;
+        this.eventManager.emit('lastSellPriceChange', this._lastSellPrice);
+    }
+
+    get lastBuyPrice(){
+        return this._lastBuyPrice;
+    }
+    
+    set lastBuyPrice(value){
+        this._lastBuyPrice = value;
+        this.eventManager.emit('lastBuyPriceChange', this._lastBuyPrice);
+    }
+
     buyExecuted(price) {
         this.account.coin = this.account.amount / price;
         this.orderHistory.push({ action: this.lastAction, coin: this.account.coin, price: price });
         this.account.amount = 0;
         this.orderInPending = false;
-        console.log("\n ------- Buied ------- ");
+        Conf.verbose ?  this.eventManager.emit('printReport') : null;
     }
 
     
@@ -77,9 +106,7 @@ module.exports = class OrderManager {
         this.orderHistory.push({ action: this.lastAction, coin: this.account.coin, price: price });
         this.account.coin = 0;
         this.orderInPending = false;
-        console.log("\n +++++++ Selled +++++++ ");
-        console.log("\n +++++++ Capitale: " + this.account.amount + "(EUR) +++++++");
-        console.log("\n +++++++ Profitto: " + this.account.profits + "(EUR) +++++++");
+        Conf.verbose ?  this.eventManager.emit('printReport') : null;
     }
 
    
@@ -131,7 +158,7 @@ module.exports = class OrderManager {
                 }
                 if (lastOrderWasFilled) {
                     me.fills++;
-                    me.eventManager.emit('printReport');
+                    //me.eventManager.emit('printReport');
                 };
                 resolve();
             }

@@ -1,5 +1,5 @@
 console.log('-----------------');
-console.log('V0.2');
+console.log('V0.3');
 console.log('Strategy' + process.argv.slice(2)[0]);
 const Events = require('events');
 const ConfG = require('./Conf');

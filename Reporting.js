@@ -13,6 +13,7 @@ module.exports = class Reporting {
         	console.log("  Last Sell Order: " + me.orderManager.lastSellPrice + "(" + me.account.toCurrency + ")       Sell Orders: " + me.orderManager.sellTimes);
         	console.log("  Profits        : " + me.account.profits + "(" + me.account.toCurrency + ")   Filled Orders: " + me.orderManager.fills);
        		console.log("  Current price  : " + me.exchangeManager.currentMarketPrice + "(" + me.account.toCurrency + ")");
+            console.log("  Current coin  : " + me.account.coin + "(" + me.account.fromCurrency + ")");
         	console.log("-------------------------------------------------------------\n");
     	});
     }

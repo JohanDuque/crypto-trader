@@ -12,11 +12,11 @@ module.exports = class Strategy {
         this.iteration = 0;
         this.tradeCycleTimer = null;
         Conf = params.conf;
-
-        this.eventManager.on('orderInPendingChange', (orderInPending) => this.orderInPending);
-        this.eventManager.on('lastActionChange', (lastAction) => this.lastAction);
-        this.eventManager.on('lastSellPriceChange', (lastSellPrice) => this.lastSellPrice);
-        this.eventManager.on('lastBuyPrice', (lastBuyPrice) => this.lastBuyPrice);
+        var me = this;
+        this.eventManager.on('orderInPendingChange', orderInPending => { me.orderInPending = orderInPending });
+        this.eventManager.on('lastActionChange', lastAction => { me.lastAction = lastAction });
+        this.eventManager.on('lastSellPriceChange', lastSellPrice => { me.lastSellPrice = lastSellPrice });
+        this.eventManager.on('lastBuyPriceChange', lastBuyPrice => { me.lastBuyPrice = lastBuyPrice });
     }
 
     start() {
@@ -25,7 +25,7 @@ module.exports = class Strategy {
             this.eventManager.emit('buy', me.exchangeManager.marketCanSellAt);
             me.tradeCycle();
         }, err => {
-            console.log('%%%%%%%%%%%%%%%%',err);
+            console.log('%%%%%%%%%%%%%%%%', err);
             setTimeout(function() { me.start(); }, C.TRADE_INTERVAL_MILLIS);
         });
     }
@@ -34,7 +34,7 @@ module.exports = class Strategy {
         var me = this;
         me.iteration++;
         me.exchangeManager.askForInfo().then(() => {
-            if(!me.verifiState()){
+            if (!me.verifiState()) {
                 return;
             }
             if (!me.orderInPending) {
@@ -42,7 +42,7 @@ module.exports = class Strategy {
             }
             me.tradeCycleTimer = setTimeout(function() { me.tradeCycle() }, C.TRADE_INTERVAL_MILLIS);
             if (Conf.verbose) {
-                me.eventManager.emit('printReport');
+                //me.eventManager.emit('printReport');
             }
         }, err => {
             me.tradeCycleTimer = setTimeout(function() { me.tradeCycle(); }, C.TRADE_INTERVAL_MILLIS);
@@ -51,20 +51,20 @@ module.exports = class Strategy {
 
     makeChoice() {
         let betterAverage = this.exchangeManager.currentMarketPrice;
-        if (this.exchangeManager.sells > this.exchangeManager.buys && this.lastAction !== C.BUY && this.lastSellPrice >= this.exchangeManager.currentMarketPrice) {
+        if (/*this.exchangeManager.sells > this.exchangeManager.buys &&*/ this.lastAction !== C.BUY && this.lastSellPrice >= this.exchangeManager.currentMarketPrice) {
             betterAverage = (this.exchangeManager.bidsAverage + this.exchangeManager.currentMarketPrice) / 2;
             if (Conf.verbose) console.log("Improved Average: " + betterAverage);
-            this.eventManager.emit('buy',betterAverage);
+            this.eventManager.emit('buy', betterAverage);
         }
 
-        if (this.exchangeManager.buys > this.exchangeManager.sells && this.lastAction !== C.SELL && this.lastBuyPrice > this.exchangeManager.currentMarketPrice) {
+        if (/*this.exchangeManager.buys > this.exchangeManager.sells && */this.lastAction !== C.SELL && this.lastBuyPrice < this.exchangeManager.currentMarketPrice) {
             betterAverage = (this.exchangeManager.asksAverage + this.exchangeManager.currentMarketPrice) / 2;
             if (Conf.verbose) console.log("Improved Average: " + betterAverage);
-            this.eventManager.emit('sell',betterAverage);
+            this.eventManager.emit('sell', betterAverage);
         }
     }
 
-    verifiState(){
+    verifiState() {
         /*if (this.account.profits <= 0) {
             console.log("\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
             clearInterval(this.tradeCycleTimer);

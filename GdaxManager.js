@@ -52,9 +52,9 @@ module.exports = class GdaxManager {
                         me.sells = allData.filter(data => data.side === C.SELL).length;
                     }
                     if (Conf.verbose) {
-                        console.log("[GDAX MANAGER] Trade History:");
+                        /*console.log("[GDAX MANAGER] Trade History:");
                         console.log(allData);
-                        console.log("\n");
+                        console.log("\n");*/
                     }
                     resolve();
                 })
