@@ -1,5 +1,5 @@
 {
-  "amountToTrade": 0.01,
+  "orderSize": 0.01,
   "errorTolerance": 300,
   "investment": 10,
   "orderFillError": 1.1,
@@ -7,5 +7,5 @@
   "productType": "ETH-EUR",
   "strategy": "V3",
   "tradeSampleSize": 13,
-  "verbose": false
+  "logLvl": 3
 }
