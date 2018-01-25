@@ -12,12 +12,13 @@ class GlobalVariables {
         this.lastBuyers = 0;
         this.lastSellers = 0;
         this.nIntervId;
-        this.lastAction = this.SELL;
+        this.lastAction = config.SELL;
         this.buyOrders = 0;
         this.sellOrders = 0;
         this.errorCount = 0;
         this.lastOrderWasFilled = true;
         this.fills = 0;
+        this.tradeHistory= null;
     }
 }
 

@@ -8,9 +8,9 @@ class Trader {
         gb.lastSellPrice = price;
         gb.lastAction = conf.SELL;
         gb.profits += this.calculateTransactionAmount(price);
+        gb.lastOrderWasFilled = false;
 
-        if (conf.logLvl > 2) Logger.log("\n +++++++ Placing Sell Order at: " + price + "(" + conf.toCurrency + ") +++++++ Sell Orders: " + gb.sellOrders);
-        Logger.printReport();
+        if (conf.logLvl >= 1) Logger.log("\n+++++ Placing Sell Order at: " + price + "(" + conf.toCurrency + ") +++++ Sell Orders: " + gb.sellOrders);
     }
 
     doBuy(price) {
@@ -18,9 +18,9 @@ class Trader {
         gb.lastBuyPrice = price;
         gb.lastAction = conf.BUY;
         gb.profits -= this.calculateTransactionAmount(price);
+        gb.lastOrderWasFilled = false;
 
-        if (conf.logLvl > 2) Logger.log("\n ------- Placing Buy Order at: " + price + "(" + conf.toCurrency + ") ------- Buy Orders: " + gb.buyOrders);
-        Logger.printReport();
+        if (conf.logLvl >= 1) Logger.log("\n----- Placing Buy Order at: " + price + "(" + conf.toCurrency + ") ----- Buy Orders: " + gb.buyOrders);
     }
 
     calculateTransactionAmount(price) {

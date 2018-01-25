@@ -14,11 +14,12 @@ class Configuration {
         this.tradeSampleSize = params.tradeSampleSize;
         this.orderFillError = params.orderFillError;
         this.startTime = new Date();
+        this.startDelay = params.startDelay;
 
         this.SELL = 'sell';
         this.BUY = 'buy';
         this.traderId = this.strategy + "|" + this.pollingInterval + "s|" +
-            this.amountToTrade + this.fromCurrency + "|" +
+            this.orderSize + this.fromCurrency + "|" +
             this.investment + this.toCurrency + "|" +
             this.tradeSampleSize + "|" + this.orderFillError;
     }
