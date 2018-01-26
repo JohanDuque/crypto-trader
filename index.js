@@ -88,7 +88,7 @@ let checkFills = () => {
     if (!gb.lastOrderWasFilled) {
         if (gb.lastAction === conf.BUY) {
             wasItFilled = gb.tradeHistory.find((data) => {
-                return (gb.lastBuyPrice - data.price) <= 0 || Math.abs(gb.lastBuyPrice - data.price) <= conf.orderFillError
+                return (gb.lastBuyPrice - data.price) >= 0 || Math.abs(gb.lastBuyPrice - data.price) <= conf.orderFillError
             });
 
         } else { //gb.lastAction === sell
