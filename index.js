@@ -59,12 +59,12 @@ let getTradeHistory = () => {
                 Logger.log("\n");
             }
             gb.tradeHistory = data;
-            gb.lastSellers = data.filter(data => data.side === conf.BUY).length;
+            gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
             gb.lastBuyers = data.filter(data => data.side === conf.SELL).length;
 
             if (conf.logLvl >= 2) {
                 Logger.log('Current Buyers: ' + gb.lastBuyers);
-                Logger.log('Current Sellers: ' + gb.lastSellers);
+                Logger.log('Current Sellers: ' + gb.currentSellers);
             }
         })
         .catch(error => {

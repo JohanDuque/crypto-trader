@@ -7,9 +7,7 @@ module.exports = class Strategy_V4 {
     static apply() {
         let betterAverage;
 
-        if (gb.lastSellers < gb.lastBuyers && gb.sellOrders === 0) {
-            gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
-        }else{
+        findStartingPoint();
 
         if (gb.lastAction !== conf.BUY && gb.lastSellPrice >= gb.currentMarketPrice && gb.lastOrderWasFilled) {
             betterAverage = (gb.bidsAverage + gb.currentMarketPrice) / 2;
@@ -25,5 +23,16 @@ module.exports = class Strategy_V4 {
             trader.doSell(betterAverage);
         }
     }
-    };
-}
+};
+
+const findStartingPoint = () => {
+    if (gb.sellOrders === gb.buyOrders === gb.fills === 0 && gb.currentSellers < gb.lastBuyers) {
+        gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
+    }
+};
+
+const findStartingPoint2 = () => {
+    if (gb.sellOrders === gb.buyOrders === gb.fills === 0) {
+        gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
+    }
+};
