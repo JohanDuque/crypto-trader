@@ -9,8 +9,8 @@ class GlobalVariables {
         this.asksAverage = 0;
         this.lastSellPrice = 0;
         this.currentMarketPrice = 0;
-        this.lastBuyers = 0;
-        this.lastSellers = 0;
+        this.currentBuyers = 0;
+        this.currentSellers = 0;
         this.nIntervId;
         this.lastAction = config.SELL;
         this.buyOrders = 0;

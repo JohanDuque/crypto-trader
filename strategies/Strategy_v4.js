@@ -26,7 +26,8 @@ module.exports = class Strategy_V4 {
 };
 
 const findStartingPoint = () => {
-    if (gb.sellOrders === gb.buyOrders === gb.fills === 0 && gb.currentSellers < gb.lastBuyers) {
+    console.log("starting point");
+    if (gb.sellOrders === gb.buyOrders === gb.fills === 0 && gb.currentSellers < gb.currentBuyers) {
         gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
     }
 };
