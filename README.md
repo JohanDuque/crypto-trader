@@ -5,4 +5,4 @@ installation:
 `npm install`
 
 start:
-`npm start`  or `node trader.js`
+`npm start`  or `node index.js`
