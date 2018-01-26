@@ -7,6 +7,4 @@ installation:
 start:
 `npm start`  or `node index.js`
 
-
-
-ciao
+j
