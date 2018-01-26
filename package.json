@@ -3,7 +3,7 @@
     "gdax": "*"
   },
   "scripts": {
-    "start": "node trader.js"
+    "start": "node index.js"
   },
   "name": "crypto-trader",
   "description": "Simple script for crypto currencies trading simulation",

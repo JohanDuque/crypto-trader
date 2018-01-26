@@ -87,12 +87,14 @@ let checkFills = () => {
 
     if (!gb.lastOrderWasFilled) {
         if (gb.lastAction === conf.BUY) {
-            wasItFilled = gb.tradeHistory.find((data) => { 
-                return (gb.lastBuyPrice - data.price)<=0 || Math.abs(gb.lastBuyPrice - data.price) <= conf.orderFillError });
+            wasItFilled = gb.tradeHistory.find((data) => {
+                return (gb.lastBuyPrice - data.price) <= 0 || Math.abs(gb.lastBuyPrice - data.price) <= conf.orderFillError
+            });
 
         } else { //gb.lastAction === sell
-            wasItFilled = gb.tradeHistory.find((data) => { 
-            return (gb.lastSellPrice - data.price)<=0 || Math.abs(gb.lastSellPrice - data.price) <= conf.orderFillError });
+            wasItFilled = gb.tradeHistory.find((data) => {
+                return (gb.lastSellPrice - data.price) <= 0 || Math.abs(gb.lastSellPrice - data.price) <= conf.orderFillError
+            });
         }
 
         gb.lastOrderWasFilled = wasItFilled !== undefined;
