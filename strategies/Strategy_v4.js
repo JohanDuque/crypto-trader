@@ -18,16 +18,15 @@ module.exports = class Strategy_V4 {
 
         } else if (gb.lastOrderWasFilled) {
             if (gb.lastAction !== conf.BUY && gb.lastSellPrice >= gb.currentMarketPrice) {
-                betterAverage = (gb.bidsAverage + gb.currentMarketPrice) / 2;
-                if (conf.logLvl >= 2) Logger.log("Improved Average: " + betterAverage);
+                improvedAverage = (gb.bidsAverage + gb.currentMarketPrice) / 2;
+                if (conf.logLvl >= 2) Logger.log("Improved Average: " + improvedAverage);
 
-                trader.doBuy(betterAverage);
+                trader.doBuy(improvedAverage);
 
             } else if (gb.lastAction !== conf.SELL && gb.lastBuyPrice < gb.currentMarketPrice) {
-                betterAverage = (gb.asksAverage + gb.currentMarketPrice) / 2;
-                if (conf.logLvl >= 2) Logger.log("Improved Average: " + betterAverage);
-
-                trader.doSell(betterAverage);
+                improvedAverage = (gb.asksAverage + gb.currentMarketPrice) / 2;
+                if (conf.logLvl >= 2) Logger.log("Improved Average: " + improvedAverage);
+                trader.doSell(improvedAverage);
             }
         }
     }
