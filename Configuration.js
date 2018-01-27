@@ -11,7 +11,7 @@ class Configuration {
         this.errorTolerance = params.errorTolerance;
         this.strategy = params.strategy;
         this.pollingInterval = params.pollingInterval;
-        this.tradeSampleSize = params.tradeSampleSize;
+        this.tradeHistorySize = params.tradeHistorySize;
         this.orderFillError = params.orderFillError;
         this.startTime = new Date();
         this.startDelay = params.startDelay;
@@ -21,7 +21,7 @@ class Configuration {
         this.traderId = this.strategy + "|" + this.pollingInterval + "s|" +
             this.orderSize + this.fromCurrency + "|" +
             this.investment + this.toCurrency + "|" +
-            this.tradeSampleSize + "|" + this.orderFillError;
+            this.tradeHistorySize + "|" + this.orderFillError;
     }
 }
 

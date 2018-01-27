@@ -3,37 +3,47 @@ const trader = require('../Trader');
 const conf = require('../Configuration');
 const Logger = require('../Logger');
 
+let isStarting = gb.sellOrders === gb.buyOrders &&
+    gb.buyOrders === gb.fills &&
+    gb.fills === gb.lastSellPrice &&
+    gb.lastSellPrice === gb.lastBuyPrice &&
+    gb.lastBuyPrice === 0;
+
 module.exports = class Strategy_V4 {
     static apply() {
         let betterAverage;
 
-        findStartingPoint();
+        if (isStarting) {
+            findStartingPoint2();
 
-        if (gb.lastAction !== conf.BUY && gb.lastSellPrice >= gb.currentMarketPrice && gb.lastOrderWasFilled) {
-            betterAverage = (gb.bidsAverage + gb.currentMarketPrice) / 2;
-            if (conf.logLvl >= 2) Logger.log("Improved Average: " + betterAverage);
+        } else if (gb.lastOrderWasFilled) {
+            if (gb.lastAction !== conf.BUY && gb.lastSellPrice >= gb.currentMarketPrice) {
+                betterAverage = (gb.bidsAverage + gb.currentMarketPrice) / 2;
+                if (conf.logLvl >= 2) Logger.log("Improved Average: " + betterAverage);
 
-            trader.doBuy(betterAverage);
-        }
+                trader.doBuy(betterAverage);
 
-        if (gb.lastAction !== conf.SELL && gb.lastBuyPrice < gb.currentMarketPrice && gb.lastOrderWasFilled) {
-            betterAverage = (gb.asksAverage + gb.currentMarketPrice) / 2;
-            if (conf.logLvl >= 2) Logger.log("Improved Average: " + betterAverage);
+            } else if (gb.lastAction !== conf.SELL && gb.lastBuyPrice < gb.currentMarketPrice) {
+                betterAverage = (gb.asksAverage + gb.currentMarketPrice) / 2;
+                if (conf.logLvl >= 2) Logger.log("Improved Average: " + betterAverage);
 
-            trader.doSell(betterAverage);
+                trader.doSell(betterAverage);
+            }
         }
     }
 };
 
 const findStartingPoint = () => {
-    console.log("starting point");
-    if (gb.sellOrders === gb.buyOrders === gb.fills === 0 && gb.currentSellers < gb.currentBuyers) {
+    if (isStarting && gb.currentSellers < gb.currentBuyers) {
+        console.log("!!! Starting point @ " + gb.currentMarketPrice + " !!!!!!!");
         gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
+        isStarting=false;
     }
 };
 
 const findStartingPoint2 = () => {
-    if (gb.sellOrders === gb.buyOrders === gb.fills === 0) {
+    if (isStarting) {
         gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
+        isStarting=false;
     }
 };
