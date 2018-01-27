@@ -8,7 +8,6 @@ const strategy = StrategyFactory.getStrategy();
 
 const publicClient = new Gdax.PublicClient();
 
-
 let getOrderBook = () => {
     return new Promise(function(resolve, reject) {
         publicClient.getProductOrderBook(conf.productType, { level: 2 })
@@ -70,6 +69,7 @@ let getTradeHistory = () => {
                 gb.tradeHistory = data;
                 gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
                 gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
+                //Logger.log('   !! Current Market Price from Histoy: ' + gb.tradeHistory[0].price);
 
                 if (conf.logLvl >= 2) {
                     Logger.log('Current Buyers: ' + gb.currentBuyers);
@@ -155,15 +155,25 @@ let askForInfo = () => {
 
 let applyStrategy = () => { strategy.apply() };
 
+let setPollingInterval = (interval) => {
+    if (conf.logLvl >= 1) Logger.log("Setting Polling Iterval to " + interval + " seconds.");
+
+    clearInterval(gb.nIntervId);
+    gb.nIntervId = setInterval(doTrade, interval * 1000);
+};
+
+
 //******************* MAIN ********************//
 let doTrade = () => {
     gb.iteration++;
 
+    if (conf.logLvl >= 2) Logger.log("Asking for info at: " + new Date());
+
     askForInfo().then(() => {
+
+        if (conf.logLvl >= 2) Logger.log("Info received at:   " + new Date());
         checkFills();
         applyStrategy();
-
-        Logger.log('   !! Current Market Price from Histoy: ' + gb.tradeHistory[0].price);
 
         if (getMeanTradeFrequency() > 3) {
             setPollingInterval(getMeanTradeFrequency());
@@ -183,23 +193,7 @@ let doTrade = () => {
     });
 };
 
-let setPollingInterval = (interval) => {
-    if (conf.logLvl >= 1) Logger.log("Setting Polling Iterval to " + interval + " seconds.");
-
-    clearInterval(gb.nIntervId);
-    gb.nIntervId = setInterval(doTrade, interval * 1000);
-}
-
-
-askForInfo().then(() => {
-        Logger.log("Start Time: " + conf.startTime);
-        Logger.log("Trading will start in " + conf.startDelay * conf.pollingInterval + " seconds...");
-
-        setTimeout(() => {
-            Logger.log("Let's make Money!");
-            gb.nIntervId = setInterval(doTrade, conf.pollingInterval * 1000);
-        }, conf.startDelay * 1000);
-    },
-    err => {
-        console.log(err);
-    });
+Logger.log("Start Time: " + conf.startTime);
+Logger.log("Trading will start within " + conf.pollingInterval + " seconds...");
+Logger.log("Let's make Money! \n");
+gb.nIntervId = setInterval(doTrade, conf.pollingInterval * 1000);
