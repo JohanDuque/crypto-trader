@@ -75,25 +75,6 @@ class GdaxManager {
                 });
         });
     };
-
-    getMeanTradeFrequency() {
-        let deltas = gb.tradeHistory.map((trade, index, tradeHistory) => {
-            if (tradeHistory[index + 1]) {
-                const date1 = new Date(trade.time).getTime();
-                const date2 = new Date(tradeHistory[index + 1].time).getTime();
-
-                return (date1 - date2) / 1000;
-            } else {
-                return 0;
-            }
-        });
-        deltas.splice(-1, 1); //I remove last delta since is 0
-        let meanTradeFrequency = deltas.reduce((accumulator, item) => {
-            return accumulator + item;
-        }, 0) / deltas.length;
-
-        return meanTradeFrequency;
-    };
 }
 
 module.exports = new GdaxManager();
