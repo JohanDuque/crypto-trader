@@ -11,7 +11,7 @@ let isStarting = gb.sellOrders === gb.buyOrders &&
 
 module.exports = class Strategy_V4 {
     static apply() {
-        let betterAverage;
+        let improvedAverage;
 
         if (isStarting) {
             findStartingPoint2();

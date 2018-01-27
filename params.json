@@ -8,5 +8,5 @@
     "productType": "ETH-EUR",
     "strategy": "V5",
     "tradeHistorySize": 33,
-    "logLvl": 1
+    "logLvl": 2
 }
