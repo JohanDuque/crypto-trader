@@ -65,7 +65,6 @@ let getTradeHistory = () => {
             if (conf.logLvl >= 2) {
                 Logger.log('Current Buyers: ' + gb.currentBuyers);
                 Logger.log('Current Sellers: ' + gb.currentSellers);
-                Logger.log('   !! Current Market Price from Histoy: ' + data[0].price);
             }
         })
         .catch(error => {
@@ -149,6 +148,8 @@ let doTrade = () => {
     checkFills();
     applyStrategy();
 
+    Logger.log('   !! Current Market Price from Histoy: ' + gb.tradeHistory[0].price);
+
     if (getMeanTradeFrequency() > 3) {
         setPollingInterval(getMeanTradeFrequency());
     }
@@ -167,7 +168,7 @@ let doTrade = () => {
 };
 
 let setPollingInterval = (interval) => {
-    if (conf.logLvl >= 2) Logger.log("Setting Polling Iterval to " + interval + " seconds.");
+    if (conf.logLvl >= 1) Logger.log("Setting Polling Iterval to " + interval + " seconds.");
 
     clearInterval(gb.nIntervId);
     gb.nIntervId = setInterval(doTrade, interval * 1000);
