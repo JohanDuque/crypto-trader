@@ -36,7 +36,7 @@ const findStartingPoint = () => {
     if (isStarting && gb.currentSellers < gb.currentBuyers) {
         console.log("!!! Starting point @ " + gb.currentMarketPrice + " !!!!!!!");
         gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
-        isStarting=false;
+        isStarting = false;
     }
 };
 
@@ -44,8 +44,9 @@ const findStartingPoint2 = () => {
     if (isStarting) {
         improvedAverage = (gb.asksAverage + gb.currentMarketPrice) / 2;
         if (conf.logLvl >= 2) Logger.log("Improved Average: " + improvedAverage);
-        
+
         gb.lastSellPrice = improvedAverage; //This is only to give a starting point
-        isStarting=false;
+        isStarting = false;
     }
 };
+

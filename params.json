@@ -6,7 +6,7 @@
     "startDelay": 0,
     "pollingInterval": 2,
     "productType": "ETH-EUR",
-    "strategy": "V4",
-    "tradeHistorySize": 11,
-    "logLvl": 0
+    "strategy": "V5",
+    "tradeHistorySize": 33,
+    "logLvl": 1
 }
