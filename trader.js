@@ -38,7 +38,7 @@ class Trader {
     removeBuyOrder() {
         gb.buyOrders--;
         gb.lastAction = conf.SELL;
-        gb.profits -= this.calculateTransactionAmount(gb.lastBuyPrice);
+        gb.profits += this.calculateTransactionAmount(gb.lastBuyPrice);
         gb.lastOrderWasFilled = false;
 
         if (conf.logLvl >= 0) Logger.printReport();
