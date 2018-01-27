@@ -3,7 +3,7 @@ const gb = require('./GlobalVariables');
 const Logger = require('./Logger');
 
 class Trader {
-    doSell(price) {
+    placeSellOrder(price) {
         gb.sellOrders++;
         gb.lastSellPrice = price;
         gb.lastAction = conf.SELL;
@@ -14,7 +14,7 @@ class Trader {
         if (conf.logLvl >= 0) Logger.printReport();
     }
 
-    doBuy(price) {
+    placeBuyOrder(price) {
         gb.buyOrders++;
         gb.lastBuyPrice = price;
         gb.lastAction = conf.BUY;

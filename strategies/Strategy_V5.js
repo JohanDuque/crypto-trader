@@ -17,7 +17,7 @@ module.exports = class Strategy_V5 {
             //While market is constantly going UP...
             if (gb.currentBuyers > gb.currentSellers + conf.tradeHistorySize / 4) {
                 if (gb.lastAction !== conf.BUY) {
-                    trader.doBuy(gb.currentMarketPrice);
+                    trader.placeBuyOrder(gb.currentMarketPrice);
                     console.log("Market is constantly going UP, I'm buying!");
                 }
                 return;
@@ -35,14 +35,14 @@ module.exports = class Strategy_V5 {
                 improvedAverage = (gb.bidsAverage + gb.currentMarketPrice) / 2;
                 if (conf.logLvl >= 2) Logger.log("Improved Average: " + improvedAverage);
 
-                trader.doBuy(improvedAverage);
+                trader.placeBuyOrder(improvedAverage);
                 return;
             }
 
             if (gb.lastAction !== conf.SELL && gb.lastBuyPrice < gb.currentMarketPrice) {
                 improvedAverage = (gb.asksAverage + gb.currentMarketPrice) / 2;
                 if (conf.logLvl >= 2) Logger.log("Improved Average: " + improvedAverage);
-                trader.doSell(improvedAverage);
+                trader.placeSellOrder(improvedAverage);
                 return;
             }
         }

@@ -21,12 +21,12 @@ module.exports = class Strategy_V4 {
                 improvedAverage = (gb.bidsAverage + gb.currentMarketPrice) / 2;
                 if (conf.logLvl >= 2) Logger.log("Improved Average: " + improvedAverage);
 
-                trader.doBuy(improvedAverage);
+                trader.placeBuyOrder(improvedAverage);
 
             } else if (gb.lastAction !== conf.SELL && gb.lastBuyPrice < gb.currentMarketPrice) {
                 improvedAverage = (gb.asksAverage + gb.currentMarketPrice) / 2;
                 if (conf.logLvl >= 2) Logger.log("Improved Average: " + improvedAverage);
-                trader.doSell(improvedAverage);
+                trader.placeSellOrder(improvedAverage);
             }
         }
     }
