@@ -10,68 +10,81 @@ const publicClient = new Gdax.PublicClient();
 
 
 let getOrderBook = () => {
-    publicClient.getProductOrderBook(conf.productType, { level: 2 })
-        .then(data => {
-            if (conf.logLvl >= 3) {
-                Logger.log("Order Book:");
-                Logger.log(data);
-                Logger.log("\n");
-            }
+    return new Promise(function(resolve, reject) {
+        publicClient.getProductOrderBook(conf.productType, { level: 2 })
+            .then(data => {
+                if (conf.logLvl >= 3) {
+                    Logger.log("Order Book:");
+                    Logger.log(data);
+                    Logger.log("\n");
+                }
 
-            gb.bidsAverage = getAverage(data.bids);
-            gb.asksAverage = getAverage(data.asks);
+                gb.bidsAverage = getAverage(data.bids);
+                gb.asksAverage = getAverage(data.asks);
 
-            if (conf.logLvl >= 2) {
-                Logger.log("Bids Average: " + gb.bidsAverage + '');
-                Logger.log("Asks Average: " + gb.asksAverage + '');
-            }
-        })
-        .catch(error => {
-            //TODO handle error
-            gb.errorCount++;
-            if (conf.logLvl >= 4) Logger.log(error);
-        });
+                if (conf.logLvl >= 2) {
+                    Logger.log("Bids Average: " + gb.bidsAverage + '');
+                    Logger.log("Asks Average: " + gb.asksAverage + '');
+                }
+                resolve();
+            })
+            .catch(error => {
+                //TODO handle error
+                gb.errorCount++;
+                if (conf.logLvl >= 4) Logger.log(error);
+                reject();
+            });
+    });
 };
 
 
 let getProductTicker = () => {
-    publicClient.getProductTicker(conf.productType)
-        .then(data => {
-            if (conf.logLvl >= 3) {
-                Logger.log("Product Ticker:");
-                Logger.log(data);
-            }
-            gb.currentMarketPrice = Number(data.price);
-        })
-        .catch(error => {
-            //TODO handle error
-            gb.errorCount++;
-            if (conf.logLvl >= 4) Logger.log(error);
-        });
+    return new Promise(function(resolve, reject) {
+        publicClient.getProductTicker(conf.productType)
+            .then(data => {
+                if (conf.logLvl >= 3) {
+                    Logger.log("Product Ticker:");
+                    Logger.log(data);
+                }
+                gb.currentMarketPrice = Number(data.price);
+                resolve();
+            })
+            .catch(error => {
+                //TODO handle error
+                gb.errorCount++;
+                if (conf.logLvl >= 4) Logger.log(error);
+                reject()
+            });
+    });
 };
 
 let getTradeHistory = () => {
-    publicClient.getProductTrades(conf.productType, { limit: conf.tradeHistorySize })
-        .then(data => {
-            if (conf.logLvl >= 3) {
-                Logger.log("Trade History:");
-                Logger.log(data);
-                Logger.log("\n");
-            }
-            gb.tradeHistory = data;
-            gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
-            gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
+    return new Promise(function(resolve, reject) {
+        publicClient.getProductTrades(conf.productType, { limit: conf.tradeHistorySize })
+            .then(data => {
+                if (conf.logLvl >= 3) {
+                    Logger.log("Trade History:");
+                    Logger.log(data);
+                    Logger.log("\n");
+                }
+                gb.tradeHistory = data;
+                gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
+                gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
 
-            if (conf.logLvl >= 2) {
-                Logger.log('Current Buyers: ' + gb.currentBuyers);
-                Logger.log('Current Sellers: ' + gb.currentSellers);
-            }
-        })
-        .catch(error => {
-            //TODO handle error
-            gb.errorCount++;
-            if (conf.logLvl >= 4) Logger.log(error);
-        });
+                if (conf.logLvl >= 2) {
+                    Logger.log('Current Buyers: ' + gb.currentBuyers);
+                    Logger.log('Current Sellers: ' + gb.currentSellers);
+                    Logger.log('   !! Current Market Price from Histoy: ' + data[0].price);
+                }
+                resolve();
+            })
+            .catch(error => {
+                //TODO handle error
+                gb.errorCount++;
+                if (conf.logLvl >= 4) Logger.log(error);
+                reject();
+            });
+    });
 };
 
 let getAverage = (items) => {
@@ -133,9 +146,11 @@ let checkFills = () => {
 };
 
 let askForInfo = () => {
-    getOrderBook();
-    getProductTicker();
-    getTradeHistory();
+    return Promise.all([
+        getOrderBook(),
+        getProductTicker(),
+        getTradeHistory()
+    ])
 };
 
 let applyStrategy = () => { strategy.apply() };
@@ -144,27 +159,28 @@ let applyStrategy = () => { strategy.apply() };
 let doTrade = () => {
     gb.iteration++;
 
-    askForInfo();
-    checkFills();
-    applyStrategy();
+    askForInfo().then(() => {
+        checkFills();
+        applyStrategy();
 
-    Logger.log('   !! Current Market Price from Histoy: ' + gb.tradeHistory[0].price);
+        Logger.log('   !! Current Market Price from Histoy: ' + gb.tradeHistory[0].price);
 
-    if (getMeanTradeFrequency() > 3) {
-        setPollingInterval(getMeanTradeFrequency());
-    }
+        if (getMeanTradeFrequency() > 3) {
+            setPollingInterval(getMeanTradeFrequency());
+        }
 
-    if (conf.logLvl >= 1) Logger.printReport();
-
-    if (gb.profits <= 0) {
-        Logger.log("\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
-        clearInterval(gb.nIntervId);
-    }
-
-    if (gb.errorCount > conf.errorTolerance || gb.errorCount > gb.iteration) {
-        Logger.log("\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
-        clearInterval(gb.nIntervId);
-    }
+        if (conf.logLvl >= 1) Logger.printReport();
+        if (gb.profits <= 0) {
+            Logger.log("\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
+            clearInterval(gb.nIntervId);
+        }
+        if (gb.errorCount > conf.errorTolerance || gb.errorCount > gb.iteration) {
+            Logger.log("\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
+            clearInterval(gb.nIntervId);
+        }
+    }, err => {
+        console.log(err);
+    });
 };
 
 let setPollingInterval = (interval) => {
@@ -174,11 +190,16 @@ let setPollingInterval = (interval) => {
     gb.nIntervId = setInterval(doTrade, interval * 1000);
 }
 
-askForInfo();
 
-Logger.log("Start Time: " + conf.startTime);
-Logger.log("Trading will start in " + conf.startDelay * conf.pollingInterval + " seconds...");
-setTimeout(() => {
-    Logger.log("Let's make Money!");
-    gb.nIntervId = setInterval(doTrade, conf.pollingInterval * 1000);
-}, conf.startDelay * 1000);
+askForInfo().then(() => {
+        Logger.log("Start Time: " + conf.startTime);
+        Logger.log("Trading will start in " + conf.startDelay * conf.pollingInterval + " seconds...");
+
+        setTimeout(() => {
+            Logger.log("Let's make Money!");
+            gb.nIntervId = setInterval(doTrade, conf.pollingInterval * 1000);
+        }, conf.startDelay * 1000);
+    },
+    err => {
+        console.log(err);
+    });
