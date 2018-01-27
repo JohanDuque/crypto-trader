@@ -36,27 +36,6 @@ let getOrderBook = () => {
     });
 };
 
-
-let getProductTicker = () => {
-    return new Promise(function(resolve, reject) {
-        publicClient.getProductTicker(conf.productType)
-            .then(data => {
-                if (conf.logLvl >= 3) {
-                    Logger.log("Product Ticker:");
-                    Logger.log(data);
-                }
-                gb.currentMarketPrice = Number(data.price);
-                resolve();
-            })
-            .catch(error => {
-                //TODO handle error
-                gb.errorCount++;
-                if (conf.logLvl >= 4) Logger.log(error);
-                reject()
-            });
-    });
-};
-
 let getTradeHistory = () => {
     return new Promise(function(resolve, reject) {
         publicClient.getProductTrades(conf.productType, { limit: conf.tradeHistorySize })
@@ -66,10 +45,11 @@ let getTradeHistory = () => {
                     Logger.log(data);
                     Logger.log("\n");
                 }
+
                 gb.tradeHistory = data;
                 gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
                 gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
-                //Logger.log('   !! Current Market Price from Histoy: ' + gb.tradeHistory[0].price);
+                gb.currentMarketPrice = Number(data[0].price);
 
                 if (conf.logLvl >= 2) {
                     Logger.log('Current Buyers: ' + gb.currentBuyers);
@@ -148,7 +128,6 @@ let checkFills = () => {
 let askForInfo = () => {
     return Promise.all([
         getOrderBook(),
-        getProductTicker(),
         getTradeHistory()
     ])
 };
