@@ -171,7 +171,10 @@ let doTrade = () => {
             setPollingInterval(getMeanTradeFrequency());
         }
     }, err => {
-        console.log(err);
+        //TODO handle error
+        gb.errorCount++;
+        if (conf.logLvl >= 4) Logger.log(err);
+
     });
 };
 

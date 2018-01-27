@@ -42,7 +42,10 @@ const findStartingPoint = () => {
 
 const findStartingPoint2 = () => {
     if (isStarting) {
-        gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
+        improvedAverage = (gb.bidsAverage + gb.currentMarketPrice) / 2;
+        if (conf.logLvl >= 2) Logger.log("Improved Average: " + improvedAverage);
+        
+        gb.lastSellPrice = improvedAverage; //This is only to give a starting point
         isStarting=false;
     }
 };
