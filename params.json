@@ -4,9 +4,9 @@
     "investment": 10,
     "orderFillError": 0.2,
     "startDelay": 0,
-    "pollingInterval": 5,
+    "pollingInterval": 2,
     "productType": "ETH-EUR",
     "strategy": "V4",
-    "tradeHistorySize": 7,
+    "tradeHistorySize": 17,
     "logLvl": 2
 }

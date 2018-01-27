@@ -141,6 +141,16 @@ let setPollingInterval = (interval) => {
     gb.nIntervId = setInterval(doTrade, interval * 1000);
 };
 
+let checkForErrors = () => {
+    if (gb.profits <= 0) {
+        Logger.log("\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
+        clearInterval(gb.nIntervId);
+    }
+    if (gb.errorCount > conf.errorTolerance || gb.errorCount > gb.iteration) {
+        Logger.log("\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
+        clearInterval(gb.nIntervId);
+    }
+};
 
 //******************* MAIN ********************//
 let doTrade = () => {
@@ -149,23 +159,16 @@ let doTrade = () => {
     if (conf.logLvl >= 2) Logger.log("Asking for info at: " + new Date());
 
     askForInfo().then(() => {
-
         if (conf.logLvl >= 2) Logger.log("Info received at:   " + new Date());
         checkFills();
         applyStrategy();
 
-        if (getMeanTradeFrequency() > 3) {
-            setPollingInterval(getMeanTradeFrequency());
-        }
-
         if (conf.logLvl >= 1) Logger.printReport();
-        if (gb.profits <= 0) {
-            Logger.log("\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
-            clearInterval(gb.nIntervId);
-        }
-        if (gb.errorCount > conf.errorTolerance || gb.errorCount > gb.iteration) {
-            Logger.log("\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
-            clearInterval(gb.nIntervId);
+
+        checkForErrors();
+
+        if (getMeanTradeFrequency() > conf.pollingInterval) {
+            setPollingInterval(getMeanTradeFrequency());
         }
     }, err => {
         console.log(err);
