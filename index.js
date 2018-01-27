@@ -60,7 +60,7 @@ let getProductTicker = () => {
 
 let getTradeHistory = () => {
     return new Promise(function(resolve, reject) {
-        publicClient.getProductTrades(conf.productType, { limit: conf.tradeSampleSize })
+        publicClient.getProductTrades(conf.productType, { limit: conf.tradeHistorySize })
             .then(data => {
                 if (conf.logLvl >= 3) {
                     Logger.log("Trade History:");
