@@ -72,7 +72,8 @@ let getAverage = (items) => {
         //"item": [ price, size, num-orders ] 
         return accumulator + parseInt(item[0]);
     }, 0);
-    return sumItems / items.length;
+    console.log("Average: " + sumItems / items.length);
+    return Number(sumItems / items.length);
 };
 
 let getMeanTradeFrequency = () => {
