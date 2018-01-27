@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "gdax": "*"
+    "gdax": "*",
+    "tracer": "*"
   },
   "scripts": {
     "start": "node index.js"
