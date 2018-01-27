@@ -54,7 +54,7 @@ let getTradeHistory = () => {
                 if (conf.logLvl >= 2) {
                     Logger.log('Current Buyers: ' + gb.currentBuyers);
                     Logger.log('Current Sellers: ' + gb.currentSellers);
-                    Logger.log('   !! Current Market Price from Histoy: ' + data[0].price);
+                    Logger.log('Current Market Price from History: ' + data[0].price);
                 }
                 resolve();
             })
