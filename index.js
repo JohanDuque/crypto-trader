@@ -68,12 +68,13 @@ let getTradeHistory = () => {
                     Logger.log("\n");
                 }
                 gb.tradeHistory = data;
-                gb.lastSellers = data.filter(data => data.side === conf.BUY).length;
-                gb.lastBuyers = data.filter(data => data.side === conf.SELL).length;
+                gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
+                gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
 
                 if (conf.logLvl >= 2) {
-                    Logger.log('Current Buyers: ' + gb.lastBuyers);
-                    Logger.log('Current Sellers: ' + gb.lastSellers);
+                  Logger.log('Current Buyers: ' + gb.currentBuyers);
+                  Logger.log('Current Sellers: ' + gb.currentSellers);
+                  Logger.log('   !! Current Market Price from Histoy: ' + data[0].price);
                 }
                 resolve();
             })
@@ -87,12 +88,32 @@ let getTradeHistory = () => {
 };
 
 let getAverage = (items) => {
-    var sumItems = items.reduce((accumulator, item) => {
+    let sumItems = items.reduce((accumulator, item) => {
         //"item": [ price, size, num-orders ] 
         return accumulator + parseInt(item[0]);
     }, 0);
     return sumItems / items.length;
 };
+
+let getMeanTradeFrequency = () => {
+    let deltas = gb.tradeHistory.map((trade, index, tradeHistory) => {
+        if (tradeHistory[index + 1]) {
+            const date1 = new Date(trade.time).getTime();
+            const date2 = new Date(tradeHistory[index + 1].time).getTime();
+
+            return (date1 - date2) / 1000;
+        } else {
+            return 0;
+        }
+    });
+    deltas.splice(-1, 1); //I remove last delta since is 0
+    let meanTradeFrequency = deltas.reduce((accumulator, item) => {
+        return accumulator + item;
+    }, 0) / deltas.length;
+
+    return meanTradeFrequency;
+};
+
 
 let checkFills = () => {
     let wasItFilled = undefined;
@@ -138,37 +159,43 @@ let applyStrategy = () => { strategy.apply() };
 let doTrade = () => {
     gb.iteration++;
 
-    checkFills();
-    applyStrategy();
     askForInfo().then(() => {
-
-        if (conf.logLvl >= 1) Logger.printReport();
-
-        if (gb.profits <= 0) {
-            Logger.log("\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
-            clearInterval(gb.nIntervId);
-        }
-
-        if (gb.errorCount > conf.errorTolerance || gb.errorCount > gb.iteration) {
-            Logger.log("\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
-            clearInterval(gb.nIntervId);
-        }
+      checkFills();
+      applyStrategy();
+      if (getMeanTradeFrequency() > 3) {
+        setPollingInterval(getMeanTradeFrequency());
+      }
+      if (conf.logLvl >= 1) Logger.printReport();
+      if (gb.profits <= 0) {
+        Logger.log("\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
+        clearInterval(gb.nIntervId);
+      }
+      if (gb.errorCount > conf.errorTolerance || gb.errorCount > gb.iteration) {
+        Logger.log("\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
+        clearInterval(gb.nIntervId);
+      }
     }, err => {
-        console.log(err);
-
+      console.log(err);
     });
 };
 
+let setPollingInterval = (interval) => {
+    if (conf.logLvl >= 2) Logger.log("Setting Polling Iterval to " + interval + " seconds.");
+
+    clearInterval(gb.nIntervId);
+    gb.nIntervId = setInterval(doTrade, interval * 1000);
+}
+
+
 askForInfo().then(() => {
+  Logger.log("Start Time: " + conf.startTime);
+  Logger.log("Trading will start in " + conf.startDelay * conf.pollingInterval + " seconds...");
 
-        Logger.log("Start Time: " + conf.startTime);
-        Logger.log("Trading will start in " + conf.startDelay * conf.pollingInterval + " seconds...");
-
-        setTimeout(() => {
-            Logger.log("Let's make Money!");
-            gb.nIntervId = setInterval(doTrade, conf.pollingInterval * 1000);
-        }, conf.startDelay * 1000);
-    },
-    err => {
-        console.log(err);
-    });
+  setTimeout(() => {
+    Logger.log("Let's make Money!");
+      gb.nIntervId = setInterval(doTrade, conf.pollingInterval * 1000);
+    }, conf.startDelay * 1000);
+ },
+ err => {
+  console.log(err);
+});

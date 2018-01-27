@@ -5,11 +5,11 @@ const Logger = require('../Logger');
 
 module.exports = class Strategy_V1 {
     static apply() {
-        if (gb.lastSellers > gb.lastBuyers && gb.lastAction !== conf.BUY && gb.lastSellPrice >= gb.bidsAverage && gb.lastOrderWasFilled) {
+        if (gb.currentSellers > gb.currentBuyers && gb.lastAction !== conf.BUY && gb.lastSellPrice >= gb.bidsAverage && gb.lastOrderWasFilled) {
             trader.doBuy(gb.bidsAverage);
             gb.lastOrderWasFilled = false;
         }
-        if (gb.lastBuyers > gb.lastSellers && gb.lastAction !== conf.SELL && gb.asksAverage > gb.lastBuyPrice && gb.lastOrderWasFilled) {
+        if (gb.currentBuyers > gb.currentSellers && gb.lastAction !== conf.SELL && gb.asksAverage > gb.lastBuyPrice && gb.lastOrderWasFilled) {
             trader.doSell(gb.asksAverage);
             gb.lastOrderWasFilled = false;
         }

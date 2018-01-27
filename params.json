@@ -3,10 +3,10 @@
     "errorTolerance": 300,
     "investment": 10,
     "orderFillError": 0.5,
-    "startDelay": 2,
+    "startDelay": 0,
     "pollingInterval": 5,
     "productType": "ETH-EUR",
     "strategy": "V4",
-    "tradeSampleSize": 13,
+    "tradeHistorySize": 15,
     "logLvl": 2
 }
