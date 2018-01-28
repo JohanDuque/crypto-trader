@@ -9,7 +9,7 @@ const gb = require('./GlobalVariables');
         count: 4        // keep 3 back copies
     }]});*/
 
-var logger = require('tracer').dailyfile({root:'./logs', maxLogFiles: 10, allLogsFileName: Conf.traderId});
+var logger = require('tracer').dailyfile({root:'./logs', maxLogFiles: 10, allLogsFileName: Conf.traderId+"@"});
  
 
 module.exports = class Logger {
