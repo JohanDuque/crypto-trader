@@ -7,7 +7,7 @@ module.exports = class Logger {
     }
 
     static printReport() {
-        if (Conf.logLvl > 0) {
+        if (Conf.logLvl >= 0) {
             this.log("-------------------------------------------------------------");
             this.log("  "+new Date()+"   "+"Iteration #"+gb.iteration);
             this.log("  Trader# " + Conf.traderId + "        Errors: " + gb.errorCount);
