@@ -12,8 +12,10 @@ class Trader {
             gb.lastBuyPrice === 0;
     };
 
-    areBuyersTwiceSellers() { return gb.currentBuyers / gb.currentSellers > 2; };
-    areSellersTwiceBuyers() { return gb.currentSellers / gb.currentBuyers > 2; };
+    isRatioIncreasing() { return gb.currentIterationRatio > gb.lastIterationRatio }
+
+    areBuyersTwiceSellers() { return gb.currentBuyers / gb.currentSellers > 2; }
+    areSellersTwiceBuyers() { return gb.currentSellers / gb.currentBuyers > 2; }
 
     placeSellOrder(price) {
         gb.sellOrders++;
@@ -24,7 +26,11 @@ class Trader {
 
         Logger.log(1, "\n+++++ Placing Sell Order at: " + price + "(" + conf.toCurrency + ") +++++ Sell Orders: " + gb.sellOrders);
         Logger.printReport();
-    };
+    }
+
+    placeSellOrderAtCurrentMarketPrice() {
+        this.placeSellOrder(gb.currentMarketPrice);
+    }
 
     placeBuyOrder(price) {
         gb.buyOrders++;
@@ -35,7 +41,11 @@ class Trader {
 
         Logger.log(1, "\n----- Placing Buy Order at: " + price + "(" + conf.toCurrency + ") ----- Buy Orders: " + gb.buyOrders);
         Logger.printReport();
-    };
+    }
+
+    placeBuyOrderAtCurrentMarketPrice() {
+        this.placeBuyOrder(gb.currentMarketPrice);
+    }
 
     removeLastSellOrder() {
         gb.sellOrders--;
@@ -46,7 +56,7 @@ class Trader {
         Logger.log(1, "\n----- Removing Last SELL Order ----");
         Logger.printReport();
 
-    };
+    }
 
     removeLastBuyOrder() {
         gb.buyOrders--;
@@ -56,17 +66,17 @@ class Trader {
 
         Logger.log(1, "\n+++++ Removing Last BUY Order ----");
         Logger.printReport();
-    };
+    }
 
-    improveSellAverage() { return (gb.asksAverage + gb.currentMarketPrice) / 2; };
-    improveBuyAverage() { return (gb.bidsAverage + gb.currentMarketPrice) / 2; };
+    improveSellAverage() { return (gb.asksAverage + gb.currentMarketPrice) / 2; }
+    improveBuyAverage() { return (gb.bidsAverage + gb.currentMarketPrice) / 2; }
 
-    placeImprovedSellOrder() { this.placeSellOrder(this.improveSellAverage()); };
-    placeImprovedBuyOrder() { this.placeBuyOrder(this.improveBuyAverage()); };
+    placeImprovedSellOrder() { this.placeSellOrder(this.improveSellAverage()); }
+    placeImprovedBuyOrder() { this.placeBuyOrder(this.improveBuyAverage()); }
 
     calculateTransactionAmount(price) {
         return price * conf.orderSize;
-    };
+    }
 }
 
 module.exports = new Trader();
