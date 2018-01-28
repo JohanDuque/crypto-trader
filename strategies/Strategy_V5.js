@@ -12,7 +12,7 @@ let isStarting = gb.sellOrders === gb.buyOrders &&
 module.exports = class Strategy_V5 {
     static apply() {
         let areBuyersTwiceSellers = gb.currentBuyers / gb.currentSellers > 2;
-        let areSellersTwiceSellers = gb.currentSellers / gb.currentBuyers > 2;
+        let areSellersTwiceBuyers = gb.currentSellers / gb.currentBuyers > 2;
 
         let improveSellAverage = () => { return (gb.asksAverage + gb.currentMarketPrice) / 2; };
         let improveBuyAverage = () => { return (gb.bidsAverage + gb.currentMarketPrice) / 2; };
@@ -38,7 +38,7 @@ module.exports = class Strategy_V5 {
             }
 
             //While market is constantly going DOWN...
-            if (areSellersTwiceSellers) {
+            if (areSellersTwiceBuyers) {
                 if (gb.lastAction !== conf.SELL) {
                     Logger.log(1, "  >> Market is going DOWN fast, I will wait to SELL");
                     return;
@@ -79,7 +79,7 @@ module.exports = class Strategy_V5 {
             }
 
             //While market is constantly going DOWN...
-            if (areSellersTwiceSellers) {
+            if (areSellersTwiceBuyers) {
                 if (gb.lastAction === conf.BUY) {
                     Logger.log(1, "  >> Market keeps constantly going DOWN");
                     Logger.log(1, "I'm replacing last BUY order Lower!");
