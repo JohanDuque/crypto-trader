@@ -81,7 +81,7 @@ module.exports = class Strategy_V6 {
                     trader.placeImprovedBuyOrder();
                 } else { // I'm trying to SELL
                     if (gb.lastBuyPrice > gb.currentMarketPrice) {
-                        Logger.log(1, "  >> Market keeps constantly going DOWN fast, I will gotta SELL now!");
+                        Logger.log(1, "  >> Market keeps constantly going DOWN fast, I'm going to SELL now!");
                         trader.removeLastSellOrder();
                         trader.placeSellOrderAtCurrentMarketPrice();
                         return;
