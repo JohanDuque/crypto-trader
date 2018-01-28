@@ -43,6 +43,7 @@ class GdaxManager {
         return new Promise(function(resolve, reject) {
             publicClient.getProductTrades(conf.productType, { limit: conf.tradeHistorySize })
                 .then(data => {
+                    gb.lastIterationRatio = gb.currentBuyers/gb.currentSellers ? gb.currentBuyers/gb.currentSellers : 0;
 
                     Logger.log(3, "Trade History:\n" + data + "\n");
 
@@ -54,6 +55,10 @@ class GdaxManager {
                     Logger.log(2, 'Current Buyers: ' + gb.currentBuyers);
                     Logger.log(2, 'Current Sellers: ' + gb.currentSellers);
                     Logger.log(2, 'Current Market Price: ' + data[0].price);
+
+                    gb.currentIterationRatio = gb.currentBuyers / gb.currentSellers;
+                    Logger.log(2, 'Last Iteration Ratio (Buyers/Sellers): ' + gb.lastIterationRatio);
+                    Logger.log(2, 'Current Iteration Ratio (Buyers/Sellers): ' + gb.currentIterationRatio);
 
                     resolve();
                 })

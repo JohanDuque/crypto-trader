@@ -19,6 +19,8 @@ class GlobalVariables {
         this.lastOrderWasFilled = true;
         this.fills = 0;
         this.tradeHistory= null;
+        this.lastIterationRatio = 0; //buyers/sellers
+        this.currentIterationRatio = 0; //buyers/sellers
     }
 }
 
