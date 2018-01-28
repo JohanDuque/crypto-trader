@@ -12,7 +12,7 @@ class Trader {
             gb.lastBuyPrice === 0;
     };
 
-    isRatioIncreasing() { return gb.currentIterationRatio > gb.lastIterationRatio }
+    isRatioIncreasing() { return gb.currentMarketRatio > gb.lastMarketRatio }
 
     areBuyersTwiceSellers() { return gb.currentBuyers / gb.currentSellers > 2; }
     areSellersTwiceBuyers() { return gb.currentSellers / gb.currentBuyers > 2; }
