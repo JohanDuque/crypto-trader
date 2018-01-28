@@ -21,18 +21,14 @@ module.exports = class Logger {
         }
     }
 
-    static log(msg) {
-        this.log(0, msg);
-    }
-
     static printReport() {
-        this.log("-------------------------------------------------------------");
-        this.log("  " + new Date() + "   " + "Iteration #" + gb.iteration);
-        this.log("  Trader# " + Conf.traderId + "        Errors: " + gb.errorCount);
-        this.log("\n  Last Buy Order : " + gb.lastBuyPrice + "(" + Conf.toCurrency + ")        Buy Orders: " + gb.buyOrders);
-        this.log("  Last Sell Order: " + gb.lastSellPrice + "(" + Conf.toCurrency + ")       Sell Orders: " + gb.sellOrders);
-        this.log("  Profits        : " + gb.profits + "(" + Conf.toCurrency + ")   Filled Orders: " + gb.fills);
-        this.log("  Current price  : " + gb.currentMarketPrice + "(" + Conf.toCurrency + ")");
-        this.log("-------------------------------------------------------------");
+        this.log(0, "-------------------------------------------------------------");
+        this.log(0, "  " + new Date() + "   " + "Iteration #" + gb.iteration);
+        this.log(0, "  Trader# " + Conf.traderId + "        Errors: " + gb.errorCount);
+        this.log(0, "\n  Last Buy Order : " + gb.lastBuyPrice + "(" + Conf.toCurrency + ")        Buy Orders: " + gb.buyOrders);
+        this.log(0, "  Last Sell Order: " + gb.lastSellPrice + "(" + Conf.toCurrency + ")       Sell Orders: " + gb.sellOrders);
+        this.log(0, "  Profits        : " + gb.profits + "(" + Conf.toCurrency + ")   Filled Orders: " + gb.fills);
+        this.log(0, "  Current price  : " + gb.currentMarketPrice + "(" + Conf.toCurrency + ")");
+        this.log(0, "-------------------------------------------------------------");
     }
 }
