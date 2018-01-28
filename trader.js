@@ -10,8 +10,8 @@ class Trader {
         gb.profits += this.calculateTransactionAmount(price);
         gb.lastOrderWasFilled = false;
 
-        if (conf.logLvl >= 1) Logger.log("\n+++++ Placing Sell Order at: " + price + "(" + conf.toCurrency + ") +++++ Sell Orders: " + gb.sellOrders);
-        if (conf.logLvl >= 0) Logger.printReport();
+        Logger.log(1, "\n+++++ Placing Sell Order at: " + price + "(" + conf.toCurrency + ") +++++ Sell Orders: " + gb.sellOrders);
+        Logger.printReport();
     };
 
     placeBuyOrder(price) {
@@ -21,8 +21,8 @@ class Trader {
         gb.profits -= this.calculateTransactionAmount(price);
         gb.lastOrderWasFilled = false;
 
-        if (conf.logLvl >= 1) Logger.log("\n----- Placing Buy Order at: " + price + "(" + conf.toCurrency + ") ----- Buy Orders: " + gb.buyOrders);
-        if (conf.logLvl >= 0) Logger.printReport();
+        Logger.log(1, "\n----- Placing Buy Order at: " + price + "(" + conf.toCurrency + ") ----- Buy Orders: " + gb.buyOrders);
+        Logger.printReport();
     };
 
     removeLastSellOrder() {
@@ -31,8 +31,8 @@ class Trader {
         gb.profits -= this.calculateTransactionAmount(gb.lastSellPrice);
         gb.lastOrderWasFilled = true;
 
-        if (conf.logLvl >= 1) Logger.log("\n----- Removing Last SELL Order ----");
-        if (conf.logLvl >= 0) Logger.printReport();
+        Logger.log(1, "\n----- Removing Last SELL Order ----");
+        Logger.printReport();
 
     };
 
@@ -42,8 +42,8 @@ class Trader {
         gb.profits += this.calculateTransactionAmount(gb.lastBuyPrice);
         gb.lastOrderWasFilled = false;
 
-        if (conf.logLvl >= 1) Logger.log("\n+++++ Removing Last BUY Order ----");
-        if (conf.logLvl >= 0) Logger.printReport();
+        Logger.log(1, "\n+++++ Removing Last BUY Order ----");
+        Logger.printReport();
     };
 
     calculateTransactionAmount(price) {

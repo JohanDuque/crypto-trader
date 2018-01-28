@@ -13,12 +13,14 @@ let checkFills = () => {
         if (gb.lastAction === conf.BUY) {
             wasItFilled = gb.tradeHistory.find((trade) => {
                 //return (gb.lastBuyPrice - trade.price) > 0 || Math.abs(gb.lastBuyPrice - trade.price) <= conf.orderFillError
-                return (gb.lastBuyPrice - trade.price) > 0 });
+                return (gb.lastBuyPrice - trade.price) > 0
+            });
 
         } else { //gb.lastAction === sell
             wasItFilled = gb.tradeHistory.find((trade) => {
                 //return (gb.lastSellPrice - trade.price) <= 0 || Math.abs(gb.lastSellPrice - data.price) <= conf.orderFillError
-                return (gb.lastSellPrice - trade.price) < 0 });
+                return (gb.lastSellPrice - trade.price) < 0
+            });
         }
 
         gb.lastOrderWasFilled = wasItFilled !== undefined;
@@ -27,12 +29,6 @@ let checkFills = () => {
             gb.fills++;
             Logger.printReport();
         };
-
-        if (conf.logLvl >= 3) {
-            Logger.log("Possible Fills from History:");
-            Logger.log(filteredArray);
-            Logger.log("\n");
-        }
     }
 };
 
@@ -46,7 +42,7 @@ let askForInfo = () => {
 let applyStrategy = () => { strategy.apply() };
 
 let setPollingInterval = (interval) => {
-    if (conf.logLvl >= 2) Logger.log("Setting Polling Iterval to " + interval + " seconds.");
+    Logger.log(2, "Setting Polling Iterval to " + interval + " seconds.");
 
     clearInterval(gb.nIntervId);
     gb.nIntervId = setInterval(doTrade, interval * 1000);
@@ -86,10 +82,10 @@ let getMeanTradeFrequency = () => {
 let doTrade = () => {
     gb.iteration++;
 
-    if (conf.logLvl >= 2) Logger.log("\nAsking for info at: " + new Date());
+    Logger.log(2, "\nAsking for info at: " + new Date());
 
     askForInfo().then(() => {
-        if (conf.logLvl >= 2) Logger.log("Info received at:   " + new Date() +"\n");
+        Logger.log(2, "Info received at:   " + new Date() + "\n");
         checkFills();
         applyStrategy();
 
@@ -103,7 +99,7 @@ let doTrade = () => {
     }, err => {
         //TODO handle error
         gb.errorCount++;
-        if (conf.logLvl >= 4) Logger.log(err);
+        Logger.log(4, err);
     });
 };
 

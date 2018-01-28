@@ -9,17 +9,20 @@ const gb = require('./GlobalVariables');
         count: 4        // keep 3 back copies
     }]});*/
 
-var logger = require('tracer').dailyfile({root:'./logs', maxLogFiles: 10, allLogsFileName: Conf.traderId+"@"});
- 
+var logger = require('tracer').dailyfile({ root: './logs', maxLogFiles: 10, allLogsFileName: Conf.traderId + "@" });
 
 module.exports = class Logger {
-    static log(msg) {
-        
-        console.log(msg);
-        
-        if(Conf.logOnFile){
+    static log(lvl, msg) {
+
+        if (Conf.logLvl >= lvl) console.log(msg);
+
+        if (Conf.logOnFile) {
             logger.info(msg);
         }
+    }
+
+    static log(msg) {
+        this.log(0, msg);
     }
 
     static printReport() {

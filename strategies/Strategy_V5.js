@@ -22,12 +22,12 @@ module.exports = class Strategy_V5 {
             //While market is constantly going UP...
             if (isMarketGoingUPFast) {
                 if (gb.lastAction !== conf.BUY) {
-                    if (conf.logLvl >= 1) Logger.log("  >> Market is constantly going UP, I'm buying!");
+                    Logger.log(1, "  >> Market is constantly going UP, I'm buying!");
                     trader.placeBuyOrder(gb.currentMarketPrice);
                     return;
                 } else {
                     improvedAverage = improveAverage(gb.asksAverage);
-                    if (conf.logLvl >= 1) Logger.log("Improved Average: " + improvedAverage);
+                    Logger.log(1, "  >> Market is constantly going UP, I'm SELLING at Improved average: " +improvedAverage);
                     trader.placeSellOrder(improvedAverage);
                     return;
                 }
@@ -37,14 +37,14 @@ module.exports = class Strategy_V5 {
             //While market is constantly going DOWN...
             if (isMarketGoingDOWNfast) {
                 if (gb.lastAction !== conf.SELL) {
-                    if (conf.logLvl >= 1) Logger.log("  >> Market is going DOWN fast, I will wait to SELL");
+                    Logger.log(1, "  >> Market is going DOWN fast, I will wait to SELL");
                     return;
                 }
             }
 
             if (gb.lastAction !== conf.BUY && gb.lastSellPrice >= gb.currentMarketPrice) {
                 improvedAverage = improveAverage(gb.bidsAverage);
-                if (conf.logLvl >= 1) Logger.log("Improved Average: " + improvedAverage);
+                Logger.log(1, "Improved Average to Buy: " + improvedAverage);
 
                 trader.placeBuyOrder(improvedAverage);
                 return;
@@ -52,7 +52,7 @@ module.exports = class Strategy_V5 {
 
             if (gb.lastAction !== conf.SELL && gb.lastBuyPrice < gb.currentMarketPrice) {
                 improvedAverage = improveAverage(gb.asksAverage);
-                if (conf.logLvl >= 1) Logger.log("Improved Average: " + improvedAverage);
+                Logger.log(1, "Improved Average to Sell: " + improvedAverage);
                 trader.placeSellOrder(improvedAverage);
                 return;
             }
@@ -62,8 +62,8 @@ module.exports = class Strategy_V5 {
                 if (gb.lastAction === conf.BUY) {
                     improvedAverage = improveAverage(gb.bidsAverage);
                     if (improvedAverage > gv.lastBuyPrice) {
-                        if (conf.logLvl >= 1) Logger.log("  >> Market keeps constantly going UP");
-                        if (conf.logLvl >= 1) Logger.log("I'm replacing last BUY order Higher at Improved Average: " + improvedAverage);
+                        Logger.log(1, "  >> Market keeps constantly going UP");
+                        Logger.log(1, "I'm replacing last BUY order Higher at Improved Average: " + improvedAverage);
                         trader.removeLastBuyOrder();
                         trader.placeBuyOrder(improvedAverage);
                         return;
@@ -71,8 +71,8 @@ module.exports = class Strategy_V5 {
                 } else { //lastAction === conf.SELL
                     improvedAverage = improveAverage(gb.asksAverage);
                     if (improvedAverage > gb.lastSellPrice) {
-                        if (conf.logLvl >= 1) Logger.log("  >> Market keeps constantly going UP");
-                        if (conf.logLvl >= 1) Logger.log("I'm replacing last SELL order Higher at Improved Average: " + improvedAverage);
+                        Logger.log(1, "  >> Market keeps constantly going UP");
+                        Logger.log(1, "I'm replacing last SELL order Higher at Improved Average: " + improvedAverage);
                         trader.removeLastSellOrder();
                         trader.placeSellOrder(improvedAverage);
                         return;
@@ -83,14 +83,14 @@ module.exports = class Strategy_V5 {
             //While market is constantly going DOWN...
             if (isMarketGoingDOWNfast) {
                 if (gb.lastAction === conf.BUY) {
-                    if (conf.logLvl >= 1) Logger.log("  >> Market keeps constantly going DOWN");
-                    if (conf.logLvl >= 1) Logger.log("I'm replacing last BUY order Lower!");
+                    Logger.log(1, "  >> Market keeps constantly going DOWN");
+                    Logger.log(1, "I'm replacing last BUY order Lower!");
                     trader.removeLastBuyOrder();
                     trader.placeBuyOrder(gb.currentMarketPrice);
                     return;
                 } else { //lastAction === conf.SELL
-                    if (conf.logLvl >= 1) Logger.log("  >> Market keeps constantly going DOWN");
-                    if (conf.logLvl >= 1) Logger.log("I'm replacing last SELL order Lower!");
+                    Logger.log(1, "  >> Market keeps constantly going DOWN");
+                    Logger.log(1, "I'm replacing last SELL order Lower!");
                     trader.removeLastSellOrder();
                     trader.placeSellOrder(gb.currentMarketPrice);
                     return;
