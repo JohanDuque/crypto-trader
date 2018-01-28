@@ -86,9 +86,21 @@ module.exports = class Strategy_V6 {
                         trader.placeSellOrderAtCurrentMarketPrice();
                         return;
                     }
-                    Logger.log(1, "   ....  At this point I'm probably loosong money ");
+                    Logger.log(1, "   ....  At this point I'm probably loosing money ");
                 }
-                return;
+            }
+
+            //While market is constantly going DOWN...
+            if (gb.currenSellers > gb.currentBuyers && !trader.isRatioIncreasing()) {
+                if (gb.lastAction === conf.SELL) {
+                    Logger.log(1, "  >> Market is going down apparenly slowly..");
+                    if (gb.lastBuyPrice > gb.currentMarketPrice) {
+                        Logger.log(1, "  >> I will SELL now!");
+                        trader.removeLastSellOrder();
+                        trader.placeSellOrderAtCurrentMarketPrice();
+                        return;
+                    }
+                }
             }
         }
     }

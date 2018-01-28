@@ -54,8 +54,6 @@ class Trader {
         gb.lastOrderWasFilled = true;
 
         Logger.log(1, "\n----- Removing Last SELL Order ----");
-        Logger.printReport();
-
     }
 
     removeLastBuyOrder() {
@@ -65,7 +63,6 @@ class Trader {
         gb.lastOrderWasFilled = false;
 
         Logger.log(1, "\n+++++ Removing Last BUY Order ----");
-        Logger.printReport();
     }
 
     improveSellAverage() { return (gb.asksAverage + gb.currentMarketPrice) / 2; }

@@ -4,16 +4,25 @@ const Logger = require('./Logger');
 
 const Gdax = require('gdax');
 const publicClient = new Gdax.PublicClient();
+let marketRatioTrend = [1, 1, 1, 1, 1];
 
 class GdaxManager {
-
     getAverage(items) {
         let sumItems = items.reduce((accumulator, item) => {
             //"item": [ price, size, num-orders ] 
             return accumulator + parseInt(item[0]);
         }, 0);
         return sumItems / items.length;
-    };
+    }
+
+    calculateMarketTrend() {
+        marketRatioTrend.splice(0, 0, gb.currentIterationRatio);
+        if (marketRatioTrend.length > 5) {
+            marketRatioTrend.length = 5;
+        }
+        Logger.log(1, "MarketTrendList: ");
+        Logger.log(1, marketRatioTrend);
+    }
 
     getOrderBook() {
         var me = this;
@@ -37,13 +46,14 @@ class GdaxManager {
                     reject();
                 });
         });
-    };
+    }
 
     getTradeHistory() {
+        var me = this;
         return new Promise(function(resolve, reject) {
             publicClient.getProductTrades(conf.productType, { limit: conf.tradeHistorySize })
                 .then(data => {
-                    gb.lastIterationRatio = gb.currentBuyers/gb.currentSellers ? gb.currentBuyers/gb.currentSellers : 0;
+                    gb.lastIterationRatio = gb.currentIterationRatio ? gb.currentIterationRatio : 1;
 
                     Logger.log(3, "Trade History:\n" + data + "\n");
 
@@ -52,13 +62,15 @@ class GdaxManager {
                     gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
                     gb.currentMarketPrice = Number(data[0].price);
 
-                    Logger.log(2, 'Current Buyers: ' + gb.currentBuyers);
-                    Logger.log(2, 'Current Sellers: ' + gb.currentSellers);
+                    Logger.log(1, 'Current Buyers: ' + gb.currentBuyers);
+                    Logger.log(1, 'Current Sellers: ' + gb.currentSellers);
                     Logger.log(2, 'Current Market Price: ' + data[0].price);
 
-                    gb.currentIterationRatio = gb.currentBuyers / gb.currentSellers;
-                    Logger.log(2, 'Last Iteration Ratio (Buyers/Sellers): ' + gb.lastIterationRatio);
-                    Logger.log(2, 'Current Iteration Ratio (Buyers/Sellers): ' + gb.currentIterationRatio);
+                    gb.currentIterationRatio = gb.currentSellers ? (gb.currentBuyers / gb.currentSellers) : gb.currentBuyers;
+                    Logger.log(1, 'Last Iteration Ratio (Buyers/Sellers): ' + gb.lastIterationRatio);
+                    Logger.log(1, 'Current Iteration Ratio (Buyers/Sellers): ' + gb.currentIterationRatio);
+
+                    me.calculateMarketTrend();
 
                     resolve();
                 })
@@ -69,7 +81,7 @@ class GdaxManager {
                     reject();
                 });
         });
-    };
+    }
 }
 
 module.exports = new GdaxManager();
