@@ -14,8 +14,8 @@ module.exports = class Strategy_V5 {
         let areBuyersTwiceSellers = gb.currentBuyers / gb.currentSellers > 2;
         let areSellersTwiceSellers = gb.currentSellers / gb.currentBuyers > 2;
 
-        let improveSellAverage = () => { return gb.asksAverage + gb.currentMarketPrice / 2; };
-        let improveBuyAverage = () => { return gb.bidsAverage+ gb.currentMarketPrice / 2; };
+        let improveSellAverage = () => { return (gb.asksAverage + gb.currentMarketPrice) / 2; };
+        let improveBuyAverage = () => { return (gb.bidsAverage + gb.currentMarketPrice) / 2; };
 
         let placeImprovedSellOrder = () => { return placeSellOrder(improveSellAverage()); };
         let placeImprovedBuyOrder = () => { return placeBuyOrder(improveBuyAverage()); };
@@ -29,8 +29,10 @@ module.exports = class Strategy_V5 {
                     trader.placeBuyOrder(gb.currentMarketPrice);
                     return;
                 } else {
-                    Logger.log(1, "  >> Market is constantly going UP, I'm SELLING at Improved average: " + improveSellAverage());
-                    placeImprovedSellOrder();
+                    if (gb.currentMarketPrice > gb.lastSellPrice) {
+                        Logger.log(1, "  >> Market is constantly going UP, I'm SELLING at Improved average: " + improveSellAverage());
+                        placeImprovedSellOrder();
+                    }
                     return;
                 }
             }
@@ -66,7 +68,7 @@ module.exports = class Strategy_V5 {
                         return;
                     }
                 } else { //lastAction === conf.SELL
-                    if (improveSellAverage > gb.lastSellPrice) {
+                    if (improveSellAverage() > gb.lastSellPrice) {
                         Logger.log(1, "  >> Market keeps constantly going UP");
                         Logger.log(1, "I'm replacing last SELL order Higher at Improved Average: " + improveSellAverage());
                         trader.removeLastSellOrder();
