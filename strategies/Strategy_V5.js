@@ -5,41 +5,24 @@ const Logger = require('../Logger');
 
 module.exports = class Strategy_V5 {
     static apply() {
-
-        let isFirstTrade = gb.sellOrders === gb.buyOrders &&
-            gb.buyOrders === gb.fills &&
-            gb.fills === gb.lastSellPrice &&
-            gb.lastSellPrice === gb.lastBuyPrice &&
-            gb.lastBuyPrice === 0;
-
-        let areBuyersTwiceSellers = gb.currentBuyers / gb.currentSellers > 2;
-        let areSellersTwiceBuyers = gb.currentSellers / gb.currentBuyers > 2;
-
-        let improveSellAverage = (gb.asksAverage + gb.currentMarketPrice) / 2;
-        let improveBuyAverage = (gb.bidsAverage + gb.currentMarketPrice) / 2;
-
-        let placeImprovedSellOrder = () => { return trader.placeSellOrder(improveSellAverage); };
-        let placeImprovedBuyOrder = () => { return trader.placeBuyOrder(improveBuyAverage); };
-
-
         if (gb.lastOrderWasFilled) {
             //While market is constantly going UP...
-            if (areBuyersTwiceSellers) {
+            if (trader.areBuyersTwiceSellers()) {
                 if (gb.lastAction !== conf.BUY) {
                     Logger.log(1, "  >> Market is constantly going UP, I'm buying!");
                     trader.placeBuyOrder(gb.currentMarketPrice);
                     return;
                 } else {
                     if (gb.currentMarketPrice > gb.lastSellPrice) {
-                        Logger.log(1, "  >> Market is constantly going UP, I'm SELLING at Improved average: " + improveSellAverage);
-                        placeImprovedSellOrder();
+                        Logger.log(1, "  >> Market is constantly going UP, I'm SELLING at Improved average: " + trader.improveSellAverage());
+                        trader.placeImprovedSellOrder();
                     }
                     return;
                 }
             }
 
             //While market is constantly going DOWN...
-            if (areSellersTwiceBuyers) {
+            if (trader.areSellersTwiceBuyers()) {
                 if (gb.lastAction !== conf.SELL) {
                     Logger.log(1, "  >> Market is going DOWN fast, I will wait to SELL");
                     return;
@@ -47,40 +30,40 @@ module.exports = class Strategy_V5 {
             }
 
             if (gb.lastAction !== conf.BUY && gb.lastSellPrice >= gb.currentMarketPrice) {
-                Logger.log(1, "Improved Average to Buy: " + improveBuyAverage);
-                placeImprovedBuyOrder();
+                Logger.log(1, "Improved Average to Buy: " + trader.improveBuyAverage());
+                trader.placeImprovedBuyOrder();
                 return;
             }
 
             if (gb.lastAction !== conf.SELL && gb.lastBuyPrice < gb.currentMarketPrice) {
-                Logger.log(1, "Improved Average to Sell: " + improveSellAverage);
-                placeImprovedSellOrder();
+                Logger.log(1, "Improved Average to Sell: " + trader.improveSellAverage());
+                trader.placeImprovedSellOrder();
                 return;
             }
         } else { //I place an Order that has not been filled yet.
 
-            if (areBuyersTwiceSellers) {
+            if (trader.areBuyersTwiceSellers()) {
                 if (gb.lastAction === conf.BUY) {
-                    if (improveBuyAverage > gv.lastBuyPrice) {
+                    if (trader.improveBuyAverage() > gb.lastBuyPrice) {
                         Logger.log(1, "  >> Market keeps constantly going UP");
-                        Logger.log(1, "I'm replacing last BUY order Higher at Improved Average: " + improveBuyAverage);
+                        Logger.log(1, "I'm replacing last BUY order Higher at Improved Average: " + trader.improveBuyAverage());
                         trader.removeLastBuyOrder();
-                        placeImprovedBuyOrder();
+                        trader.placeImprovedBuyOrder();
                         return;
                     }
                 } else { //lastAction === conf.SELL
-                    if (improveSellAverage > gb.lastSellPrice) {
+                    if (trader.improveSellAverage() > gb.lastSellPrice) {
                         Logger.log(1, "  >> Market keeps constantly going UP");
-                        Logger.log(1, "I'm replacing last SELL order Higher at Improved Average: " + improveSellAverage);
+                        Logger.log(1, "I'm replacing last SELL order Higher at Improved Average: " + trader.improveSellAverage());
                         trader.removeLastSellOrder();
-                        placeImprovedSellOrder();
+                        trader.placeImprovedSellOrder();
                         return;
                     }
                 }
             }
 
             //While market is constantly going DOWN...
-            if (areSellersTwiceBuyers) {
+            if (trader.areSellersTwiceBuyers()) {
                 if (gb.lastAction === conf.BUY) {
                     Logger.log(1, "  >> Market keeps constantly going DOWN");
                     Logger.log(1, "I'm replacing last BUY order Lower!");

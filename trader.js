@@ -3,6 +3,18 @@ const gb = require('./GlobalVariables');
 const Logger = require('./Logger');
 
 class Trader {
+
+    isThisFirstTrade() {
+        return gb.sellOrders === gb.buyOrders &&
+            gb.buyOrders === gb.fills &&
+            gb.fills === gb.lastSellPrice &&
+            gb.lastSellPrice === gb.lastBuyPrice &&
+            gb.lastBuyPrice === 0;
+    };
+
+    areBuyersTwiceSellers() { return gb.currentBuyers / gb.currentSellers > 2; };
+    areSellersTwiceBuyers() { return gb.currentSellers / gb.currentBuyers > 2; };
+
     placeSellOrder(price) {
         gb.sellOrders++;
         gb.lastSellPrice = price;
@@ -45,6 +57,12 @@ class Trader {
         Logger.log(1, "\n+++++ Removing Last BUY Order ----");
         Logger.printReport();
     };
+
+    improveSellAverage() { return (gb.asksAverage + gb.currentMarketPrice) / 2; };
+    improveBuyAverage() { return (gb.bidsAverage + gb.currentMarketPrice) / 2; };
+
+    placeImprovedSellOrder() { this.placeSellOrder(this.improveSellAverage()); };
+    placeImprovedBuyOrder() { this.placeBuyOrder(this.improveBuyAverage()); };
 
     calculateTransactionAmount(price) {
         return price * conf.orderSize;
