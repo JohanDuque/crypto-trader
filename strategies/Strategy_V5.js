@@ -14,18 +14,15 @@ module.exports = class Strategy_V5 {
         let improvedAverage;
 
         let isMarketGoingUPFast = gb.currentBuyers / gb.currentSellers > 2;
-        //let isMarketGoingUPFast = gb.currentBuyers > gb.currentSellers + conf.tradeHistorySize / 4;
         let isMarketGoingDOWNfast = gb.currentSellers / gb.currentBuyers > 2;
-        //let isMarketGoingDOWNfast = gb.currentSellers > gb.currentBuyers + conf.tradeHistorySize / 4;
-        console.log("Aplying strategy, gb.lastOrderWasFilled: " + gb.lastOrderWasFilled);
         
-        let improveAverage =(actionAverage) => { (actionAverage + gb.currentMarketPrice) / 2;}; 
+        let improveAverage =(actionAverage) => { return (actionAverage + gb.currentMarketPrice) / 2;}; 
 
         if (gb.lastOrderWasFilled) {
             //While market is constantly going UP...
             if (isMarketGoingUPFast) {
                 if (gb.lastAction !== conf.BUY) {
-                    console.log("Market is constantly going UP, I'm buying!");
+                    if (conf.logLvl >= 1) Logger.log("  >> Market is constantly going UP, I'm buying!");
                     trader.placeBuyOrder(gb.currentMarketPrice);
                     return;
                 } else {
@@ -40,7 +37,7 @@ module.exports = class Strategy_V5 {
             //While market is constantly going DOWN...
             if (isMarketGoingDOWNfast) {
                 if (gb.lastAction !== conf.SELL) {
-                    console.log("Market is going DOWN fast, I will wait to SELL");
+                    Logger.log("  >> Market is going DOWN fast, I will wait to SELL");
                     return;
                 }
             }
@@ -62,16 +59,14 @@ module.exports = class Strategy_V5 {
         } else { //I place an Order that has not been filled yet.
 
             if (isMarketGoingUPFast) {
-                console.log("Market keeps constantly going UP");
+                if (conf.logLvl >= 1) Logger.log("  >> Market keeps constantly going UP");
                 if (gb.lastAction === conf.BUY) {
 
                     improvedAverage = improveAverage(gb.bidsAverage);
                     if (improvedAverage > gv.lastBuyPrice) {
                         if (conf.logLvl >= 1) Logger.log("I'm replacing last BUY order Higher at Improved Average: " + improvedAverage);
-
-
                         trader.removeBuyOrder();
-                        trader.placeBuyOrder(gb.currentMarketPrice);
+                        trader.placeBuyOrder(improvedAverage);
                         return;
                     }
                 } else { //lastAction === conf.SELL
@@ -80,7 +75,7 @@ module.exports = class Strategy_V5 {
                     if (improvedAverage > gb.lastSellPrice) {
                         if (conf.logLvl >= 1) Logger.log("I'm replacing last SELL order Higher at Improved Average: " + improvedAverage);
                         trader.removeSellOrder();
-                        trader.placeSellOrder(gb.currentMarketPrice);
+                        trader.placeSellOrder(improvedAverage);
                         return;
                     }
                 }
@@ -88,16 +83,16 @@ module.exports = class Strategy_V5 {
 
             //While market is constantly going DOWN...
             if (isMarketGoingDOWNfast) {
-                console.log("Market keeps constantly going DOWN");
+                if (conf.logLvl >= 1) Logger.log("  >> Market keeps constantly going DOWN");
                 if (gb.lastAction === conf.BUY) {
                     trader.removeBuyOrder();
                     trader.placeBuyOrder(gb.currentMarketPrice);
-                    console.log("I'm replacing last BUY order Lower!");
+                    Logger.log("I'm replacing last BUY order Lower!");
                     return;
                 } else { //lastAction === conf.SELL
                     trader.removeSellOrder();
                     trader.placeSellOrder(gb.currentMarketPrice);
-                    console.log("I'm replacing last SELL order Lower!");
+                    Logger.log("I'm replacing last SELL order Lower!");
                     return;
                 }
             }
