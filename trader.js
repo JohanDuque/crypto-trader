@@ -25,22 +25,24 @@ class Trader {
         if (conf.logLvl >= 0) Logger.printReport();
     };
 
-    removeSellOrder() {
+    removeLastSellOrder() {
         gb.sellOrders--;
         gb.lastAction = conf.BUY;
         gb.profits -= this.calculateTransactionAmount(gb.lastSellPrice);
         gb.lastOrderWasFilled = true;
 
+        if (conf.logLvl >= 1) Logger.log("\n----- Removing Last SELL Order ----");
         if (conf.logLvl >= 0) Logger.printReport();
 
     };
 
-    removeBuyOrder() {
+    removeLastBuyOrder() {
         gb.buyOrders--;
         gb.lastAction = conf.SELL;
         gb.profits += this.calculateTransactionAmount(gb.lastBuyPrice);
         gb.lastOrderWasFilled = false;
 
+        if (conf.logLvl >= 1) Logger.log("\n+++++ Removing Last BUY Order ----");
         if (conf.logLvl >= 0) Logger.printReport();
     };
 

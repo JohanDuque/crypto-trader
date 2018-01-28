@@ -65,7 +65,7 @@ module.exports = class Strategy_V5 {
                     improvedAverage = improveAverage(gb.bidsAverage);
                     if (improvedAverage > gv.lastBuyPrice) {
                         if (conf.logLvl >= 1) Logger.log("I'm replacing last BUY order Higher at Improved Average: " + improvedAverage);
-                        trader.removeBuyOrder();
+                        trader.removeLastBuyOrder();
                         trader.placeBuyOrder(improvedAverage);
                         return;
                     }
@@ -74,7 +74,7 @@ module.exports = class Strategy_V5 {
                     improvedAverage = improveAverage(gb.asksAverage);
                     if (improvedAverage > gb.lastSellPrice) {
                         if (conf.logLvl >= 1) Logger.log("I'm replacing last SELL order Higher at Improved Average: " + improvedAverage);
-                        trader.removeSellOrder();
+                        trader.removeLastSellOrder();
                         trader.placeSellOrder(improvedAverage);
                         return;
                     }
@@ -85,12 +85,12 @@ module.exports = class Strategy_V5 {
             if (isMarketGoingDOWNfast) {
                 if (conf.logLvl >= 1) Logger.log("  >> Market keeps constantly going DOWN");
                 if (gb.lastAction === conf.BUY) {
-                    trader.removeBuyOrder();
+                    trader.removeLastBuyOrder();
                     trader.placeBuyOrder(gb.currentMarketPrice);
                     Logger.log("I'm replacing last BUY order Lower!");
                     return;
                 } else { //lastAction === conf.SELL
-                    trader.removeSellOrder();
+                    trader.removeLastSellOrder();
                     trader.placeSellOrder(gb.currentMarketPrice);
                     Logger.log("I'm replacing last SELL order Lower!");
                     return;
