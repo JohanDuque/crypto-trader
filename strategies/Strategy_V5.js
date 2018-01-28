@@ -3,14 +3,15 @@ const trader = require('../Trader');
 const conf = require('../Configuration');
 const Logger = require('../Logger');
 
-let isStarting = gb.sellOrders === gb.buyOrders &&
-    gb.buyOrders === gb.fills &&
-    gb.fills === gb.lastSellPrice &&
-    gb.lastSellPrice === gb.lastBuyPrice &&
-    gb.lastBuyPrice === 0;
-
 module.exports = class Strategy_V5 {
     static apply() {
+
+        let isFirstTrade = gb.sellOrders === gb.buyOrders &&
+            gb.buyOrders === gb.fills &&
+            gb.fills === gb.lastSellPrice &&
+            gb.lastSellPrice === gb.lastBuyPrice &&
+            gb.lastBuyPrice === 0;
+
         let areBuyersTwiceSellers = gb.currentBuyers / gb.currentSellers > 2;
         let areSellersTwiceBuyers = gb.currentSellers / gb.currentBuyers > 2;
 
