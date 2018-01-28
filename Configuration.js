@@ -3,6 +3,7 @@ const params = require('./params.json');
 class Configuration {
     constructor() {
         this.logLvl = params.logLvl; //(0-5) from nothing to verbose
+        this.logOnFile = params.logOnFile;
         this.productType = params.productType;
         this.fromCurrency = this.productType.split('-')[0];
         this.toCurrency = this.productType.split('-')[1];
