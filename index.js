@@ -46,7 +46,7 @@ let askForInfo = () => {
 let applyStrategy = () => { strategy.apply() };
 
 let setPollingInterval = (interval) => {
-    if (conf.logLvl >= 1) Logger.log("Setting Polling Iterval to " + interval + " seconds.");
+    if (conf.logLvl >= 2) Logger.log("Setting Polling Iterval to " + interval + " seconds.");
 
     clearInterval(gb.nIntervId);
     gb.nIntervId = setInterval(doTrade, interval * 1000);
@@ -93,7 +93,7 @@ let doTrade = () => {
         checkFills();
         applyStrategy();
 
-        if (conf.logLvl >= 1) Logger.printReport();
+        if (conf.logLvl >= 2) Logger.printReport();
 
         if (getMeanTradeFrequency() > conf.pollingInterval) {
             setPollingInterval(getMeanTradeFrequency());
