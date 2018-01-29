@@ -4,10 +4,11 @@
     "investment": 10,
     "orderFillError": 0.1,
     "startDelay": 0,
-    "pollingInterval": 2,
+    "minPollingInterval": 1,
+    "maxPollingInterval": 5,
     "productType": "ETH-EUR",
     "strategy": "V6",
-    "tradeHistorySize": 33,
-    "logLvl": 2,
+    "tradeHistorySize": 31,
+    "logLvl": 1,
     "logOnFile" : true
 }

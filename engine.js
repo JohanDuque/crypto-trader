@@ -194,6 +194,6 @@ let doTrade = () => {
 };
 
 Logger.log("Start Time: " + conf.startTime);
-Logger.log("Trading will start within " + conf.pollingInterval + " seconds...");
+Logger.log("Trading will start within " + conf.minPollingInterval + " seconds...");
 Logger.log("Let's make Money! \n");
-gb.nIntervId = setInterval(doTrade, conf.pollingInterval * 1000);
+gb.nIntervId = setInterval(doTrade, conf.minPollingInterval * 1000);

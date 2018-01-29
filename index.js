@@ -42,7 +42,7 @@ let askForInfo = () => {
 let applyStrategy = () => { strategy.apply() };
 
 let setPollingInterval = (interval) => {
-    Logger.log(2, "Setting Polling Iterval to " + interval + " seconds.");
+    Logger.log(1, "Setting Polling Iterval to " + interval + " seconds.");
 
     clearInterval(gb.nIntervId);
     gb.nIntervId = setInterval(doTrade, interval * 1000);
@@ -91,8 +91,11 @@ let doTrade = () => {
 
         if (conf.logLvl >= 2) Logger.printReport();
 
-        if (getMeanTradeFrequency() > conf.pollingInterval) {
-            setPollingInterval(getMeanTradeFrequency());
+
+        const meanFrequency = getMeanTradeFrequency();
+        console.log("  ***  MEAN FQ: " + meanFrequency + "     Errors: " +gb.errorCount);
+        if (meanFrequency > conf.minPollingInterval && meanFrequency < conf.maxPollingInterval) {
+            setPollingInterval(meanFrequency);
         }
 
         checkForErrors();
@@ -103,7 +106,7 @@ let doTrade = () => {
     });
 };
 
-Logger.log("Start Time: " + conf.startTime);
-Logger.log("Trading will start within " + conf.pollingInterval + " seconds...");
-Logger.log("Let's make Money! \n");
-gb.nIntervId = setInterval(doTrade, conf.pollingInterval * 1000);
+Logger.log(1, "Start Time: " + conf.startTime);
+Logger.log(1, "Trading will start within " + conf.maxPollingInterval + " seconds...");
+Logger.log(1, "Let's make Money! \n");
+gb.nIntervId = setInterval(doTrade, conf.maxPollingInterval * 1000);
