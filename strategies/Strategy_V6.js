@@ -28,7 +28,7 @@ module.exports = class Strategy_V6 {
             if (analysis.areSellersTwiceBuyers()) {
                 if (gb.lastAction !== conf.SELL) { //So I bought
                     if (gb.lastBuyPrice > gb.currentMarketPrice) {
-                        if (!analysis.isRatioIncreasing) {
+                        if (!analysis.isRatioIncreasing()) {
                             Logger.log(1, "  >> Market is going DOWN fast ratio is decerasing, I will place SELL order now");
                             trader.placeSellOrderAtCurrentMarketPrice();
                         } else {
