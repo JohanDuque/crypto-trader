@@ -5,7 +5,7 @@
     "orderFillError": 0.1,
     "startDelay": 0,
     "minPollingInterval": 1,
-    "maxPollingInterval": 10,
+    "maxPollingInterval": 7,
     "productType": "ETH-EUR",
     "strategy": "V6",
     "tradeHistorySize": 31,
