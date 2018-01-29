@@ -1,7 +1,6 @@
 const conf = require('./Configuration');
 const gb = require('./GlobalVariables');
 const Logger = require('./Logger');
-const analysis = require('./Analysis');
 
 class Trader {
 

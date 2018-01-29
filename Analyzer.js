@@ -1,7 +1,7 @@
 const gb = require('./GlobalVariables');
 
 
-class Anaysis {
+class Analyzer {
 
 	isRatioIncreasing() { return gb.currentMarketRatio > gb.lastMarketRatio }
 
@@ -12,4 +12,4 @@ class Anaysis {
 }
 
 
-module.exports = new Anaysis();
+module.exports = new Analyzer();
