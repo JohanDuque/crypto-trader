@@ -42,7 +42,7 @@ let askForInfo = () => {
 let applyStrategy = () => { strategy.apply() };
 
 let setPollingInterval = (interval) => {
-    Logger.log(1, "Setting Polling Iterval to " + interval + " seconds.");
+    Logger.log(2, "Setting Polling Iterval to " + interval + " seconds.");
 
     clearInterval(gb.nIntervId);
     gb.nIntervId = setInterval(doTrade, interval * 1000);
@@ -93,7 +93,6 @@ let doTrade = () => {
 
 
         const meanFrequency = getMeanTradeFrequency();
-        console.log("  ***  MEAN FQ: " + meanFrequency + "     Errors: " +gb.errorCount);
         if (meanFrequency > conf.minPollingInterval && meanFrequency < conf.maxPollingInterval) {
             setPollingInterval(meanFrequency);
         }
