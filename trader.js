@@ -1,6 +1,7 @@
 const conf = require('./Configuration');
 const gb = require('./GlobalVariables');
 const Logger = require('./Logger');
+const analysis = require('./Analysis');
 
 class Trader {
 
@@ -11,11 +12,6 @@ class Trader {
             gb.lastSellPrice === gb.lastBuyPrice &&
             gb.lastBuyPrice === 0;
     };
-
-    isRatioIncreasing() { return gb.currentMarketRatio > gb.lastMarketRatio }
-
-    areBuyersTwiceSellers() { return gb.currentBuyers / gb.currentSellers > 2; }
-    areSellersTwiceBuyers() { return gb.currentSellers / gb.currentBuyers > 2; }
 
     placeSellOrder(price) {
         gb.sellOrders++;

@@ -1,13 +1,5 @@
 const Conf = require('./Configuration');
 const gb = require('./GlobalVariables');
-//var bunyan = require('bunyan');
-/*var logger = bunyan.createLogger({name: 'myapp',
-    streams: [{
-        type: 'rotating-file',
-        path: './log/crypto' + Conf.strategy +'.log',
-        period: '6h',   // daily rotation
-        count: 4        // keep 3 back copies
-    }]});*/
 
 let logger = require('tracer').dailyfile({ root: './logs', maxLogFiles: 10, allLogsFileName: Conf.traderId + "@" });
 

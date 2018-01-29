@@ -2,12 +2,13 @@ const gb = require('../GlobalVariables');
 const trader = require('../Trader');
 const conf = require('../Configuration');
 const Logger = require('../Logger');
+const analysis = require('../Analysis');
 
 module.exports = class Strategy_V5 {
     static apply() {
         if (gb.lastOrderWasFilled) {
             //While market is constantly going UP...
-            if (trader.areBuyersTwiceSellers()) {
+            if (analysis.areBuyersTwiceSellers()) {
                 if (gb.lastAction !== conf.BUY) {
                     Logger.log(1, "  >> Market is constantly going UP, I'm buying!");
                     trader.placeBuyOrder(gb.currentMarketPrice);
@@ -22,7 +23,7 @@ module.exports = class Strategy_V5 {
             }
 
             //While market is constantly going DOWN...
-            if (trader.areSellersTwiceBuyers()) {
+            if (analysis.areSellersTwiceBuyers()) {
                 if (gb.lastAction !== conf.SELL) {
                     Logger.log(1, "  >> Market is going DOWN fast, I will wait to SELL");
                     return;
@@ -42,7 +43,7 @@ module.exports = class Strategy_V5 {
             }
         } else { //I place an Order that has not been filled yet.
 
-            if (trader.areBuyersTwiceSellers()) {
+            if (analysis.areBuyersTwiceSellers()) {
                 if (gb.lastAction === conf.BUY) {
                     if (trader.improveBuyAverage() > gb.lastBuyPrice) {
                         Logger.log(1, "  >> Market keeps constantly going UP");
@@ -63,7 +64,7 @@ module.exports = class Strategy_V5 {
             }
 
             //While market is constantly going DOWN...
-            if (trader.areSellersTwiceBuyers()) {
+            if (analysis.areSellersTwiceBuyers()) {
                 if (gb.lastAction === conf.BUY) {
                     Logger.log(1, "  >> Market keeps constantly going DOWN");
                     Logger.log(1, "I'm replacing last BUY order Lower!");
