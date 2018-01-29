@@ -2,20 +2,21 @@ const gb = require('../GlobalVariables');
 const trader = require('../Trader');
 const conf = require('../Configuration');
 const Logger = require('../Logger');
+const analysis = require('../Analysis');
 
 module.exports = class Strategy_V6 {
     static apply() {
         if (gb.lastOrderWasFilled) {
             //While market is constantly going UP...
 
-            //console.log("Is Ratio Increasing: " + trader.isRatioIncreasing() );
-            if (trader.areBuyersTwiceSellers()) {
+            //console.log("Is Ratio Increasing: " + analysis.isRatioIncreasing() );
+            if (analysis.areBuyersTwiceSellers()) {
                 if (gb.lastAction !== conf.BUY) {
                     Logger.log(1, "  >> Market is constantly going UP, I'm buying!");
                     trader.placeBuyOrderAtCurrentMarketPrice();
                     return;
                 } else {
-                    if (gb.currentMarketPrice > gb.lastSellPrice && trader.isRatioIncreasing()) {
+                    if (gb.currentMarketPrice > gb.lastSellPrice && analysis.isRatioIncreasing()) {
                         Logger.log(1, "  >> Market is constantly going UP, I'm SELLING at Improved average: " + trader.improveSellAverage());
                         trader.placeImprovedSellOrder();
                     }
@@ -24,10 +25,10 @@ module.exports = class Strategy_V6 {
             }
 
             //While market is constantly going DOWN...
-            if (trader.areSellersTwiceBuyers()) {
+            if (analysis.areSellersTwiceBuyers()) {
                 if (gb.lastAction !== conf.SELL) { //So I bought
                     if (gb.lastBuyPrice > gb.currentMarketPrice) {
-                        if (!trader.isRatioIncreasing) {
+                        if (!analysis.isRatioIncreasing) {
                             Logger.log(1, "  >> Market is going DOWN fast ratio is decerasing, I will place SELL order now");
                             trader.placeSellOrderAtCurrentMarketPrice();
                         } else {
@@ -53,7 +54,7 @@ module.exports = class Strategy_V6 {
             }
         } else { //I place an Order that has not been filled yet.
 
-            if (trader.areBuyersTwiceSellers() && trader.isRatioIncreasing()) {
+            if (analysis.areBuyersTwiceSellers() && analysis.isRatioIncreasing()) {
                 Logger.log(1, "  >> Market keeps constantly going UP, ratio is increasing...");
                 if (gb.lastAction === conf.BUY) {
                     if (trader.improveBuyAverage() > gb.lastBuyPrice) {
@@ -73,7 +74,7 @@ module.exports = class Strategy_V6 {
             }
 
             //While market is constantly going DOWN...
-            if (trader.areSellersTwiceBuyers() && !trader.isRatioIncreasing()) {
+            if (analysis.areSellersTwiceBuyers() && !analysis.isRatioIncreasing()) {
                 if (gb.lastAction === conf.BUY) {
                     Logger.log(1, "  >> Market keeps constantly going DOWN");
                     Logger.log(1, "I'm replacing last BUY order Lower!");
@@ -91,7 +92,7 @@ module.exports = class Strategy_V6 {
             }
 
             //While market is constantly going DOWN...
-            if (gb.currenSellers > gb.currentBuyers && !trader.isRatioIncreasing()) {
+            if (gb.currenSellers > gb.currentBuyers && !analysis.isRatioIncreasing()) {
                 if (gb.lastAction === conf.SELL) {
                     Logger.log(1, "  >> Market is going down apparenly slowly..");
                     if (gb.lastBuyPrice > gb.currentMarketPrice) {
