@@ -16,9 +16,16 @@ class Configuration {
         this.orderFillError = params.orderFillError;
         this.startTime = new Date();
         this.startDelay = params.startDelay;
+        this.analyzer = params.Analyzer
 
         this.SELL = 'sell';
         this.BUY = 'buy';
+
+        this.PRICE_GROWING = 'growing';
+        this.PRICE_STABLE = 'stable';
+        this.PRICE_FALLING = 'falling';
+        this.PRICE_DIRECTION_UNKNOWN = 'unknown';
+
         this.traderId = this.strategy + "|" + this.pollingInterval + "s|" +
             this.orderSize + this.fromCurrency + "|" +
             this.investment + this.toCurrency + "|" +

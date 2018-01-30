@@ -1,5 +1,5 @@
 const config = require('./Configuration');
-
+const Events = require('events');
 class GlobalVariables {
     constructor() {
         this.profits = config.investment;
@@ -21,6 +21,7 @@ class GlobalVariables {
         this.tradeHistory= null;
         this.lastMarketRatio = 0; //buyers/sellers
         this.currentMarketRatio = 0; //buyers/sellers
+        this.eventManager = new Events();
     }
 }
 

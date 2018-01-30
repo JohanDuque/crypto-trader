@@ -71,7 +71,7 @@ class GdaxManager {
                     Logger.log(1, 'Current Iteration Ratio (Buyers/Sellers): ' + gb.currentMarketRatio);
 
                     me.calculateMarketTrend();
-
+                    gb.eventManager.emit('currentMarketPriceUpdate');
                     resolve();
                 })
                 .catch(error => {

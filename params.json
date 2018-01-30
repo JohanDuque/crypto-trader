@@ -9,5 +9,12 @@
     "strategy": "V6",
     "tradeHistorySize": 33,
     "logLvl": 2,
-    "logOnFile" : true
+    "logOnFile" : true,
+    "Analyzer" : {
+        "MarketDirection" : {
+            "samplesQuantityForEval" : 3,
+            "freqOfSampling" : 5
+
+        }
+    }
 }
