@@ -10,12 +10,12 @@ class Analyzer {
         me.priceDirection = conf.PRICE_DIRECTION_UNKNOWN;
 
         gb.eventManager.on('currentMarketPriceUpdate', function() {
+            //BETA
             if (me.lastSamplesTimestamp && me.lastSamplesTimestamp.add(conf.analyzer.MarketDirection.freqOfSampling, "s") > moment()) {
                 return;
             }
             me.lastSamplesTimestamp = moment();
             me.priceSamples.push(gb.currentMarketPrice);
-            console.log('pppppp',me.priceSamples)
             if (me.priceSamples.length < conf.analyzer.MarketDirection.samplesQuantityForEval) {
                 return;
             }
