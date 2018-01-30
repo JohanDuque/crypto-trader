@@ -43,7 +43,8 @@ class GdaxManager {
         return new Promise(function(resolve, reject) {
             publicClient.getProductTrades(conf.productType, { limit: conf.tradeHistorySize })
                 .then(data => {
-                    gb.lastMarketVelocity = gb.currentMarketVelocity ? gb.currentMarketVelocity : 1;
+                    gb.lastBuySpeed = gb.currentBuySpeed ? gb.currentBuySpeed : 1;
+                    gb.lastSellSpeed = gb.currentSellSpeed ? gb.currentSellSpeed : 1;
 
                     Logger.log(3, "Trade History:\n" + data + "\n");
 
@@ -56,9 +57,13 @@ class GdaxManager {
                     Logger.log(2, 'Current Sellers: ' + gb.currentSellers);
                     Logger.log(2, 'Current Market Price: ' + data[0].price);
 
-                    gb.currentMarketVelocity = gb.currentSellers ? (gb.currentBuyers / gb.currentSellers) : gb.currentBuyers;
-                    Logger.log(2, 'Current Market Velocity (Buyers/Sellers): ' + gb.currentMarketVelocity);
-                    Logger.log(2, 'Last Market Velocity (Buyers/Sellers): ' + gb.lastMarketVelocity);
+                    gb.currentBuySpeed = gb.currentSellers ? (gb.currentBuyers / gb.currentSellers) : gb.currentBuyers;
+                    Logger.log(2, 'Current BUY Speed (Buyers/Sellers): ' + gb.currentBuySpeed);
+                    Logger.log(2, 'Last BUY Speed (Buyers/Sellers): ' + gb.lastBuySpeed);
+
+                    gb.currentSellSpeed = gb.currentBuyers ? (gb.currentSellers / gb.currentBuyers) : gb.currentSellers;
+                    Logger.log(2, 'Current SELL Speed (Sellers/Buyers): ' + gb.currentSellSpeed);
+                    Logger.log(2, 'Last SELL Speed (Sellers/Buyers): ' + gb.lastSellSpeed);
 
                     resolve();
                 })

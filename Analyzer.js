@@ -3,7 +3,8 @@ const gb = require('./GlobalVariables');
 
 class Analyzer {
 
-	isVelocityIncreasing() { return gb.currentMarketVelocity > gb.lastMarketVelocity }
+	isBuySpeedIncreasing() { return gb.currentBuySpeed > gb.lastBuySpeed }
+	isSellSpeedIncreasing() { return gb.currentSellSpeed > gb.lastSellSpeed }
 
     areBuyersTwiceSellers() { return gb.currentBuyers / gb.currentSellers > 2; }
     areSellersTwiceBuyers() { return gb.currentSellers / gb.currentBuyers > 2; }
