@@ -22,6 +22,10 @@ class GlobalVariables {
         this.lastMarketRatio = 0; //buyers/sellers
         this.currentMarketRatio = 0; //buyers/sellers
         this.eventManager = new Events();
+        this.lastBuySpeed = 0; //buyers/sellers
+        this.currentBuySpeed = 0; //buyers/sellers
+        this.lastSellSpeed = 0; //sellers/buyers
+        this.currentSellSpeed = 0; //sellers/buyers
     }
 }
 

@@ -29,13 +29,9 @@ class Analyzer {
             if (me.priceSamples[0] > me.priceSamples[conf.analyzer.MarketDirection.samplesQuantityForEval - 1]) {
                 _priceDirection = conf.PRICE_FALLING;
             }
-            console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
-            console.log('this.priceSamples', me.priceSamples);
-            console.log('_priceDirection', _priceDirection);
-            console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
             if (_priceDirection != me.priceDirection) {
                 me.priceDirection = _priceDirection;
-                gb.eventManager.emit('priceDirectionChange');
+                gb.eventManager.emit('priceDirectionChange',_priceDirection);
             }
         });
 
@@ -43,11 +39,11 @@ class Analyzer {
 
     isRatioIncreasing() { return gb.currentMarketRatio > gb.lastMarketRatio }
 
+	isBuySpeedIncreasing() { return gb.currentBuySpeed > gb.lastBuySpeed }
+	isSellSpeedIncreasing() { return gb.currentSellSpeed > gb.lastSellSpeed }
+
     areBuyersTwiceSellers() { return gb.currentBuyers / gb.currentSellers > 2; }
     areSellersTwiceBuyers() { return gb.currentSellers / gb.currentBuyers > 2; }
-
-
-
 
     isPriceGrowing() { return this.priceDirection === onf.PRICE_GROWING };
     isPriceStable() { return this.priceDirection === onf.PRICE_STABLE };
