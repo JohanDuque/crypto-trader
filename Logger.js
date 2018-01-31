@@ -3,6 +3,7 @@ const gb = require('./GlobalVariables');
 
 let logger = require('tracer').dailyfile({ root: './logs', maxLogFiles: 10, allLogsFileName: Conf.traderId + "@" });
 
+
 module.exports = class Logger {
     static log(lvl, msg) {
 
