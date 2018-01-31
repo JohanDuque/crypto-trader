@@ -4,8 +4,8 @@ const conf = require('../Configuration');
 const Logger = require('../Logger');
 const analyzer = require('../Analyzer');
 
-module.exports = class Strategy_V6 {
-    static apply() {
+class Strategy_V6 {
+    apply() {
         if (gb.lastOrderWasFilled) {
             //While market is constantly going UP...
 
@@ -106,3 +106,5 @@ module.exports = class Strategy_V6 {
         }
     }
 };
+
+module.exports = new Strategy_V6();

@@ -10,7 +10,7 @@ class Trader {
             gb.fills === gb.lastSellPrice &&
             gb.lastSellPrice === gb.lastBuyPrice &&
             gb.lastBuyPrice === 0;
-    };
+    }
 
     placeSellOrder(price) {
         gb.sellOrders++;
