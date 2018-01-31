@@ -1,8 +1,10 @@
 const Conf = require('./Configuration');
 const gb = require('./GlobalVariables');
+const fs = require('fs');
+const moment = require('moment');
 
-let logger = require('tracer').dailyfile({ root: './logs', maxLogFiles: 10, allLogsFileName: Conf.traderId + "@" });
-
+const reportFileName = './reports/' + Conf.traderId + "@" + moment().format('YYYYMMDD-hh-mm-ss') + '.log';
+const useTimeInLog = false;
 
 module.exports = class Logger {
     static log(lvl, msg) {
@@ -10,7 +12,21 @@ module.exports = class Logger {
         if (Conf.logLvl >= lvl) console.log(msg);
 
         if (Conf.logOnFile) {
-            logger.info(msg);
+            if (Conf.logLvl >= lvl) {
+                let logMsg = msg;
+
+                if (useTimeInLog) {
+                    let logTime = moment().format('YYYY-MM-DD hh:mm:ss');
+                    let logMsg = '\n' + logTime + "  " + msg;
+                }
+
+                fs.appendFile(reportFileName, logMsg, (err) => {
+                    // throws an error, you could also catch it here
+                    if (err) throw err;
+                    // success case, the file was saved
+                    //console.log('File saved!');
+                });
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 const conf = require('./Configuration');
 const gb = require('./GlobalVariables');
 const Logger = require('./Logger');
+const util = require('util');
 
 const Gdax = require('gdax');
 const publicClient = new Gdax.PublicClient();
@@ -20,7 +21,7 @@ class GdaxManager {
         return new Promise(function(resolve, reject) {
             publicClient.getProductOrderBook(conf.productType, { level: 2 })
                 .then(data => {
-                    Logger.log(3, "Order Book:\n" + data + "\n");
+                    Logger.log(3, "\nOrder Book:\n" + util.inspect(data, { depth: 2 }) + "\n");
 
                     gb.bidsAverage = me.getAverage(data.bids);
                     gb.asksAverage = me.getAverage(data.asks);
@@ -46,7 +47,7 @@ class GdaxManager {
                     gb.lastBuySpeed = gb.currentBuySpeed ? gb.currentBuySpeed : 1;
                     gb.lastSellSpeed = gb.currentSellSpeed ? gb.currentSellSpeed : 1;
 
-                    Logger.log(3, "Trade History:\n" + data + "\n");
+                    Logger.log(3, "\nTrade History:\n" + util.inspect(data, { depth: 2 }) +"\n");
 
                     gb.tradeHistory = data;
                     gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
