@@ -8,7 +8,7 @@
     "maxPollingInterval": 7,
     "productType": "ETH-EUR",
     "strategy": "V7",
-    "tradeHistorySize": 33,
-    "logLvl": 1,
+    "tradeHistorySize": 43,
+    "logLvl": 2,
     "logOnFile" : true
 }

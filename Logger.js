@@ -11,22 +11,22 @@ module.exports = class Logger {
 
         if (Conf.logLvl >= lvl) console.log(msg);
 
-        if (Conf.logOnFile) {
-            if (Conf.logLvl >= lvl) {
-                let logMsg = msg;
+        if (Conf.logOnFile && Conf.logLvl >= lvl) {
+            let logMsg = '\n';
 
-                if (useTimeInLog) {
-                    let logTime = moment().format('YYYY-MM-DD hh:mm:ss');
-                    let logMsg = '\n' + logTime + "  " + msg;
-                }
-
-                fs.appendFile(reportFileName, logMsg, (err) => {
-                    // throws an error, you could also catch it here
-                    if (err) throw err;
-                    // success case, the file was saved
-                    //console.log('File saved!');
-                });
+            if (useTimeInLog) {
+                let logTime = moment().format('YYYY-MM-DD hh:mm:ss');
+                logMsg += logTime + "  " + msg;
+            }else{
+                logMsg+=msg;
             }
+
+            fs.appendFile(reportFileName, logMsg, (err) => {
+                // throws an error, you could also catch it here
+                if (err) throw err;
+                // success case, the file was saved
+                //console.log('File saved!');
+            });
         }
     }
 
