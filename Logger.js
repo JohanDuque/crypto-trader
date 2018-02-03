@@ -34,14 +34,16 @@ module.exports = class Logger {
 
     static recordInfo(){
         if(Conf.recordInfo){
-            let info = "";
+            let info="";
 
             if(gb.iteration == 1){
-                info += '['
+                info += '[';
+            }else{
+                info = "\n";
             }
 
-            info += util.inspect(gb,) + ',';
-            //info += JSON.stringify(gb) + ',';
+            //info += util.inspect(gb,) + ',';
+            info += JSON.stringify(gb) + ',';
 
             fs.appendFile(recordFile, info, (err) => {
                 // throws an error, you could also catch it here

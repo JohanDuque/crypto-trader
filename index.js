@@ -1,10 +1,13 @@
 const conf = require('./Configuration');
 const gb = require('./GlobalVariables');
 const Logger = require('./Logger');
+const util = require('util');
 const GdaxManager = require('./GdaxManager');
 
 const StrategyFactory = require('./StrategyFactory');
 const strategy = StrategyFactory.getStrategy();
+
+let nIntervId;
 
 let checkFills = () => {
     let wasItFilled = undefined;
@@ -44,18 +47,18 @@ let applyStrategy = () => { strategy.apply() };
 let setPollingInterval = (interval) => {
     Logger.log(2, "Setting Polling Iterval to " + interval + " seconds.");
 
-    clearInterval(gb.nIntervId);
-    gb.nIntervId = setInterval(doTrade, interval * 1000);
+    clearInterval(nIntervId);
+    nIntervId = setInterval(doTrade, interval * 1000);
 };
 
 let checkForErrors = () => {
     if (gb.profits <= 0) {
         Logger.log("\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
-        clearInterval(gb.nIntervId);
+        clearInterval(nIntervId);
     }
     if (gb.errorCount > conf.errorTolerance || gb.errorCount > gb.iteration) {
         Logger.log("\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
-        clearInterval(gb.nIntervId);
+        clearInterval(nIntervId);
     }
 };
 
@@ -78,24 +81,18 @@ let getMeanTradeFrequency = () => {
     return meanTradeFrequency;
 };
 
-//******************* MAIN ********************//
-
-const record = true;
-
 let doTrade = () => {
     gb.iteration++;
-
     Logger.log(2, "\nAsking for info at: " + new Date());
 
     askForInfo().then(() => {
         Logger.log(2, "Info received at:   " + new Date() + "\n");
 
-        Logger.recordInfo();        
+        Logger.recordInfo();
         checkFills();
         applyStrategy();
 
         if (conf.logLvl >= 2) Logger.printReport();
-
 
         const meanFrequency = getMeanTradeFrequency();
         if (meanFrequency > conf.minPollingInterval && meanFrequency < conf.maxPollingInterval) {
@@ -110,7 +107,47 @@ let doTrade = () => {
     });
 };
 
-Logger.log(1, "Start Time: " + conf.startTime);
-Logger.log(1, "Trading will start within " + conf.maxPollingInterval + " seconds...");
-Logger.log(1, "Let's make Money! \n");
-gb.nIntervId = setInterval(doTrade, conf.maxPollingInterval * 1000);
+let simulateFromRecording = () => {
+    const infoRecorded = require(conf.recordingFile);
+
+    infoRecorded.forEach(function(element) {
+        gb.profits = element.profits;
+        gb.iteration = element.iteration;
+        gb.bidsAverage = element.bidsAverage;
+        gb.lastBuyPrice = element.lastBuyPrice;
+        gb.asksAverage = element.asksAverage;
+        gb.lastSellPrice = element.lastSellPrice;
+        gb.currentMarketPrice = element.currentMarketPrice;
+        gb.currentBuyers = element.currentBuyers;
+        gb.currentSellers = element.currentSellers;
+        gb.lastAction = element.lastAction.SELL;
+        gb.buyOrders = element.buyOrders;
+        gb.sellOrders = element.sellOrders;
+        gb.errorCount = element.errorCount;
+        gb.lastOrderWasFilled = element.lastOrderWasFilled;
+        gb.fills = element.fills;
+        gb.tradeHistory = element.tradeHistory;
+        gb.lastBuySpeed = element.lastBuySpeed; //buyers/sellers
+        gb.currentBuySpeed = element.currentBuySpeed; //buyers/sellers
+        gb.lastSellSpeed = element.lastSellSpeed; //sellers/buyers
+        gb.currentSellSpeed = element.currentSellSpeed; //sellers/buyers
+
+        checkFills();
+        applyStrategy();
+
+        if (conf.logLvl >= 2) Logger.printReport();
+        checkForErrors();
+    });
+    Logger.log(1, "\n Simulation Done!");
+}
+
+
+//******************* MAIN ********************//
+if (conf.simulateFromRecording) {
+    simulateFromRecording();
+} else {
+    Logger.log(1, "Start Time: " + conf.startTime);
+    Logger.log(1, "Trading will start within " + conf.maxPollingInterval + " seconds...");
+    Logger.log(1, "Let's make Money! \n");
+    nIntervId = setInterval(doTrade, conf.maxPollingInterval * 1000);
+}

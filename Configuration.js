@@ -18,6 +18,8 @@ class Configuration {
         this.orderFillError = params.orderFillError;
         this.startTime = new Date();
         this.startDelay = params.startDelay;
+        this.simulateFromRecording = params.simulateFromRecording;
+        this.recordingFile = params.recordingFile;
 
         this.SELL = 'sell';
         this.BUY = 'buy';
