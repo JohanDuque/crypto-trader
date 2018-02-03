@@ -2,8 +2,10 @@ const Conf = require('./Configuration');
 const gb = require('./GlobalVariables');
 const fs = require('fs');
 const moment = require('moment');
+const util = require('util');
 
 const reportFileName = './reports/' + Conf.traderId + "@" + moment().format('YYYYMMDD-hh-mm-ss') + '.log';
+const recordFile = './recordings/'+ moment().format('YYYY-MM-DD-hh-mm-ss') + '.json';
 const useTimeInLog = false;
 
 module.exports = class Logger {
@@ -22,6 +24,26 @@ module.exports = class Logger {
             }
 
             fs.appendFile(reportFileName, logMsg, (err) => {
+                // throws an error, you could also catch it here
+                if (err) throw err;
+                // success case, the file was saved
+                //console.log('File saved!');
+            });
+        }
+    }
+
+    static recordInfo(){
+        if(Conf.recordInfo){
+            let info = "";
+
+            if(gb.iteration == 1){
+                info += '['
+            }
+
+            info += util.inspect(gb,) + ',';
+            //info += JSON.stringify(gb) + ',';
+
+            fs.appendFile(recordFile, info, (err) => {
                 // throws an error, you could also catch it here
                 if (err) throw err;
                 // success case, the file was saved

@@ -4,3 +4,4 @@ logs
 package-lock.json
 .DS_Store
 reports/
+recordings/

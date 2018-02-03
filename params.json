@@ -9,6 +9,7 @@
     "productType": "ETH-EUR",
     "strategy": "V7",
     "tradeHistorySize": 43,
-    "logLvl": 2,
-    "logOnFile" : true
+    "logLvl": 4,
+    "logOnFile" : true,
+    "recordInfo" : true
 }

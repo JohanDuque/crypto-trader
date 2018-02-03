@@ -13,13 +13,13 @@ let checkFills = () => {
         if (gb.lastAction === conf.BUY) {
             wasItFilled = gb.tradeHistory.find((trade) => {
                 //return (gb.lastBuyPrice - trade.price) > 0 || Math.abs(gb.lastBuyPrice - trade.price) <= conf.orderFillError
-                return (gb.lastBuyPrice - trade.price) > 0
+                return (gb.lastBuyPrice - trade.price) >= 0;
             });
 
         } else { //gb.lastAction === sell
             wasItFilled = gb.tradeHistory.find((trade) => {
                 //return (gb.lastSellPrice - trade.price) <= 0 || Math.abs(gb.lastSellPrice - data.price) <= conf.orderFillError
-                return (gb.lastSellPrice - trade.price) < 0
+                return (gb.lastSellPrice - trade.price) <= 0;
             });
         }
 
@@ -79,6 +79,9 @@ let getMeanTradeFrequency = () => {
 };
 
 //******************* MAIN ********************//
+
+const record = true;
+
 let doTrade = () => {
     gb.iteration++;
 
@@ -86,6 +89,8 @@ let doTrade = () => {
 
     askForInfo().then(() => {
         Logger.log(2, "Info received at:   " + new Date() + "\n");
+
+        Logger.recordInfo();        
         checkFills();
         applyStrategy();
 
