@@ -120,7 +120,7 @@ let simulateFromRecording = () => {
         gb.currentMarketPrice = element.currentMarketPrice;
         gb.currentBuyers = element.currentBuyers;
         gb.currentSellers = element.currentSellers;
-        gb.lastAction = element.lastAction.SELL;
+        gb.lastAction = element.lastAction;
         gb.buyOrders = element.buyOrders;
         gb.sellOrders = element.sellOrders;
         gb.errorCount = element.errorCount;

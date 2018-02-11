@@ -5,13 +5,13 @@
     "orderFillError": 0.1,
     "startDelay": 0,
     "minPollingInterval": 1.5,
-    "maxPollingInterval": 7,
+    "maxPollingInterval": 9,
     "productType": "ETH-EUR",
-    "strategy": "V7",
-    "tradeHistorySize": 33,
+    "strategy": "V9",
+    "tradeHistorySize": 31,
     "logLvl": 1,
     "logOnFile" : true,
     "recordInfo" : true,
-    "simulateFromRecording" : false,
-    "recordingFile" : "./recordings/2018-02-03-11-45-40"
+    "simulateFromRecording" : true,
+    "recordingFile" : "./recordings/myTest"
 }
