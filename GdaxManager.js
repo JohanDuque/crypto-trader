@@ -53,10 +53,12 @@ class GdaxManager {
                     gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
                     gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
                     gb.currentMarketPrice = Number(data[0].price);
+                    gb.lowestTradePrice= gb.currentMarketPrice < gb.lowestTradePrice ? gb.lowestTradePrice : gb.currentMarketPrice ;
+                    gb.hightestTradePrice= gb.currentMarketPrice > gb.hightestTradePrice ? gb.hightestTradePrice : gb.currentMarketPrice ;
 
                     Logger.log(2, 'Current Buyers: ' + gb.currentBuyers);
                     Logger.log(2, 'Current Sellers: ' + gb.currentSellers);
-                    Logger.log(2, 'Current Market Price: ' + data[0].price);
+                    Logger.log(2, 'Current Market Price: ' + gb.currentMarketPrice);
 
                     gb.currentBuySpeed = gb.currentSellers ? (gb.currentBuyers / gb.currentSellers) : gb.currentBuyers;
                     Logger.log(2, 'Current BUY Speed (Buyers/Sellers): ' + gb.currentBuySpeed);

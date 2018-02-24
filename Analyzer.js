@@ -2,7 +2,6 @@ const gb = require('./GlobalVariables');
 const Logger = require('./Logger');
 
 class Analyzer {
-
     isBuySpeedIncreasing() { return gb.currentBuySpeed > gb.lastBuySpeed }
     isSellSpeedIncreasing() { return gb.currentSellSpeed > gb.lastSellSpeed }
 
@@ -16,7 +15,6 @@ class Analyzer {
     isMarketGoingFromUpToDown() {
         return this.isSellSpeedIncreasing() && (gb.lastBuySpeed > 1) && (gb.currentBuySpeed < 1);
     }
-
 }
 
 

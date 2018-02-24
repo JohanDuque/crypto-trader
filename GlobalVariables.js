@@ -2,6 +2,8 @@ const config = require('./Configuration');
 
 class GlobalVariables {
     constructor() {
+        this.lowestTradePrice=999999;
+        this.hightestTradePrice=0;
         this.profits = config.investment;
         this.iteration = 0;
         this.bidsAverage = 0;
@@ -22,6 +24,8 @@ class GlobalVariables {
         this.currentBuySpeed = 0; //buyers/sellers
         this.lastSellSpeed = 0; //sellers/buyers
         this.currentSellSpeed = 0; //sellers/buyers
+        this.totalAmoutTraded = this.hightestTradePrice / this.lowestTradePrice;
+
     }
 }
 

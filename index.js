@@ -111,6 +111,7 @@ let simulateFromRecording = () => {
     const infoRecorded = require(conf.recordingFile);
 
     infoRecorded.forEach(function(element) {
+        //TODO use a map
         gb.profits = element.profits;
         gb.iteration = element.iteration;
         gb.bidsAverage = element.bidsAverage;
@@ -131,6 +132,8 @@ let simulateFromRecording = () => {
         gb.currentBuySpeed = element.currentBuySpeed; //buyers/sellers
         gb.lastSellSpeed = element.lastSellSpeed; //sellers/buyers
         gb.currentSellSpeed = element.currentSellSpeed; //sellers/buyers
+        gb.lowestTradePrice=element.lowestTradePrice;
+        gb.hightestTradePrice=element.hightestTradePrice;
 
         checkFills();
         applyStrategy();
