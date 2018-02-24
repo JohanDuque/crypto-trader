@@ -3,8 +3,8 @@ const params = require('./params.json');
 class Configuration {
     constructor() {
         this.logLvl = params.logLvl; //(0-5) from nothing to verbose
-        this.logOnFile = params.logOnFile;
-        this.recordInfo = params.recordInfo;
+        this.logOnFile = params.simulateFromRecordign ? params.logOnFile :false;
+        this.recordInfo = params.simulateFromRecordign ? params.recordInfo :false;
         this.productType = params.productType;
         this.fromCurrency = this.productType.split('-')[0];
         this.toCurrency = this.productType.split('-')[1];
@@ -23,10 +23,10 @@ class Configuration {
 
         this.SELL = 'sell';
         this.BUY = 'buy';
-        this.traderId = this.strategy + "|" + this.minPollingInterval + "-"+this.maxPollingInterval+"|" +
-            this.orderSize + this.fromCurrency + "|" +
-            this.investment + this.toCurrency + "|" +
-            this.tradeHistorySize + "|" + this.orderFillError;
+        this.traderId = this.strategy + "_" + this.minPollingInterval + "-"+this.maxPollingInterval+"_" +
+            this.orderSize + this.fromCurrency + "_" +
+            this.investment + this.toCurrency + "_" +
+            this.tradeHistorySize + "_" + this.orderFillError;
     }
 }
 
