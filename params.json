@@ -7,11 +7,11 @@
     "minPollingInterval": 1.5,
     "maxPollingInterval": 9,
     "productType": "ETH-EUR",
-    "strategy": "V9",
+    "strategy": "V10",
     "tradeHistorySize": 31,
     "logLvl": 1,
     "logOnFile" : true,
     "recordInfo" : true,
     "simulateFromRecording" : true,
-    "recordingFile" : "./recordings/myTest"
+    "recordingFile" : "./recordings/lastTest"
 }
