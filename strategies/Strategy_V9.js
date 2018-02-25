@@ -9,9 +9,7 @@ class Strategy_V9 {
     apply() {
         if (gb.lastOrderWasFilled) {
             if (gb.lastAction !== conf.BUY) {
-                //const shouldBuy = trader.isThisFirstTrade() || gb.lastSellPrice > gb.currentMarketPrice;
-                const shouldBuy = true;
-                if (analyzer.isMarketGoingFromDownToUp() && shouldBuy) {
+                if (analyzer.isMarketGoingFromDownToUp()) {
                     Logger.log(1, "Market is GoingFrom DOWN to UP I'm buying at current price");
                     trader.placeBuyOrderAtCurrentMarketPrice();
                     return;
