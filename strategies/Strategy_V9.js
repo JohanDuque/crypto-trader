@@ -12,14 +12,14 @@ class Strategy_V9 {
                 //const shouldBuy = trader.isThisFirstTrade() || gb.lastSellPrice > gb.currentMarketPrice;
                 const shouldBuy = true;
                 if (analyzer.isMarketGoingFromDownToUp() && shouldBuy) {
-                    Logger.log(1, "Market is GoingFromDownToUP I'm buying at current price");
+                    Logger.log(1, "Market is GoingFrom DOWN to UP I'm buying at current price");
                     trader.placeBuyOrderAtCurrentMarketPrice();
                     return;
                 }
 
             } else { //I'm trying to SELL
                 if (analyzer.isMarketGoingFromUpToDown() && gb.lastBuyPrice < gb.currentMarketPrice) {
-                    Logger.log(1, "Market is GoingFromUpToDOWN I'm selling now at current price");
+                    Logger.log(1, "Market is GoingFrom UP to DOWN I'm selling now at current price");
                     trader.placeSellOrderAtCurrentMarketPrice();
                     return;
                 }

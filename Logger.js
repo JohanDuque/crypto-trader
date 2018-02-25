@@ -5,7 +5,7 @@ const moment = require('moment');
 const util = require('util');
 
 const reportFileName = './reports/' + Conf.traderId + "@" + moment().format('YYYYMMDD-hh-mm-ss') + '.log';
-const recordFile = './recordings/'+ moment().format('YYYY-MM-DD-hh-mm-ss') + '.json';
+const recordFile = './recordings/' + moment().format('YYYY-MM-DD-hh-mm-ss') + '.json';
 const useTimeInLog = false;
 
 module.exports = class Logger {
@@ -19,8 +19,8 @@ module.exports = class Logger {
             if (useTimeInLog) {
                 let logTime = moment().format('YYYY-MM-DD hh:mm:ss');
                 logMsg += logTime + "  " + msg;
-            }else{
-                logMsg+=msg;
+            } else {
+                logMsg += msg;
             }
 
             fs.appendFile(reportFileName, logMsg, (err) => {
@@ -32,13 +32,13 @@ module.exports = class Logger {
         }
     }
 
-    static recordInfo(){
-        if(Conf.recordInfo){
-            let info="";
+    static recordInfo() {
+        if (Conf.recordInfo) {
+            let info = "";
 
-            if(gb.iteration == 1){
+            if (gb.iteration == 1) {
                 info += '[';
-            }else{
+            } else {
                 info = "\n";
             }
 
@@ -60,8 +60,8 @@ module.exports = class Logger {
         this.log(0, "  Trader# " + Conf.traderId + "        Errors: " + gb.errorCount);
         this.log(0, "\n  Last Buy Order : " + gb.lastBuyPrice + "(" + Conf.toCurrency + ")        Buy Orders: " + gb.buyOrders);
         this.log(0, "  Last Sell Order: " + gb.lastSellPrice + "(" + Conf.toCurrency + ")       Sell Orders: " + gb.sellOrders);
-        this.log(0, "  Total Traded Amount: "+gb.totalTradedAmout+"  Highest Price: " + gb.hightestTradePrice + "(" + Conf.toCurrency + ")   Lowest Price: " +  gb.lowestTradePrice);
         this.log(0, "  Profits        : " + gb.profits + "(" + Conf.toCurrency + ")   Filled Orders: " + gb.fills);
+        this.log(0, "  Highest Price  : " + gb.hightestTradePrice + "  Lowest Price: " + gb.lowestTradePrice + "  Diff: " + gb.totalAmoutTraded + "(" + Conf.toCurrency + ")");
         this.log(0, "  Current price  : " + gb.currentMarketPrice + "(" + Conf.toCurrency + ")");
         this.log(0, "-------------------------------------------------------------");
     }
