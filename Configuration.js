@@ -31,6 +31,3 @@ class Configuration {
 }
 
 module.exports = Object.freeze(new Configuration());
-//const config = new Configuration();
-//console.log(config);
-// new Configuration();

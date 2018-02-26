@@ -6,3 +6,4 @@ package-lock.json
 reports/
 recordings/
 .idea/
+privateKeys.json

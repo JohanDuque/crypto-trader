@@ -3,11 +3,96 @@ const gb = require('./GlobalVariables');
 const Logger = require('./Logger');
 const util = require('util');
 
+const GdaxAuthenticator = require('./GdaxAuthenticator');
+
 const Gdax = require('gdax');
 const publicClient = new Gdax.PublicClient();
 
+const authedClient = new Gdax.AuthenticatedClient(
+    GdaxAuthenticator.key,
+    GdaxAuthenticator.secret,
+    GdaxAuthenticator.passphrase,
+    GdaxAuthenticator.apiURI
+);
+
+const ETH_ID = GdaxAuthenticator.ETH_ACCOUNT_ID;
 
 class GdaxManager {
+
+    getCoinbaseAccounts() {
+        return new Promise(function(resolve, reject) {
+            authedClient.getCoinbaseAccounts()
+                .then(data => {
+                    console.log('Coinbase Accounts:');
+                    console.log(data);
+
+                    resolve();
+                })
+                .catch(error => {
+                    //TODO handle error
+                    gb.errorCount++;
+                    Logger.log(4, error);
+                    reject();
+                });
+        });
+    }
+
+    getAccounts() {
+        return new Promise(function(resolve, reject) {
+            authedClient.getAccounts()
+                .then(data => {
+
+                    console.log('Accounts:');
+                    console.log(data);
+
+                    resolve();
+                })
+                .catch(error => {
+                    //TODO handle error
+                    gb.errorCount++;
+                    Logger.log(4, error);
+                    reject();
+                });
+        });
+    }
+
+    getAccount() {
+        return new Promise(function(resolve, reject) {
+            authedClient.getAccount(ETH_ID)
+                .then(data => {
+                    console.log('Account:');
+                    console.log(data);
+
+                    resolve();
+                })
+                .catch(error => {
+                    //TODO handle error
+                    gb.errorCount++;
+                    Logger.log(4, error);
+                    reject();
+                });
+        });
+    }
+
+    getAccountHistory() {
+        return new Promise(function(resolve, reject) {
+            // For pagination, you can include extra page arguments
+            authedClient.getAccountHistory(ETH_ID, { before: 3000 })
+                .then(data => {
+                    console.log('Account History:');
+                    console.log(data);
+
+                    resolve();
+                })
+                .catch(error => {
+                    //TODO handle error
+                    gb.errorCount++;
+                    Logger.log(4, error);
+                    reject();
+                });
+        });
+    }
+
     getAverage(items) {
         let sumItems = items.reduce((accumulator, item) => {
             //"item": [ price, size, num-orders ] 
@@ -47,14 +132,14 @@ class GdaxManager {
                     gb.lastBuySpeed = gb.currentBuySpeed ? gb.currentBuySpeed : 1;
                     gb.lastSellSpeed = gb.currentSellSpeed ? gb.currentSellSpeed : 1;
 
-                    Logger.log(3, "\nTrade History:\n" + util.inspect(data, { depth: 2 }) +"\n");
+                    Logger.log(3, "\nTrade History:\n" + util.inspect(data, { depth: 2 }) + "\n");
 
                     gb.tradeHistory = data;
                     gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
                     gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
                     gb.currentMarketPrice = Number(data[0].price);
-                    gb.lowestTradePrice= gb.currentMarketPrice < gb.lowestTradePrice ? gb.currentMarketPrice : gb.lowestTradePrice;
-                    gb.hightestTradePrice= gb.currentMarketPrice > gb.hightestTradePrice ? gb.currentMarketPrice : gb.hightestTradePrice;
+                    gb.lowestTradePrice = gb.currentMarketPrice < gb.lowestTradePrice ? gb.currentMarketPrice : gb.lowestTradePrice;
+                    gb.hightestTradePrice = gb.currentMarketPrice > gb.hightestTradePrice ? gb.currentMarketPrice : gb.hightestTradePrice;
                     gb.totalAmoutTraded = gb.hightestTradePrice - gb.lowestTradePrice;
 
                     Logger.log(2, 'Current Buyers: ' + gb.currentBuyers);
