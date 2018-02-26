@@ -12,6 +12,6 @@
     "logLvl": 1,
     "logOnFile" : true,
     "recordInfo" : true,
-    "simulateFromRecording" : true,
+    "simulateFromRecording" : false,
     "recordingFile" : "./recordings/lastTest"
 }

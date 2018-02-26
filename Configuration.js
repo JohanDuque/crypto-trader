@@ -3,8 +3,8 @@ const params = require('./params.json');
 class Configuration {
     constructor() {
         this.logLvl = params.logLvl; //(0-5) from nothing to verbose
-        this.logOnFile = params.simulateFromRecordign ? params.logOnFile :false;
-        this.recordInfo = params.simulateFromRecordign ? params.recordInfo :false;
+        this.logOnFile = params.simulateFromRecordign ? false : params.logOnFile;
+        this.recordInfo = params.simulateFromRecordign ? false : params.recordInfo;
         this.productType = params.productType;
         this.fromCurrency = this.productType.split('-')[0];
         this.toCurrency = this.productType.split('-')[1];
