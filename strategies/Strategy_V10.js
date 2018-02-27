@@ -7,7 +7,7 @@ const analyzer = require('../Analyzer');
 class Strategy_V10 {
 
     apply() {
-        if (gb.lastOrderWasFilled) {
+        if (gb.lastOrderWasFilled || gb.buyOrders == 0) {
             if (gb.lastAction !== conf.BUY) {
                 if (analyzer.isMarketGoingFromDownToUp()) {
                     Logger.log(1, "Market is GoingFrom DOWN to UP I'm buying at current price");

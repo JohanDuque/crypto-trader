@@ -9,7 +9,7 @@ const strategy = StrategyFactory.getStrategy();
 
 let nIntervId;
 
-let checkFills = () => {
+let checkFills_OLD = () => {
     let wasItFilled = undefined;
 
     if (!gb.lastOrderWasFilled) {
@@ -35,8 +35,21 @@ let checkFills = () => {
     }
 };
 
+let checkFills = () => {
+    if (gb.lastOrderWasFilled) {
+        gb.fills++;
+        Logger.printReport();
+    };
+};
+
 let askForInfo = () => {
     return Promise.all([
+        //GdaxManager.getCoinbaseAccounts(),
+        //GdaxManager.getAccounts(),
+        //GdaxManager.getAccount(),
+        //GdaxManager.getAccountHistory(),
+        //GdaxManager.placeBuyOrder(),
+        GdaxManager.getFills(),
         GdaxManager.getOrderBook(),
         GdaxManager.getTradeHistory()
     ])
@@ -132,9 +145,9 @@ let simulateFromRecording = () => {
         gb.currentBuySpeed = element.currentBuySpeed; //buyers/sellers
         gb.lastSellSpeed = element.lastSellSpeed; //sellers/buyers
         gb.currentSellSpeed = element.currentSellSpeed; //sellers/buyers
-        gb.lowestTradePrice=element.lowestTradePrice;
-        gb.hightestTradePrice=element.hightestTradePrice;
-        gb.totalAmoutTraded=element.totalAmoutTraded;
+        gb.lowestTradePrice = element.lowestTradePrice;
+        gb.hightestTradePrice = element.hightestTradePrice;
+        gb.totalAmoutTraded = element.totalAmoutTraded;
 
         checkFills();
         applyStrategy();

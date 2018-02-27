@@ -17,14 +17,59 @@ const authedClient = new Gdax.AuthenticatedClient(
 
 const ETH_ID = GdaxAuthenticator.ETH_ACCOUNT_ID;
 
+let lastCallFills = -1;//just to give it an starting value
+
 class GdaxManager {
+
+    placeOrder(params) {
+        return new Promise(function(resolve, reject) {
+            authedClient.placeOrder(params)
+                .then(data => {
+                    Logger.log(3, 'Place Order:');
+                    Logger.log(3, data);
+
+                    resolve();
+                })
+                .catch(error => {
+                    //TODO handle error
+                    gb.errorCount++;
+                    Logger.log(4, error);
+                    reject();
+                });
+        });
+    }
+
+    getFills(){
+        return new Promise(function(resolve, reject) {
+            authedClient.getFills()
+                .then(data => {
+                    Logger.log(3, 'Fills:');
+                    Logger.log(3, data);
+
+                    if(lastCallFills == -1){
+                        lastCallFills = data.length;    
+                    }
+
+                    gb.lastOrderWasFilled = data.length > lastCallFills;
+                    lastCallFills = data.length;
+
+                    resolve();
+                })
+                .catch(error => {
+                    //TODO handle error
+                    gb.errorCount++;
+                    Logger.log(4, error);
+                    reject();
+                });
+        });
+    }
 
     getCoinbaseAccounts() {
         return new Promise(function(resolve, reject) {
             authedClient.getCoinbaseAccounts()
                 .then(data => {
-                    console.log('Coinbase Accounts:');
-                    console.log(data);
+                    Logger.log(3, 'Coinbase Accounts:');
+                    Logger.log(3, data);
 
                     resolve();
                 })
@@ -42,8 +87,8 @@ class GdaxManager {
             authedClient.getAccounts()
                 .then(data => {
 
-                    console.log('Accounts:');
-                    console.log(data);
+                    Logger.log(3, 'Accounts:');
+                    Logger.log(3, data);
 
                     resolve();
                 })
@@ -60,8 +105,8 @@ class GdaxManager {
         return new Promise(function(resolve, reject) {
             authedClient.getAccount(ETH_ID)
                 .then(data => {
-                    console.log('Account:');
-                    console.log(data);
+                    Logger.log(3, 'Account:');
+                    Logger.log(3, data);
 
                     resolve();
                 })
@@ -79,8 +124,8 @@ class GdaxManager {
             // For pagination, you can include extra page arguments
             authedClient.getAccountHistory(ETH_ID, { before: 3000 })
                 .then(data => {
-                    console.log('Account History:');
-                    console.log(data);
+                    Logger.log(3, 'Account History:');
+                    Logger.log(3, data);
 
                     resolve();
                 })
