@@ -17,7 +17,7 @@ class GlobalVariables {
         this.buyOrders = 0;
         this.sellOrders = 0;
         this.errorCount = 0;
-        this.lastOrderWasFilled = true;
+        this.lastOrderWasFilled = false;
         this.fills = 0;
         this.tradeHistory= null;
         this.lastBuySpeed = 0; //buyers/sellers

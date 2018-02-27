@@ -14,46 +14,69 @@ class Trader {
     }
 
     placeSellOrder(price) {
-        this.placeOrderOnExchange(price, conf.SELL).then(() => {
-            gb.sellOrders++;
-            gb.lastSellPrice = price;
-            gb.lastAction = conf.SELL;
-            gb.profits += this.calculateTransactionAmount(price);
-            gb.lastOrderWasFilled = false;
+        if (conf.simulateFromRecording) {
+            this.onSellOrderPlaced(price);
+        } else {
+            this.placeOrderOnExchange(price, conf.SELL).then(() => {
+                this.onSellOrderPlaced(price);
+            }, err => {
+                //TODO handle error
+                gb.errorCount++;
+                Logger.log(1, err);
+            });
+        }
+    }
 
-            Logger.log(1, "\n+++++ Placing Sell Order at: " + price + "(" + conf.toCurrency + ") +++++ Sell Orders: " + gb.sellOrders);
-            Logger.printReport();
-        }, err => {
-            //TODO handle error
-            gb.errorCount++;
-            Logger.log(1, err);
-        });
+    onSellOrderPlaced(price) {
+        gb.sellOrders++;
+        gb.lastSellPrice = price;
+        gb.lastAction = conf.SELL;
+        gb.profits += this.calculateTransactionAmount(price);
+        gb.lastOrderWasFilled = false;
+
+        Logger.log(1, "\n+++++ Placing Sell Order at: " + price + "(" + conf.toCurrency + ") +++++ Sell Orders: " + gb.sellOrders);
+        Logger.printReport();
     }
 
     placeSellOrderAtCurrentMarketPrice() {
         this.placeSellOrder(gb.currentMarketPrice);
     }
 
+    placeSellOrderCloseToCurrentMarketPrice() {
+        this.placeSellOrder(gb.currentMarketPrice);//TODO
+    }
+
     placeBuyOrder(price) {
-        this.placeOrderOnExchange(price, conf.BUY).then(() => {
-            gb.buyOrders++;
-            gb.lastBuyPrice = price;
-            gb.lastAction = conf.BUY;
-            gb.profits -= this.calculateTransactionAmount(price);
-            gb.lastOrderWasFilled = false;
+        if (conf.simulateFromRecording) {
+            this.onBuyOrderPlaced(price);
+        } else {
+            this.placeOrderOnExchange(price, conf.BUY).then(() => {
+                this.onBuyOrderPlaced(price);
+            }, err => {
+                //TODO handle error
+                gb.errorCount++;
+                Logger.log(1, err);
+            });
+        }
+    }
 
-            Logger.log(1, "\n----- Placing Buy Order at: " + price + "(" + conf.toCurrency + ") ----- Buy Orders: " + gb.buyOrders);
-            Logger.printReport();
-        }, err => {
-            //TODO handle error
-            gb.errorCount++;
-            Logger.log(1, err);
-        });
+    onBuyOrderPlaced(price) {
+        gb.buyOrders++;
+        gb.lastBuyPrice = price;
+        gb.lastAction = conf.BUY;
+        gb.profits -= this.calculateTransactionAmount(price);
+        gb.lastOrderWasFilled = false;
 
+        Logger.log(1, "\n----- Placing Buy Order at: " + price + "(" + conf.toCurrency + ") ----- Buy Orders: " + gb.buyOrders);
+        Logger.printReport();
     }
 
     placeBuyOrderAtCurrentMarketPrice() {
         this.placeBuyOrder(gb.currentMarketPrice);
+    }
+
+    placeBuyOrderCloseToCurrentMarketPrice() {
+        this.placeBuyOrder(gb.currentMarketPrice);//TODO
     }
 
     removeLastSellOrder() {
@@ -90,13 +113,13 @@ class Trader {
             price: price,
             size: conf.orderSize,
             product_id: conf.productType,
+            post_only: true
         };
 
         return Promise.all([
             GdaxManager.placeOrder(params)
         ]);
     }
-
 }
 
 module.exports = new Trader();

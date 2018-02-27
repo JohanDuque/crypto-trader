@@ -17,7 +17,7 @@ const authedClient = new Gdax.AuthenticatedClient(
 
 const ETH_ID = GdaxAuthenticator.ETH_ACCOUNT_ID;
 
-let lastCallFills = -1;//just to give it an starting value
+let lastCallFills = -1; //just to give it an starting value
 
 class GdaxManager {
 
@@ -27,6 +27,7 @@ class GdaxManager {
                 .then(data => {
                     Logger.log(3, 'Place Order:');
                     Logger.log(3, data);
+                    console.log(data);
 
                     resolve();
                 })
@@ -39,20 +40,27 @@ class GdaxManager {
         });
     }
 
-    getFills(){
+    getFills() {
         return new Promise(function(resolve, reject) {
             authedClient.getFills()
                 .then(data => {
                     Logger.log(3, 'Fills:');
                     Logger.log(3, data);
 
-                    if(lastCallFills == -1){
-                        lastCallFills = data.length;    
+                    if (lastCallFills == -1) {
+                        lastCallFills = data.length;
                     }
 
-                    gb.lastOrderWasFilled = data.length > lastCallFills;
-                    lastCallFills = data.length;
+                    if (!gb.lastOrderWasFilled) {
+                        gb.lastOrderWasFilled = data.length > lastCallFills;
+                        lastCallFills = data.length;
 
+                        if (gb.lastOrderWasFilled) {
+                            gb.fills++;
+                            Logger.printReport();
+                            Logger.log(1, "gb.lastOrderWasFilled = " + gb.lastOrderWasFilled);
+                        }
+                    }
                     resolve();
                 })
                 .catch(error => {
