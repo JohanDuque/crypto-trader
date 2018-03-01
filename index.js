@@ -146,6 +146,8 @@ let simulateFromRecording = () => {
         checkFills();
         applyStrategy();
 
+        //Logger.log(1, 'It#' + gb.iteration + ' \nBuyers:' + gb.currentBuyers+ ' Sellers:' + gb.currentSellers+ ' MarketPrice:' +gb.currentMarketPrice + ' BUYspeed(Buy/Sell):' + gb.currentBuySpeed+ ' SELLspeed(Sell/Buy):' + gb.currentSellSpeed);
+
         if (conf.logLvl >= 2) Logger.printReport();
         checkForErrors();
     });

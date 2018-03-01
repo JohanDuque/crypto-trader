@@ -1,7 +1,7 @@
 {
     "orderSize": 0.01,
     "errorTolerance": 300,
-    "investment": 10,
+    "investment": 13.49,
     "orderFillError": 0.1,
     "postOnlyFactor": 0.0001,
     "startDelay": 0,
@@ -14,5 +14,5 @@
     "logOnFile" : true,
     "recordInfo" : true,
     "simulateFromRecording" : false,
-    "recordingFile" : "./recordings/realTest"
+    "recordingFile" : "./recordings/test"
 }

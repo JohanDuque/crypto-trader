@@ -13,7 +13,7 @@ class Analyzer {
     }
 
     isMarketGoingFromUpToDown() {
-        return this.isSellSpeedIncreasing() && (gb.lastBuySpeed > 0.1) && (gb.currentBuySpeed < 0.1);
+        return this.isSellSpeedIncreasing() && (gb.lastBuySpeed > 0.1) && (gb.currentBuySpeed < 0.5);
     }
 }
 
