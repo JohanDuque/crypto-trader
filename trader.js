@@ -14,12 +14,13 @@ class Trader {
     }
 
     placeSellOrder(price) {
+        const newPrice = this.precisionRound(price, 2);
         if (conf.simulateFromRecording) {
-            this.onSellOrderPlaced(price);
+            this.onSellOrderPlaced(newPrice);
         } else {
-            this.placeOrderOnExchange(price, conf.SELL).then(() => {
-                this.onSellOrderPlaced(price);
-            }, err => {
+            this.placeOrderOnExchange(newPrice, conf.SELL).then(() => {
+                this.onSellOrderPlaced(newPrice);
+            }).catch( err => {
                 //TODO handle error
                 gb.errorCount++;
                 Logger.log(1, err);
@@ -43,16 +44,18 @@ class Trader {
     }
 
     placeSellOrderCloseToCurrentMarketPrice() {
-        this.placeSellOrder(gb.currentMarketPrice);//TODO
+        const closePrice = gb.currentMarketPrice - (gb.currentMarketPrice * conf.postOnlyFactor);
+        this.placeSellOrder(closePrice);
     }
 
     placeBuyOrder(price) {
+        const newPrice = this.precisionRound(price, 2);
         if (conf.simulateFromRecording) {
-            this.onBuyOrderPlaced(price);
+            this.onBuyOrderPlaced(newPrice);
         } else {
-            this.placeOrderOnExchange(price, conf.BUY).then(() => {
-                this.onBuyOrderPlaced(price);
-            }, err => {
+            this.placeOrderOnExchange(newPrice, conf.BUY).then(() => {
+                this.onBuyOrderPlaced(newPrice);
+            }).catch(err => {
                 //TODO handle error
                 gb.errorCount++;
                 Logger.log(1, err);
@@ -76,7 +79,8 @@ class Trader {
     }
 
     placeBuyOrderCloseToCurrentMarketPrice() {
-        this.placeBuyOrder(gb.currentMarketPrice);//TODO
+        const closePrice = gb.currentMarketPrice - (gb.currentMarketPrice * conf.postOnlyFactor);
+        this.placeBuyOrder(closePrice);
     }
 
     removeLastSellOrder() {
@@ -107,7 +111,13 @@ class Trader {
         return price * conf.orderSize;
     }
 
+    precisionRound(number, precision) {
+        let factor = Math.pow(10, precision);
+        return Math.round(number * factor) / factor;
+    }
+
     placeOrderOnExchange(price, side) {
+        Logger.log(1, "\nPlacing "+side+" Order of "+price+" on Exchange at: " + new Date());
         const params = {
             side: side,
             price: price,
@@ -116,9 +126,7 @@ class Trader {
             post_only: true
         };
 
-        return Promise.all([
-            GdaxManager.placeOrder(params)
-        ]);
+        return GdaxManager.placeOrder(params);
     }
 }
 

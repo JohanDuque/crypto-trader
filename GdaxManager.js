@@ -51,6 +51,8 @@ class GdaxManager {
                         lastCallFills = data.length;
                     }
 
+                    //Logger.log(1, "data.length= " + data.length + " lastCallFills= " + lastCallFills+  " lastOrderWasFilled="+ gb.lastOrderWasFilled);
+
                     if (!gb.lastOrderWasFilled) {
                         gb.lastOrderWasFilled = data.length > lastCallFills;
                         lastCallFills = data.length;
@@ -58,7 +60,7 @@ class GdaxManager {
                         if (gb.lastOrderWasFilled) {
                             gb.fills++;
                             Logger.printReport();
-                            Logger.log(1, "gb.lastOrderWasFilled = " + gb.lastOrderWasFilled);
+                            Logger.log(1, "gb.lastOrderWasFilled= " + gb.lastOrderWasFilled);
                         }
                     }
                     resolve();

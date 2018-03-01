@@ -16,6 +16,7 @@ class Configuration {
         this.maxPollingInterval = params.maxPollingInterval;
         this.tradeHistorySize = params.tradeHistorySize;
         this.orderFillError = params.orderFillError;
+        this.postOnlyFactor = params.postOnlyFactor;
         this.startTime = new Date();
         this.startDelay = params.startDelay;
         this.simulateFromRecording = params.simulateFromRecording;
