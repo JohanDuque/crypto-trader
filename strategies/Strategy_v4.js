@@ -1,7 +1,7 @@
-const gb = require('../GlobalVariables');
-const trader = require('../Trader');
-const conf = require('../Configuration');
-const Logger = require('../Logger');
+const gb = require('../commons/GlobalVariables');
+const trader = require('../actors/Trader');
+const conf = require('../commons/Configuration');
+const Logger = require('../commons/Logger');
 
 let isStarting = gb.sellOrders === gb.buyOrders &&
     gb.buyOrders === gb.fills &&

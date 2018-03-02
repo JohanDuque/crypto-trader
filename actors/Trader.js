@@ -1,7 +1,7 @@
-const conf = require('./Configuration');
-const gb = require('./GlobalVariables');
-const GdaxManager = require('./GdaxManager');
-const Logger = require('./Logger');
+const conf = require('../commons/Configuration');
+const gb = require('../commons/GlobalVariables');
+const GdaxManager = require('../Gdax/GdaxManager');//TODO use an abtract
+const Logger = require('../commons/Logger');
 
 class Trader {
 

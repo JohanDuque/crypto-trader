@@ -13,6 +13,7 @@
     "logLvl": 1,
     "logOnFile" : true,
     "recordInfo" : true,
-    "simulateFromRecording" : false,
+    "simulateFromRecording" : true,
+    "simulateOnly" : false,
     "recordingFile" : "./recordings/test"
 }

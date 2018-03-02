@@ -1,4 +1,4 @@
-const params = require('./params.json');
+const params = require('../params.json');
 
 class Configuration {
     constructor() {
@@ -19,6 +19,7 @@ class Configuration {
         this.postOnlyFactor = params.postOnlyFactor;
         this.startTime = new Date();
         this.startDelay = params.startDelay;
+        this.simulateOnly = params.simulateOnly;
         this.simulateFromRecording = params.simulateFromRecording;
         this.recordingFile = params.recordingFile;
 

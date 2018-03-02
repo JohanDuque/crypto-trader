@@ -1,4 +1,4 @@
-const privatekeys = require('./privatekeys.json');
+const privatekeys = require('../privateKeys.json');
 
 class GdaxAuthenticator {
     constructor() {

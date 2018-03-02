@@ -1,10 +1,10 @@
-const conf = require('./Configuration');
-const gb = require('./GlobalVariables');
-const Logger = require('./Logger');
+const conf = require('./commons/Configuration');
+const gb = require('./commons/GlobalVariables');
+const Logger = require('./commons/Logger');
 const util = require('util');
-const GdaxManager = require('./GdaxManager');
+const GdaxManager = require('./Gdax/GdaxManager');
 
-const StrategyFactory = require('./StrategyFactory');
+const StrategyFactory = require('./commons/StrategyFactory');
 const strategy = StrategyFactory.getStrategy();
 
 let nIntervId;

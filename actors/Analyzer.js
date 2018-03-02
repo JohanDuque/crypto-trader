@@ -1,5 +1,5 @@
-const gb = require('./GlobalVariables');
-const Logger = require('./Logger');
+const gb = require('../commons/GlobalVariables');
+const Logger = require('../commons/Logger');
 
 class Analyzer {
     isBuySpeedIncreasing() { return gb.currentBuySpeed > gb.lastBuySpeed }

@@ -1,9 +1,9 @@
-const conf = require('./Configuration');
-const gb = require('./GlobalVariables');
-const Logger = require('./Logger');
+const conf = require('./commons/Configuration');
+const gb = require('./commons/GlobalVariables');
+const Logger = require('./commons/Logger');
 const Gdax = require('gdax');
 
-const StrategyFactory = require('./StrategyFactory');
+const StrategyFactory = require('./commons/StrategyFactory');
 const strategy = StrategyFactory.getStrategy();
 
 const publicClient = new Gdax.PublicClient();
