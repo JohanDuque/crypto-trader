@@ -15,5 +15,5 @@
     "recordInfo" : true,
     "simulateFromRecording" : true,
     "simulateOnly" : false,
-    "recordingFile" : "./recordings/test"
+    "recordingFile" : "./recordings/realtest2"
 }
