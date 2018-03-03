@@ -1,7 +1,6 @@
 const conf = require('./commons/Configuration');
 const gb = require('./commons/GlobalVariables');
 const Logger = require('./commons/Logger');
-const util = require('util');
 const GdaxManager = require('./Gdax/GdaxManager');
 
 const StrategyFactory = require('./commons/StrategyFactory');

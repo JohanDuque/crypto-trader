@@ -143,14 +143,14 @@ class Strategy_V7 {
         if (gb.lastOrderWasFilled) {
             if (gb.lastAction !== conf.BUY) {
                 if (trader.isThisFirstTrade() || gb.lastSellPrice >= gb.currentMarketPrice) {
-                    if (analyzer.isBuySpeedIncreasing()) {
+                    if (Analyzer.isBuySpeedIncreasing()) {
                         //Logger.log("Market is going UP, I'm trying to BUY...");
                         Logger.log(1, "Market is going UP...");
                         this.aboutToBuyWhileMarketGrowing();
                         return;
                     }
 
-                    if (analyzer.isSellSpeedIncreasing()) {
+                    if (Analyzer.isSellSpeedIncreasing()) {
                         Logger.log(1, "Market is going DOWN, I'm trying to BUY...");
                         this.aboutToBuyWhileMarketDropping();
                         return;
@@ -161,13 +161,13 @@ class Strategy_V7 {
 
             } else { //I'm trying to SELL
                 if (gb.lastBuyPrice <= gb.currentMarketPrice) {
-                    if (analyzer.isBuySpeedIncreasing()) {
+                    if (Analyzer.isBuySpeedIncreasing()) {
                         Logger.log(1, "Market is going UP, I'm trying to SELL...");
                         this.aboutToSellWhileMarketGrowing();
                         return;
                     }
 
-                    if (analyzer.isSellSpeedIncreasing()) {
+                    if (Analyzer.isSellSpeedIncreasing()) {
                         Logger.log(1, "Market is going DOWN, I'm trying to SELL...");
                         this.aboutToSellWhileMarketDropping();
                         return;
@@ -180,13 +180,13 @@ class Strategy_V7 {
         } else { //I placed an Order that has not been filled yet.
 
             if (gb.lastAction !== conf.SELL) {
-                if (analyzer.isBuySpeedIncreasing()) {
+                if (Analyzer.isBuySpeedIncreasing()) {
                     Logger.log(1, "Market is going UP, I have placed buy Order...");
                     this.buyOrderPlacedWhileMarketGrowing();
                     return;
                 }
 
-                if (analyzer.isSellSpeedIncreasing()) {
+                if (Analyzer.isSellSpeedIncreasing()) {
                     Logger.log(1, "Market is going DOWN, I've placed buy order...");
                     this.buyOrderPlacedWhileMarketDropping();
                     return;
@@ -194,13 +194,13 @@ class Strategy_V7 {
 
             } else { //I'm trying to SELL
 
-                if (analyzer.isBuySpeedIncreasing()) {
+                if (Analyzer.isBuySpeedIncreasing()) {
                     Logger.log(1, "Market is going UP, I've placed SELL...");
                     this.sellOrderPlacedWhileMarketGrowing();
                     return;
                 }
 
-                if (analyzer.isSellSpeedIncreasing()) {
+                if (Analyzer.isSellSpeedIncreasing()) {
                     Logger.log(1, "Market is going DOWN, I've placed SELL...");
                     this.sellOrderPlacedWhileMarketDropping();
                     return;

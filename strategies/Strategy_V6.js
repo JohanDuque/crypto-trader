@@ -10,7 +10,7 @@ class Strategy_V6 {
             //While market is constantly going UP...
 
             //console.log("Is Ratio Increasing: " + analyzer.isRatioIncreasing() );
-            if (analyzer.areBuyersTwiceSellers()) {
+            if (Analyzer.areBuyersTwiceSellers()) {
                 if (gb.lastAction !== conf.BUY) {
                     Logger.log(1, "  >> Market is constantly going UP, I'm buying!");
                     trader.placeBuyOrderAtCurrentMarketPrice();
@@ -25,7 +25,7 @@ class Strategy_V6 {
             }
 
             //While market is constantly going DOWN...
-            if (analyzer.areSellersTwiceBuyers()) {
+            if (Analyzer.areSellersTwiceBuyers()) {
                 if (gb.lastAction !== conf.SELL) { //So I bought
                     if (gb.lastBuyPrice > gb.currentMarketPrice) {
                         if (!analyzer.isRatioIncreasing()) {
@@ -54,7 +54,7 @@ class Strategy_V6 {
             }
         } else { //I place an Order that has not been filled yet.
 
-            if (analyzer.areBuyersTwiceSellers() && analyzer.isRatioIncreasing()) {
+            if (Analyzer.areBuyersTwiceSellers() && analyzer.isRatioIncreasing()) {
                 Logger.log(1, "  >> Market keeps constantly going UP, ratio is increasing...");
                 if (gb.lastAction === conf.BUY) {
                     if (trader.improveBuyAverage() > gb.lastBuyPrice) {
@@ -74,7 +74,7 @@ class Strategy_V6 {
             }
 
             //While market is constantly going DOWN...
-            if (analyzer.areSellersTwiceBuyers() && !analyzer.isRatioIncreasing()) {
+            if (Analyzer.areSellersTwiceBuyers() && !analyzer.isRatioIncreasing()) {
                 if (gb.lastAction === conf.BUY) {
                     Logger.log(1, "  >> Market keeps constantly going DOWN");
                     Logger.log(1, "I'm replacing last BUY order Lower!");
