@@ -4,7 +4,8 @@
     "moment": "*"
   },
   "scripts": {
-    "start": "babel-node index.js"
+    "start": "babel-node index.js",
+    "dev-tools": "node --inspect-brk index.js"
   },
   "name": "crypto-trader",
   "description": "Simple script for crypto currencies trading simulation",
