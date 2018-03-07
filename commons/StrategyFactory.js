@@ -11,6 +11,7 @@ const Strategy_V8 = require('../strategies/Strategy_V8');
 const Strategy_V9 = require('../strategies/Strategy_V9');
 const Strategy_V10 = require('../strategies/Strategy_V10');
 const Strategy_V11 = require('../strategies/Strategy_V11');
+const Strategy_V12 = require('../strategies/Strategy_V12');
 
 
 const strategies = new Map();
@@ -25,7 +26,7 @@ strategies.set('V8', Strategy_V8);
 strategies.set('V9', Strategy_V9);
 strategies.set('V10', Strategy_V10);
 strategies.set('V11', Strategy_V11);
-
+strategies.set('V12', Strategy_V12);
 
 module.exports = class StrategyFactory {
 	static getStrategy(){

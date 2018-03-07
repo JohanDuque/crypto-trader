@@ -1,19 +1,19 @@
 {
     "orderSize": 0.01,
     "errorTolerance": 300,
-    "investment": 13.49,
+    "investment": 10,
     "orderFillError": 0.1,
     "postOnlyFactor": 0.0001,
     "startDelay": 0,
     "minPollingInterval": 1.5,
     "maxPollingInterval": 9,
     "productType": "ETH-EUR",
-    "strategy": "V11",
+    "strategy": "V12",
     "tradeHistorySize": 31,
     "logLvl": 1,
     "logOnFile" : true,
     "recordInfo" : true,
     "simulateFromRecording" : true,
     "simulateOnly" : false,
-    "recordingFile" : "./recordings/realtest2"
+    "recordingFile" : "./recordings/lastSession"
 }
