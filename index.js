@@ -115,6 +115,8 @@ let doTrade = () => {
 
 let simulateFromRecording = () => {
     const infoRecorded = require(conf.recordingFile);
+    let logString = "";
+    let lastLogString = "";
 
     infoRecorded.forEach(function(element) {
         //TODO use a map
@@ -145,7 +147,12 @@ let simulateFromRecording = () => {
         checkFills();
         applyStrategy();
 
-        //Logger.log(1, 'It#' + gb.iteration + ' \nBuyers:' + gb.currentBuyers+ ' Sellers:' + gb.currentSellers+ ' MarketPrice:' +gb.currentMarketPrice + ' BUYspeed(Buy/Sell):' + gb.currentBuySpeed+ ' SELLspeed(Sell/Buy):' + gb.currentSellSpeed);
+        logString = '\tBuyers:' + gb.currentBuyers+ '\t Sellers:' + gb.currentSellers+ '\t MarketPrice:' +gb.currentMarketPrice + '\t BUYspeed(Buy/Sell):' + gb.currentBuySpeed+ '\t SELLspeed(Sell/Buy):' + gb.currentSellSpeed;
+
+        if(logString !== lastLogString){
+            Logger.log(1, 'It#' + gb.iteration + logString);    
+        }
+        lastLogString = logString;
 
         if (conf.logLvl >= 2) Logger.printReport();
         checkForErrors();
