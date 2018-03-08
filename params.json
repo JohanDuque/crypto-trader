@@ -1,7 +1,7 @@
 {
     "orderSize": 0.01,
-    "errorTolerance": 300,
-    "investment": 10,
+    "errorTolerance": 400,
+    "investment": 8,
     "orderFillError": 0.1,
     "postOnlyFactor": 0.0001,
     "startDelay": 0,
@@ -15,5 +15,5 @@
     "recordInfo" : true,
     "simulateFromRecording" : true,
     "simulateOnly" : false,
-    "recordingFile" : "./recordings/lastSession"
+    "recordingFileName" : "lastSession"
 }

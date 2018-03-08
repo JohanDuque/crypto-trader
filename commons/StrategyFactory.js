@@ -28,9 +28,9 @@ strategies.set('V10', Strategy_V10);
 strategies.set('V11', Strategy_V11);
 strategies.set('V12', Strategy_V12);
 
-module.exports = class StrategyFactory {
-	static getStrategy(){
-		return strategies.get(config.strategy);
-	}
-};
+class StrategyFactory {
+    getStrategy() {return strategies.get(config.strategy)}
+}
+
+module.exports = new StrategyFactory();
 

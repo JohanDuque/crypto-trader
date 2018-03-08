@@ -1,40 +1,13 @@
 const conf = require('./commons/Configuration');
 const gb = require('./commons/GlobalVariables');
 const Logger = require('./commons/Logger');
+const Simulator = require('./actors/Simulator');
 const GdaxManager = require('./Gdax/GdaxManager');
 
 const StrategyFactory = require('./commons/StrategyFactory');
 const strategy = StrategyFactory.getStrategy();
 
 let nIntervId;
-
-let checkFills = () => {
-    if (gb.buyOrders > 0) {
-        let wasItFilled = undefined;
-
-        if (!gb.lastOrderWasFilled) {
-            if (gb.lastAction === conf.BUY) {
-                wasItFilled = gb.tradeHistory.find((trade) => {
-                    //return (gb.lastBuyPrice - trade.price) > 0 || Math.abs(gb.lastBuyPrice - trade.price) <= conf.orderFillError
-                    return (gb.lastBuyPrice - trade.price) >= 0;
-                });
-
-            } else { //gb.lastAction === sell
-                wasItFilled = gb.tradeHistory.find((trade) => {
-                    //return (gb.lastSellPrice - trade.price) <= 0 || Math.abs(gb.lastSellPrice - data.price) <= conf.orderFillError
-                    return (gb.lastSellPrice - trade.price) <= 0;
-                });
-            }
-
-            gb.lastOrderWasFilled = wasItFilled !== undefined;
-
-            if (gb.lastOrderWasFilled) {
-                gb.fills++;
-                Logger.printReport();
-            };
-        }
-    }
-};
 
 let askForInfo = () => {
     return Promise.all([
@@ -48,8 +21,6 @@ let askForInfo = () => {
         GdaxManager.getTradeHistory()
     ])
 };
-
-let applyStrategy = () => { strategy.apply() };
 
 let setPollingInterval = (interval) => {
     Logger.log(2, "Setting Polling Iterval to " + interval + " seconds.");
@@ -96,7 +67,7 @@ let doTrade = () => {
         Logger.log(2, "Info received at:   " + new Date() + "\n");
 
         Logger.recordInfo();
-        applyStrategy();
+        strategy.apply();
 
         if (conf.logLvl >= 2) Logger.printReport();
 
@@ -113,60 +84,19 @@ let doTrade = () => {
     });
 };
 
-let simulateFromRecording = () => {
-    const infoRecorded = require(conf.recordingFile);
-    let logString = "";
-    let lastLogString = "";
-
-    infoRecorded.forEach(function(element) {
-        //TODO use a map
-        //gb.profits = element.profits;
-        gb.iteration = element.iteration;
-        gb.bidsAverage = element.bidsAverage;
-        //gb.lastBuyPrice = element.lastBuyPrice;
-        gb.asksAverage = element.asksAverage;
-        //gb.lastSellPrice = element.lastSellPrice;
-        gb.currentMarketPrice = element.currentMarketPrice;
-        gb.currentBuyers = element.currentBuyers;
-        gb.currentSellers = element.currentSellers;
-        //gb.lastAction = element.lastAction;
-        //gb.buyOrders = element.buyOrders;
-        //gb.sellOrders = element.sellOrders;
-        gb.errorCount = element.errorCount;
-        //gb.lastOrderWasFilled = element.lastOrderWasFilled;
-        //gb.fills = element.fills;
-        gb.tradeHistory = element.tradeHistory;
-        gb.lastBuySpeed = element.lastBuySpeed; //buyers/sellers
-        gb.currentBuySpeed = element.currentBuySpeed; //buyers/sellers
-        gb.lastSellSpeed = element.lastSellSpeed; //sellers/buyers
-        gb.currentSellSpeed = element.currentSellSpeed; //sellers/buyers
-        gb.lowestTradePrice = element.lowestTradePrice;
-        gb.hightestTradePrice = element.hightestTradePrice;
-        gb.totalAmoutTraded = element.totalAmoutTraded;
-
-        checkFills();
-        applyStrategy();
-
-        logString = '\tBuyers:' + gb.currentBuyers+ '\t Sellers:' + gb.currentSellers+ '\t MarketPrice:' +gb.currentMarketPrice + '\t BUYspeed(Buy/Sell):' + gb.currentBuySpeed+ '\t SELLspeed(Sell/Buy):' + gb.currentSellSpeed;
-
-        if(logString !== lastLogString){
-            Logger.log(1, 'It#' + gb.iteration + logString);    
-        }
-        lastLogString = logString;
-
-        if (conf.logLvl >= 2) Logger.printReport();
-        checkForErrors();
-    });
-    Logger.log(1, "\n Simulation Done!");
-}
-
+//****************** EXIT MESSAGE ***************//
+process.on('exit', function(code) {
+    Logger.printReport();
+    return console.log(`About to exit with code ${code}`);
+});
 
 //******************* MAIN ********************//
 if (conf.simulateFromRecording) {
-    simulateFromRecording();
+    Simulator.simulateFromRecording();
 } else {
     Logger.log(1, "Start Time: " + conf.startTime);
     Logger.log(1, "Trading will start within " + conf.maxPollingInterval + " seconds...");
     Logger.log(1, "Let's make Money! \n");
     nIntervId = setInterval(doTrade, conf.maxPollingInterval * 1000);
 }
+

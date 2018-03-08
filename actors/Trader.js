@@ -44,7 +44,7 @@ class Trader {
     }
 
     placeSellOrderCloseToCurrentMarketPrice() {
-        const closePrice = gb.currentMarketPrice - (gb.currentMarketPrice * conf.postOnlyFactor);
+        const closePrice = gb.currentMarketPrice + (gb.currentMarketPrice * conf.postOnlyFactor);
         this.placeSellOrder(closePrice);
     }
 
