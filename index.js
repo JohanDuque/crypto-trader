@@ -2,7 +2,7 @@ const conf = require('./commons/Configuration');
 const gb = require('./commons/GlobalVariables');
 const Logger = require('./commons/Logger');
 const Simulator = require('./actors/Simulator');
-const GdaxManager = require('./Gdax/GdaxManager');
+const Exchange = require('./actors/Exchange');
 
 const StrategyFactory = require('./commons/StrategyFactory');
 const strategy = StrategyFactory.getStrategy();
@@ -11,14 +11,14 @@ let nIntervId;
 
 let askForInfo = () => {
     return Promise.all([
-        //GdaxManager.getCoinbaseAccounts(),
-        //GdaxManager.getAccounts(),
-        //GdaxManager.getAccount(),
-        //GdaxManager.getAccountHistory(),
-        //GdaxManager.placeBuyOrder(),
-        GdaxManager.getFills(),
-        GdaxManager.getOrderBook(),
-        GdaxManager.getTradeHistory()
+        //Exchange.getCoinbaseAccounts(),
+        //Exchange.getAccounts(),
+        //Exchange.getAccount(),
+        //Exchange.getAccountHistory(),
+        //Exchange.placeBuyOrder(),
+        Exchange.getFills(),
+        Exchange.getOrderBook(),
+        Exchange.getTradeHistory()
     ])
 };
 

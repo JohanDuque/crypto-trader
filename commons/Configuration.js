@@ -5,6 +5,7 @@ class Configuration {
         this.logLvl = params.logLvl; //(0-5) from nothing to verbose
         this.logOnFile = params.simulateFromRecording ? false : params.logOnFile;
         this.recordInfo = params.simulateFromRecording ? false : params.recordInfo;
+        this.exchange = params.exchange;
         this.productType = params.productType;
         this.fromCurrency = this.productType.split('-')[0];
         this.toCurrency = this.productType.split('-')[1];

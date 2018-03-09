@@ -24,6 +24,6 @@ class Strategy_V11 {
             }
         }
     }
-};
+}
 
 module.exports = new Strategy_V11();

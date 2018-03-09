@@ -1,11 +1,12 @@
 const conf = require('../commons/Configuration');
 const gb = require('../commons/GlobalVariables');
 const Logger = require('../commons/Logger');
+const ExchangeInterface = require('../actors/ExchangeInterface');
 const util = require('util');
 
+const Gdax = require('gdax');
 const GdaxAuthenticator = require('./GdaxAuthenticator');
 
-const Gdax = require('gdax');
 const publicClient = new Gdax.PublicClient();
 
 const authedClient = new Gdax.AuthenticatedClient(
@@ -19,7 +20,7 @@ const ETH_ID = GdaxAuthenticator.ETH_ACCOUNT_ID;
 
 let lastCallFills = -1; //just to give it an starting value
 
-class GdaxManager {
+class GdaxManager extends ExchangeInterface {
 
     placeOrder(params) {
         return new Promise(function(resolve, reject) {
@@ -47,7 +48,7 @@ class GdaxManager {
                     Logger.log(3, 'Fills:');
                     Logger.log(3, data);
 
-                    if (lastCallFills == -1) {
+                    if (lastCallFills === -1) {
                         lastCallFills = data.length;
                     }
 
@@ -80,7 +81,6 @@ class GdaxManager {
                 .then(data => {
                     Logger.log(3, 'Coinbase Accounts:');
                     Logger.log(3, data);
-
                     resolve();
                 })
                 .catch(error => {
@@ -96,10 +96,8 @@ class GdaxManager {
         return new Promise(function(resolve, reject) {
             authedClient.getAccounts()
                 .then(data => {
-
                     Logger.log(3, 'Accounts:');
                     Logger.log(3, data);
-
                     resolve();
                 })
                 .catch(error => {
@@ -148,16 +146,8 @@ class GdaxManager {
         });
     }
 
-    getAverage(items) {
-        let sumItems = items.reduce((accumulator, item) => {
-            //"item": [ price, size, num-orders ] 
-            return accumulator + parseInt(item[0]);
-        }, 0);
-        return sumItems / items.length;
-    }
-
     getOrderBook() {
-        var me = this;
+        const me = this;
         return new Promise(function(resolve, reject) {
             publicClient.getProductOrderBook(conf.productType, { level: 2 })
                 .then(data => {
@@ -221,4 +211,4 @@ class GdaxManager {
     }
 }
 
-module.exports = new GdaxManager();
+module.exports = GdaxManager;

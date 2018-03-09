@@ -1,6 +1,6 @@
 const conf = require('../commons/Configuration');
 const gb = require('../commons/GlobalVariables');
-const GdaxManager = require('../Gdax/GdaxManager');//TODO use an abtract
+const Exchange = require('../actors/Exchange');
 const Logger = require('../commons/Logger');
 
 class Trader {
@@ -82,7 +82,7 @@ class Trader {
         const closePrice = gb.currentMarketPrice - (gb.currentMarketPrice * conf.postOnlyFactor);
         this.placeBuyOrder(closePrice);
     }
-
+//TODO implement exchange part
     removeLastSellOrder() {
         gb.sellOrders--;
         gb.lastAction = conf.BUY;
@@ -126,7 +126,7 @@ class Trader {
             post_only: true
         };
 
-        return GdaxManager.placeOrder(params);
+        return Exchange.placeOrder(params);
     }
 }
 
