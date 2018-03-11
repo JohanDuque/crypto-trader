@@ -5,7 +5,7 @@ const moment = require('moment');
 const util = require('util');
 
 const reportFileName = './reports/' + Conf.traderId + "@" + moment().format('YYYYMMDD-hh-mm-ss') + '.log';
-const recordFile = '../recordings/' + moment().format('YYYY-MM-DD-hh-mm-ss') + '.json';
+const recordFile = './recordings/' + moment().format('YYYY-MM-DD-hh-mm-ss') + '.json';
 const useTimeInLog = false;
 
 class Logger {

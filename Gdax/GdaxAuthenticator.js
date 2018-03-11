@@ -1,4 +1,5 @@
-const privatekeys = require('../privateKeys.json');
+//const privatekeys = require('../privateKeys.json');
+const privatekeys = require('../sandBoxPrivateKeys.json');
 
 class GdaxAuthenticator {
     constructor() {
@@ -8,7 +9,9 @@ class GdaxAuthenticator {
 
         this.ETH_ACCOUNT_ID = privatekeys.ETH_ACCOUNT_ID; 
 
-        this.apiURI = 'https://api.gdax.com';
+        //this.apiURI = 'https://api.gdax.com';
+        this.apiURI = 'https://api-public.sandbox.gdax.com';
+
         this.sandboxURI = 'https://api-public.sandbox.gdax.com';
     }
 }

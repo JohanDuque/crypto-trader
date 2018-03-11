@@ -64,7 +64,6 @@ class Simulator {
                         //return (gb.lastBuyPrice - trade.price) > 0 || Math.abs(gb.lastBuyPrice - trade.price) <= conf.orderFillError
                         return (gb.lastBuyPrice - trade.price) >= 0;
                     });
-
                 } else { //gb.lastAction === sell
                     wasItFilled = gb.tradeHistory.find((trade) => {
                         //return (gb.lastSellPrice - trade.price) <= 0 || Math.abs(gb.lastSellPrice - data.price) <= conf.orderFillError

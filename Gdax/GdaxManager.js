@@ -211,4 +211,4 @@ class GdaxManager extends ExchangeInterface {
     }
 }
 
-module.exports = GdaxManager;
+module.exports = new GdaxManager();
