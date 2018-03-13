@@ -1,8 +1,9 @@
-const conf = require('../commons/Configuration');
-//const GdaxManager = require('../Gdax/GdaxManager');
-
 class ExchangeInterface {
     placeOrder(params) {
+        throw new Error('You have to implement this method!');
+    }
+
+    cancelOrder(orderId) {
         throw new Error('You have to implement this method!');
     }
 

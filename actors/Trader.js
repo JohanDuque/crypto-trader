@@ -20,7 +20,7 @@ class Trader {
         } else {
             this.placeOrderOnExchange(newPrice, conf.SELL).then(() => {
                 this.onSellOrderPlaced(newPrice);
-            }).catch( err => {
+            }).catch(err => {
                 //TODO handle error
                 gb.errorCount++;
                 Logger.log(1, err);
@@ -82,30 +82,66 @@ class Trader {
         const closePrice = gb.currentMarketPrice - (gb.currentMarketPrice * conf.postOnlyFactor);
         this.placeBuyOrder(closePrice);
     }
-//TODO implement exchange part
+
     removeLastSellOrder() {
+        if (conf.simulateFromRecording) {
+            this.onRemoveLastSellOrder();
+        } else {
+            this.cancelLastOrder().then(() => {
+                this.onRemoveLastSellOrder();
+            }).catch(err => {
+                //TODO handle error
+                gb.errorCount++;
+                Logger.log(1, err);
+            });
+        }
+    }
+
+    onRemoveLastSellOrder() {
         gb.sellOrders--;
         gb.lastAction = conf.BUY;
         gb.profits -= this.calculateTransactionAmount(gb.lastSellPrice);
-        gb.lastOrderWasFilled = true;
 
         Logger.log(1, "\n----- Removing Last SELL Order ----");
     }
 
     removeLastBuyOrder() {
+        if (conf.simulateFromRecording) {
+            this.onRemoveLastBuyOrder();
+        } else {
+            this.cancelLastOrder().then(() => {
+                this.onRemoveLastBuyOrder();
+            }).catch(err => {
+                //TODO handle error
+                gb.errorCount++;
+                Logger.log(1, err);
+            });
+        }
+    }
+
+    onRemoveLastBuyOrder() {
         gb.buyOrders--;
         gb.lastAction = conf.SELL;
         gb.profits += this.calculateTransactionAmount(gb.lastBuyPrice);
-        gb.lastOrderWasFilled = false;
 
         Logger.log(1, "\n+++++ Removing Last BUY Order ----");
     }
 
-    improveSellAverage() { return (gb.asksAverage + gb.currentMarketPrice) / 2; }
-    improveBuyAverage() { return (gb.bidsAverage + gb.currentMarketPrice) / 2; }
+    improveSellAverage() {
+        return (gb.asksAverage + gb.currentMarketPrice) / 2;
+    }
 
-    placeImprovedSellOrder() { this.placeSellOrder(this.improveSellAverage()); }
-    placeImprovedBuyOrder() { this.placeBuyOrder(this.improveBuyAverage()); }
+    improveBuyAverage() {
+        return (gb.bidsAverage + gb.currentMarketPrice) / 2;
+    }
+
+    placeImprovedSellOrder() {
+        this.placeSellOrder(this.improveSellAverage());
+    }
+
+    placeImprovedBuyOrder() {
+        this.placeBuyOrder(this.improveBuyAverage());
+    }
 
     calculateTransactionAmount(price) {
         return price * conf.orderSize;
@@ -117,7 +153,7 @@ class Trader {
     }
 
     placeOrderOnExchange(price, side) {
-        Logger.log(1, "\nPlacing "+side+" Order of "+price+" on Exchange at: " + new Date());
+        Logger.log(1, "\nPlacing " + side + " Order of " + price + " on Exchange at: " + new Date());
         const params = {
             side: side,
             price: price,
@@ -128,6 +164,13 @@ class Trader {
 
         return Exchange.placeOrder(params);
     }
+
+    cancelLastOrder() {
+        Logger.log(1, "\nCanceling last order");
+        return Exchange.cancelOrder(gb.lastOrderId);
+    }
+
+
 }
 
 module.exports = new Trader();

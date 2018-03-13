@@ -47,7 +47,9 @@ class Logger {
 
             fs.appendFile(recordFile, info, (err) => {
                 // throws an error, you could also catch it here
-                if (err) throw err;
+                if (err) {
+                    console.log("Logger Error: ", err);
+                }
                 // success case, the file was saved
                 //console.log('File saved!');
             });

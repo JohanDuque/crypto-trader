@@ -3,7 +3,7 @@ const GdaxManager = require('../Gdax/GdaxManager');
 
 class Exchange {
     constructor(exchange) {
-        switch (exchange){
+        switch (exchange) {
             case 'GDAX':
                 return GdaxManager;
             default:

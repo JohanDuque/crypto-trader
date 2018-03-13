@@ -12,7 +12,7 @@ let nIntervId;
 let askForInfo = () => {
     return Promise.all([
         //Exchange.getCoinbaseAccounts(),
-        Exchange.getAccounts(),
+        //Exchange.getAccounts(),
         //Exchange.getAccount(),
         //Exchange.getAccountHistory(),
         //Exchange.placeBuyOrder(),

@@ -18,8 +18,6 @@ const authedClient = new Gdax.AuthenticatedClient(
 
 const ETH_ID = GdaxAuthenticator.ETH_ACCOUNT_ID;
 
-let lastCallFills = -1; //just to give it an starting value
-
 class GdaxManager extends ExchangeInterface {
 
     placeOrder(params) {
@@ -41,6 +39,24 @@ class GdaxManager extends ExchangeInterface {
         });
     }
 
+    cancelOrder(orderId) {
+        return new Promise(function(resolve, reject) {
+            authedClient.cancelOrder(orderId)
+                .then(data => {
+                    Logger.log(3, 'Order: ', orderId, ' has been canceled');
+                    Logger.log(3, data);
+                    console.log(data);
+                    resolve();
+                })
+                .catch(error => {
+                    //TODO handle error
+                    gb.errorCount++;
+                    Logger.log(4, error);
+                    reject();
+                });
+        });
+    }
+
     getFills() {
         return new Promise(function(resolve, reject) {
             authedClient.getFills()
@@ -48,13 +64,45 @@ class GdaxManager extends ExchangeInterface {
                     Logger.log(3, 'Fills:');
                     Logger.log(3, data);
 
+                    if (!gb.lastOrderWasFilled) {
+
+                        const lastFilledOrder = data.find(function(element) {
+                            return element.order_id === gb.lastOrderId;
+                        });
+
+                        gb.lastOrderWasFilled = lastFilledOrder.order_id === gb.lastOrderId;
+
+                        if (gb.lastOrderWasFilled) {
+                            gb.fills++;
+                            Logger.printReport();
+                        }
+                    }
+                    resolve();
+                })
+                .catch(error => {
+                    //TODO handle error
+                    gb.errorCount++;
+                    Logger.log(4, error);
+                    reject();
+                });
+        });
+    }
+
+
+    getFills_OLD() {
+        return new Promise(function(resolve, reject) {
+            authedClient.getFills()
+                .then(data => {
+                    Logger.log(1, 'Fills:');
+                    Logger.log(1, data);
+
                     if (lastCallFills === -1) {
                         lastCallFills = data.length;
                     }
-
                     //Logger.log(1, "data.length= " + data.length + " lastCallFills= " + lastCallFills+  " lastOrderWasFilled="+ gb.lastOrderWasFilled);
 
                     if (!gb.lastOrderWasFilled) {
+                        //TODO filter orders to know last fill
                         gb.lastOrderWasFilled = data.length > lastCallFills;
                         lastCallFills = data.length;
 
