@@ -14,7 +14,7 @@
     "logLvl": 1,
     "logOnFile" : true,
     "recordInfo" : true,
-    "simulateFromRecording" : true,
-    "simulateOnly" : true,
-    "recordingFileName" : "lastSession"
+    "simulateFromRecording" : false,
+    "simulateOnly" : false,
+    "recordingFileName" : "2018-03-13-10-47-47"
 }

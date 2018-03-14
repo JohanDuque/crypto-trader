@@ -153,7 +153,7 @@ class Trader {
     }
 
     placeOrderOnExchange(price, side) {
-        Logger.log(1, "\nPlacing " + side + " Order of " + price + " on Exchange at: " + new Date());
+        Logger.log(1, "\nPlacing " + side + " Order of " + price + " on "+ conf.exchange +" Exchange at: " + new Date());
         const params = {
             side: side,
             price: price,
@@ -166,7 +166,7 @@ class Trader {
     }
 
     cancelLastOrder() {
-        Logger.log(1, "\nCanceling last order");
+        Logger.log(1, "\nTrying to cancel last order...");
         return Exchange.cancelOrder(gb.lastOrderId);
     }
 

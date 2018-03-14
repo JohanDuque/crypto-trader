@@ -13,7 +13,7 @@ class GlobalVariables {
         this.currentMarketPrice = 0;
         this.currentBuyers = 0;
         this.currentSellers = 0;
-        this.lastAction = config.SELL;
+        this.lastAction = null;
         this.buyOrders = 0;
         this.sellOrders = 0;
         this.errorCount = 0;

@@ -20,7 +20,7 @@ class Strategy_V12 {
                 //}
                 //if (gb.sellOrders - gb.buyOrders < (1)) {
                 if (analyzer.isMarketGoingFromUpToDown() && (gb.currentMarketPrice - gb.lastBuyPrice > 1)) {
-                    Logger.log(1, "\nMarket is GoingFrom UP to DOWN I'm selling now at current price");
+                    Logger.log(1, "\nMarket is GoingFrom UP to DOWN I'm selling now close to current price");
                     trader.placeSellOrderCloseToCurrentMarketPrice();
                     return;
                 }
@@ -28,8 +28,9 @@ class Strategy_V12 {
         }
 
         if (gb.lastAction === conf.SELL && (!gb.lastOrderWasFilled && gb.buyOrders>0)) {
-            if (analyzer.isBuySpeedIncreasing()) {
-                Logger.log(1, "\n\t\t\t\tMarket is Higher than Sell order place I'm removing it");
+            //if (analyzer.isBuySpeedIncreasing()) {
+            if (analyzer.isSellSpeedIncreasing()) {
+                Logger.log(1, "\n\t\t\t\tMarket is Higher than last SELL order placed, I'm replacing it!");
                 trader.removeLastSellOrder();
                 trader.placeImprovedSellOrder();
                 return;
@@ -38,15 +39,16 @@ class Strategy_V12 {
 
         //Cutting loses
         if (gb.lastAction === conf.BUY) {
-            if (analyzer.isSellSpeedIncreasing() && (gb.currentMarketPrice < gb.lastBuyPrice)) {
+            //if (analyzer.isSellSpeedIncreasing() && (gb.currentMarketPrice < gb.lastBuyPrice)) {
+            if (analyzer.isBuySpeedIncreasing() && (gb.currentMarketPrice < gb.lastBuyPrice)) {
                 if (!gb.lastOrderWasFilled && gb.buyOrders > 0) {
-                    Logger.log(1, "\n\t\t\t\tMarket lower than last buy I'm improving my order ");
+                    Logger.log(1, "\n\t\t\tMarket is lower than last BUY order, I'm improving my order ");
                     trader.removeLastBuyOrder();
                     trader.placeBuyOrderCloseToCurrentMarketPrice();
                     return;
                 }
                 else{
-                    Logger.log(1, "\n\t\t\t\tMarket lower than last buy I'm selling now ");
+                    Logger.log(1, "\n\t\t\tMarket is lower than last BUY I'm selling now in order to CUT MY LOSSES");
                     trader.placeSellOrderAtCurrentMarketPrice();
                     return;
                 }

@@ -25,9 +25,8 @@ class GdaxManager extends ExchangeInterface {
             authedClient.placeOrder(params)
                 .then(data => {
                     Logger.log(3, 'Place Order:');
-                    Logger.log(3, data);
-                    console.log(data);
-
+                    Logger.log(1, data);
+                    gb.lastOrderId = data.id;
                     resolve();
                 })
                 .catch(error => {
@@ -43,9 +42,8 @@ class GdaxManager extends ExchangeInterface {
         return new Promise(function(resolve, reject) {
             authedClient.cancelOrder(orderId)
                 .then(data => {
-                    Logger.log(3, 'Order: ', orderId, ' has been canceled');
-                    Logger.log(3, data);
-                    console.log(data);
+                    Logger.log(1, 'Order: ', orderId, ' has been canceled');
+                    Logger.log(1, data);
                     resolve();
                 })
                 .catch(error => {
@@ -70,46 +68,11 @@ class GdaxManager extends ExchangeInterface {
                             return element.order_id === gb.lastOrderId;
                         });
 
-                        gb.lastOrderWasFilled = lastFilledOrder.order_id === gb.lastOrderId;
+                        gb.lastOrderWasFilled = lastFilledOrder != undefined && lastFilledOrder.order_id === gb.lastOrderId;
 
                         if (gb.lastOrderWasFilled) {
                             gb.fills++;
                             Logger.printReport();
-                        }
-                    }
-                    resolve();
-                })
-                .catch(error => {
-                    //TODO handle error
-                    gb.errorCount++;
-                    Logger.log(4, error);
-                    reject();
-                });
-        });
-    }
-
-
-    getFills_OLD() {
-        return new Promise(function(resolve, reject) {
-            authedClient.getFills()
-                .then(data => {
-                    Logger.log(1, 'Fills:');
-                    Logger.log(1, data);
-
-                    if (lastCallFills === -1) {
-                        lastCallFills = data.length;
-                    }
-                    //Logger.log(1, "data.length= " + data.length + " lastCallFills= " + lastCallFills+  " lastOrderWasFilled="+ gb.lastOrderWasFilled);
-
-                    if (!gb.lastOrderWasFilled) {
-                        //TODO filter orders to know last fill
-                        gb.lastOrderWasFilled = data.length > lastCallFills;
-                        lastCallFills = data.length;
-
-                        if (gb.lastOrderWasFilled) {
-                            gb.fills++;
-                            Logger.printReport();
-                            Logger.log(1, "gb.lastOrderWasFilled= " + gb.lastOrderWasFilled);
                         }
                     }
                     resolve();

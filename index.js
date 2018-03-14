@@ -19,7 +19,7 @@ let askForInfo = () => {
         Exchange.getFills(),
         Exchange.getOrderBook(),
         Exchange.getTradeHistory()
-    ])
+    ]);
 };
 
 let setPollingInterval = (interval) => {
