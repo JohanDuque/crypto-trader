@@ -1,4 +1,4 @@
-class ExchangeInterface {
+class ExchangeManager {
     placeOrder(params) {
         throw new Error('You have to implement this method!');
     }
@@ -42,4 +42,4 @@ class ExchangeInterface {
     }
 }
 
-module.exports = ExchangeInterface;
+module.exports = ExchangeManager;

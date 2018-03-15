@@ -1,7 +1,7 @@
 const conf = require('../commons/Configuration');
 const gb = require('../commons/GlobalVariables');
 const Logger = require('../commons/Logger');
-const ExchangeInterface = require('../actors/ExchangeInterface');
+const ExchangeManager = require('../actors/ExchangeManager');
 const util = require('util');
 
 const Gdax = require('gdax');
@@ -10,15 +10,15 @@ const GdaxAuthenticator = require('./GdaxAuthenticator');
 const publicClient = new Gdax.PublicClient();
 
 const authedClient = new Gdax.AuthenticatedClient(
-    GdaxAuthenticator.key,
+  /*  GdaxAuthenticator.key,
     GdaxAuthenticator.secret,
     GdaxAuthenticator.passphrase,
-    GdaxAuthenticator.apiURI
+    GdaxAuthenticator.apiURI*/
 );
 
 const ETH_ID = GdaxAuthenticator.ETH_ACCOUNT_ID;
 
-class GdaxManager extends ExchangeInterface {
+class GdaxManager extends ExchangeManager {
 
     placeOrder(params) {
         return new Promise(function(resolve, reject) {
