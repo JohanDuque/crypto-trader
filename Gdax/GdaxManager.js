@@ -10,10 +10,10 @@ const GdaxAuthenticator = require('./GdaxAuthenticator');
 const publicClient = new Gdax.PublicClient();
 
 const authedClient = new Gdax.AuthenticatedClient(
-  /*  GdaxAuthenticator.key,
+    GdaxAuthenticator.key,
     GdaxAuthenticator.secret,
     GdaxAuthenticator.passphrase,
-    GdaxAuthenticator.apiURI*/
+    GdaxAuthenticator.apiURI
 );
 
 const ETH_ID = GdaxAuthenticator.ETH_ACCOUNT_ID;
