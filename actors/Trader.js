@@ -35,7 +35,7 @@ class Trader {
         gb.profits += this.calculateTransactionAmount(price);
         gb.lastOrderWasFilled = false;
 
-        Logger.log(1, "\n+++++ Placing Sell Order at: " + price + "(" + conf.toCurrency + ") +++++ Sell Orders: " + gb.sellOrders);
+        Logger.log(1, "\n+++++ Placed Sell Order at: " + price + "(" + conf.toCurrency + ") +++++ Sell Orders: " + gb.sellOrders);
         Logger.printReport();
     }
 
@@ -70,7 +70,7 @@ class Trader {
         gb.profits -= this.calculateTransactionAmount(price);
         gb.lastOrderWasFilled = false;
 
-        Logger.log(1, "\n----- Placing Buy Order at: " + price + "(" + conf.toCurrency + ") ----- Buy Orders: " + gb.buyOrders);
+        Logger.log(1, "\n----- Placed Buy Order at: " + price + "(" + conf.toCurrency + ") ----- Buy Orders: " + gb.buyOrders);
         Logger.printReport();
     }
 
@@ -102,7 +102,7 @@ class Trader {
         gb.lastAction = conf.BUY;
         gb.profits -= this.calculateTransactionAmount(gb.lastSellPrice);
 
-        Logger.log(1, "\n----- Removing Last SELL Order ----");
+        Logger.log(1, "\n----- Last SELL Order has been removed ----");
     }
 
     removeLastBuyOrder() {
@@ -124,7 +124,7 @@ class Trader {
         gb.lastAction = conf.SELL;
         gb.profits += this.calculateTransactionAmount(gb.lastBuyPrice);
 
-        Logger.log(1, "\n+++++ Removing Last BUY Order ----");
+        Logger.log(1, "\n+++++ Last BUY Order has been removed +++++");
     }
 
     improveSellAverage() {
