@@ -63,7 +63,6 @@ class Logger {
         this.log(0, "\n  Last Buy Order : " + gb.lastBuyPrice + "(" + Conf.toCurrency + ")        Buy Orders: " + gb.buyOrders);
         this.log(0, "  Last Sell Order: " + gb.lastSellPrice + "(" + Conf.toCurrency + ")       Sell Orders: " + gb.sellOrders);
         this.log(0, "  Profits        : " + gb.profits + "(" + Conf.toCurrency + ")   Filled Orders: " + gb.fills);
-        //this.log(0, "  Highest Price  : " + gb.hightestTradePrice + "  Lowest Price: " + gb.lowestTradePrice + "  Diff: " + gb.totalAmoutTraded + "(" + Conf.toCurrency + ")");
         this.log(0, "  Current price  : " + gb.currentMarketPrice + "(" + Conf.toCurrency + ")");
         this.log(0, "-------------------------------------------------------------");
     }

@@ -194,9 +194,6 @@ class GdaxManager extends ExchangeManager {
                     gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
                     gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
                     gb.currentMarketPrice = Number(data[0].price);
-                    gb.lowestTradePrice = gb.currentMarketPrice < gb.lowestTradePrice ? gb.currentMarketPrice : gb.lowestTradePrice;
-                    gb.hightestTradePrice = gb.currentMarketPrice > gb.hightestTradePrice ? gb.currentMarketPrice : gb.hightestTradePrice;
-                    gb.totalAmoutTraded = gb.hightestTradePrice - gb.lowestTradePrice;
 
                     Logger.log(2, 'Current Buyers: ' + gb.currentBuyers);
                     Logger.log(2, 'Current Sellers: ' + gb.currentSellers);

@@ -33,9 +33,6 @@ class Simulator {
             gb.currentBuySpeed = element.currentBuySpeed; //buyers/sellers
             gb.lastSellSpeed = element.lastSellSpeed; //sellers/buyers
             gb.currentSellSpeed = element.currentSellSpeed; //sellers/buyers
-            gb.lowestTradePrice = element.lowestTradePrice;
-            gb.hightestTradePrice = element.hightestTradePrice;
-            gb.totalAmoutTraded = element.totalAmoutTraded;
 
             me.checkFills();
             strategy.apply();
