@@ -143,6 +143,49 @@ class Trader {
         this.placeBuyOrder(this.improveBuyAverage());
     }
 
+    improveLastSellOrder() {
+        const newPrice = this.precisionRound(this.improveSellAverage(), 2);
+
+        if (conf.simulateFromRecording) {
+            this.onRemoveLastSellOrder();
+            this.onSellOrderPlaced(newPrice);
+        } else {
+            return Promise.all([
+                this.cancelLastOrder(),
+                this.placeOrderOnExchange(newPrice, conf.SELL)
+            ]).then(() => {
+                this.onRemoveLastSellOrder();
+                this.onSellOrderPlaced(newPrice);
+            }).catch(err => {
+                //TODO handle error
+                gb.errorCount++;
+                Logger.log(1, err);
+            });
+        }
+    }
+
+    improveLastBuyOrder() {
+        const closePrice = gb.currentMarketPrice - (gb.currentMarketPrice * conf.postOnlyFactor);
+        const newPrice = this.precisionRound(closePrice, 2);
+
+        if (conf.simulateFromRecording) {
+            this.onRemoveLastBuyOrder();
+            this.onBuyOrderPlaced(newPrice);
+        } else {
+            return Promise.all([
+                this.cancelLastOrder(),
+                this.placeOrderOnExchange(newPrice, conf.BUY)
+            ]).then(() => {
+                this.onRemoveLastBuyOrder();
+                this.onBuyOrderPlaced(newPrice);
+            }).catch(err => {
+                //TODO handle error
+                gb.errorCount++;
+                Logger.log(1, err);
+            });
+        }
+    }
+
     calculateTransactionAmount(price) {
         return price * conf.orderSize;
     }
@@ -153,7 +196,7 @@ class Trader {
     }
 
     placeOrderOnExchange(price, side) {
-        Logger.log(1, "\nPlacing " + side + " Order of " + price + " on "+ conf.exchange +" Exchange at: " + new Date());
+        Logger.log(1, "\nPlacing " + side + " Order of " + price + " on " + conf.exchange + " Exchange at: " + new Date());
         const params = {
             side: side,
             price: price,
@@ -166,7 +209,7 @@ class Trader {
     }
 
     cancelLastOrder() {
-        Logger.log(1, "\nTrying to cancel last order...");
+        Logger.log(1, "\nAsking Exchange for cancel last order...");
         return Exchange.cancelOrder(gb.lastOrderId);
     }
 

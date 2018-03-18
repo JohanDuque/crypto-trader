@@ -14,7 +14,7 @@
     "errorTolerance": 400,
     "logOnFile" : true,
     "recordInfo" : true,
-    "simulateFromRecording" : true,
+    "simulateFromRecording" : false,
     "simulateOnly" : false,
     "recordingFileName" : "2018-03-13-10-47-47"
 }

@@ -24,21 +24,19 @@ class Strategy_V12 {
         }
 
         if (gb.lastAction === conf.SELL && (!gb.lastOrderWasFilled && gb.buyOrders > 0)) {
-            if (analyzer.isSellSpeedIncreasing()) {
+            if (gb.currentMarketPrice > gb.lastSellPrice) {
                 Logger.log(1, "\n\t\t\t\tMarket is Higher than last SELL order placed, I'm replacing it!");
-                trader.removeLastSellOrder();
-                trader.placeImprovedSellOrder();
+                trader.improveLastSellOrder();
                 return;
             }
         }
 
         //Cutting loses
         if (gb.lastAction === conf.BUY) {
-            if (analyzer.isBuySpeedIncreasing() && (gb.currentMarketPrice < gb.lastBuyPrice)) {
+            if (gb.currentMarketPrice < gb.lastBuyPrice) {
                 if (!gb.lastOrderWasFilled && gb.buyOrders > 0) {
                     Logger.log(1, "\n\t\t\tMarket is lower than last BUY order, I'm improving my order ");
-                    trader.removeLastBuyOrder();
-                    trader.placeBuyOrderCloseToCurrentMarketPrice();
+                    trader.improveLastBuyOrder();
                     return;
                 }
                 else {
@@ -50,6 +48,6 @@ class Strategy_V12 {
         }
 
     }
-};
+}
 
 module.exports = new Strategy_V12();
