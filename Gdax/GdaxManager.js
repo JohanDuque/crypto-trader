@@ -42,7 +42,7 @@ class GdaxManager extends ExchangeManager {
         return new Promise(function(resolve, reject) {
             authedClient.cancelOrder(orderId)
                 .then(data => {
-                    Logger.log(1, 'Order: ', orderId, ' has been canceled');
+                    Logger.log(1, 'Order: ' + orderId+ ' has been canceled');
                     Logger.log(1, data);
                     resolve();
                 })
