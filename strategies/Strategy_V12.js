@@ -31,7 +31,7 @@ class Strategy_V12 {
             }
         }
 
-        //Cutting loses
+        //Cutting losses
         if (gb.lastAction === conf.BUY) {
             if (gb.currentMarketPrice < gb.lastBuyPrice) {
                 if (!gb.lastOrderWasFilled && gb.buyOrders > 0) {
