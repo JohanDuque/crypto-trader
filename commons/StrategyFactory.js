@@ -1,5 +1,5 @@
 const config = require('./Configuration');
-
+//TODO use fs for the requires
 const Strategy_V1 = require('../strategies/Strategy_V1');
 const Strategy_V2 = require('../strategies/Strategy_V2');
 const Strategy_V3 = require('../strategies/Strategy_V3');
@@ -12,7 +12,6 @@ const Strategy_V9 = require('../strategies/Strategy_V9');
 const Strategy_V10 = require('../strategies/Strategy_V10');
 const Strategy_V11 = require('../strategies/Strategy_V11');
 const Strategy_V12 = require('../strategies/Strategy_V12');
-const Strategy_V13 = require('../strategies/Strategy_V13');
 
 
 const strategies = new Map();
@@ -28,7 +27,6 @@ strategies.set('V9', Strategy_V9);
 strategies.set('V10', Strategy_V10);
 strategies.set('V11', Strategy_V11);
 strategies.set('V12', Strategy_V12);
-strategies.set('V13', Strategy_V13);
 
 class StrategyFactory {
     getStrategy() {return strategies.get(config.strategy)}

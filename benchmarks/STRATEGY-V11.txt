@@ -1,0 +1,199 @@
+STRATEGY V11
+
+FILE------->>> Prova
+
+-------------------------------------------------------------
+  Tue Mar 20 2018 22:39:07 GMT+0100 (CET)   Iteration #9398
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 59
+
+  Last Buy Order : 441.96(EUR)        Buy Orders: 10
+  Last Sell Order: 443.99(EUR)       Sell Orders: 10
+  Profits        : 10.6067(EUR)   Filled Orders: 20
+  Current price  : 443.99(EUR)
+-------------------------------------------------------------
+
+Market is GoingFrom DOWN to UP I'm buying CLOSE to current price
+
+Placing buy Order of 440.17 on SIMULATOR Exchange at: Tue Mar 20 2018 22:39:07 GMT+0100 (CET)
+Place order simulated,  side: buy price: 440.17
+
+----- Placed Buy Order at: 440.17(EUR) ----- Buy Orders: 11
+-------------------------------------------------------------
+  Tue Mar 20 2018 22:39:07 GMT+0100 (CET)   Iteration #9637
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 59
+
+  Last Buy Order : 440.17(EUR)        Buy Orders: 11
+  Last Sell Order: 443.99(EUR)       Sell Orders: 10
+  Profits        : 6.205(EUR)   Filled Orders: 20
+  Current price  : 440.21(EUR)
+-------------------------------------------------------------
+-------------------------------------------------------------
+  Tue Mar 20 2018 22:39:07 GMT+0100 (CET)   Iteration #9638
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 59
+
+  Last Buy Order : 440.17(EUR)        Buy Orders: 11
+  Last Sell Order: 443.99(EUR)       Sell Orders: 10
+  Profits        : 6.205(EUR)   Filled Orders: 21
+  Current price  : 440.21(EUR)
+-------------------------------------------------------------
+Simulation Done!
+-------------------------------------------------------------
+  Tue Mar 20 2018 22:39:07 GMT+0100 (CET)   Iteration #9702
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 59
+
+  Last Buy Order : 440.17(EUR)        Buy Orders: 11
+  Last Sell Order: 443.99(EUR)       Sell Orders: 10
+  Profits        : 6.205(EUR)   Filled Orders: 21
+  Current price  : 442(EUR)
+-------------------------------------------------------------
+
+
+
+
+FILE------->>> lastTest.json
+
+
++++++ Placed Sell Order at: 769.49(EUR) +++++ Sell Orders: 15
+-------------------------------------------------------------
+  Tue Mar 20 2018 22:58:57 GMT+0100 (CET)   Iteration #27809
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 281
+
+  Last Buy Order : 767.92(EUR)        Buy Orders: 15
+  Last Sell Order: 769.49(EUR)       Sell Orders: 15
+  Profits        : 10.806000000000004(EUR)   Filled Orders: 29
+  Current price  : 769.49(EUR)
+-------------------------------------------------------------
+-------------------------------------------------------------
+  Tue Mar 20 2018 22:58:57 GMT+0100 (CET)   Iteration #27810
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 281
+
+  Last Buy Order : 767.92(EUR)        Buy Orders: 15
+  Last Sell Order: 769.49(EUR)       Sell Orders: 15
+  Profits        : 10.806000000000004(EUR)   Filled Orders: 30
+  Current price  : 769.5(EUR)
+-------------------------------------------------------------
+Simulation Done!
+-------------------------------------------------------------
+  Tue Mar 20 2018 22:58:57 GMT+0100 (CET)   Iteration #28775
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 286
+
+  Last Buy Order : 767.92(EUR)        Buy Orders: 15
+  Last Sell Order: 769.49(EUR)       Sell Orders: 15
+  Profits        : 10.806000000000004(EUR)   Filled Orders: 30
+  Current price  : 760.42(EUR)
+-------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+FILE------->>> lastSession.json
+
+
+
+-------------------------------------------------------------
+  Tue Mar 20 2018 23:02:46 GMT+0100 (CET)   Iteration #203
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 12
+
+  Last Buy Order : 710.58(EUR)        Buy Orders: 1
+  Last Sell Order: 712(EUR)       Sell Orders: 1
+  Profits        : 10.014199999999999(EUR)   Filled Orders: 2
+  Current price  : 712.01(EUR)
+-------------------------------------------------------------
+
+Market is GoingFrom DOWN to UP I'm buying CLOSE to current price
+
+Placing buy Order of 710.92 on SIMULATOR Exchange at: Tue Mar 20 2018 23:02:46 GMT+0100 (CET)
+Place order simulated,  side: buy price: 710.92
+
+----- Placed Buy Order at: 710.92(EUR) ----- Buy Orders: 2
+-------------------------------------------------------------
+  Tue Mar 20 2018 23:02:46 GMT+0100 (CET)   Iteration #324
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 18
+
+  Last Buy Order : 710.92(EUR)        Buy Orders: 2
+  Last Sell Order: 712(EUR)       Sell Orders: 1
+  Profits        : 2.9049999999999994(EUR)   Filled Orders: 2
+  Current price  : 710.99(EUR)
+-------------------------------------------------------------
+-------------------------------------------------------------
+  Tue Mar 20 2018 23:02:46 GMT+0100 (CET)   Iteration #325
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 18
+
+  Last Buy Order : 710.92(EUR)        Buy Orders: 2
+  Last Sell Order: 712(EUR)       Sell Orders: 1
+  Profits        : 2.9049999999999994(EUR)   Filled Orders: 3
+  Current price  : 710.99(EUR)
+-------------------------------------------------------------
+Simulation Done!
+-------------------------------------------------------------
+  Tue Mar 20 2018 23:02:47 GMT+0100 (CET)   Iteration #27685
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 321
+
+  Last Buy Order : 710.92(EUR)        Buy Orders: 2
+  Last Sell Order: 712(EUR)       Sell Orders: 1
+  Profits        : 2.9049999999999994(EUR)   Filled Orders: 3
+  Current price  : 661.99(EUR)
+-------------------------------------------------------------
+
+
+
+
+
+
+FILE -------->>>>>   2018-03-18-09-51-26.json
+
+
+
+
+
+
+-------------------------------------------------------------
+  Tue Mar 20 2018 23:45:14 GMT+0100 (CET)   Iteration #9777
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 59
+
+  Last Buy Order : 440.17(EUR)        Buy Orders: 11
+  Last Sell Order: 446.48(EUR)       Sell Orders: 11
+  Profits        : 10.6698(EUR)   Filled Orders: 22
+  Current price  : 445.7(EUR)
+-------------------------------------------------------------
+
+Market is GoingFrom DOWN to UP I'm buying CLOSE to current price
+
+Placing buy Order of 447.95 on SIMULATOR Exchange at: Tue Mar 20 2018 23:45:14 GMT+0100 (CET)
+Place order simulated,  side: buy price: 447.95
+
+----- Placed Buy Order at: 447.95(EUR) ----- Buy Orders: 12
+-------------------------------------------------------------
+  Tue Mar 20 2018 23:45:14 GMT+0100 (CET)   Iteration #10040
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 79
+
+  Last Buy Order : 447.95(EUR)        Buy Orders: 12
+  Last Sell Order: 446.48(EUR)       Sell Orders: 11
+  Profits        : 6.190300000000001(EUR)   Filled Orders: 22
+  Current price  : 447.99(EUR)
+-------------------------------------------------------------
+-------------------------------------------------------------
+  Tue Mar 20 2018 23:45:14 GMT+0100 (CET)   Iteration #10041
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 79
+
+  Last Buy Order : 447.95(EUR)        Buy Orders: 12
+  Last Sell Order: 446.48(EUR)       Sell Orders: 11
+  Profits        : 6.190300000000001(EUR)   Filled Orders: 23
+  Current price  : 448(EUR)
+-------------------------------------------------------------
+Simulation Done!
+-------------------------------------------------------------
+  Tue Mar 20 2018 23:45:14 GMT+0100 (CET)   Iteration #10366
+  Trader# V11_1.5-9_0.01ETH_10EUR_31_0.1        Errors: 79
+
+  Last Buy Order : 447.95(EUR)        Buy Orders: 12
+  Last Sell Order: 446.48(EUR)       Sell Orders: 11
+  Profits        : 6.190300000000001(EUR)   Filled Orders: 23
+  Current price  : 443.94(EUR)
+-------------------------------------------------------------
