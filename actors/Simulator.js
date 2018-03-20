@@ -6,50 +6,53 @@ const strategy = StrategyFactory.getStrategy();
 
 class Simulator {
 
-     simulateFromRecording() {
-        const infoRecorded = require('../recordings/'+conf.recordingFileName);
+    simulateFromRecording() {
+        const infoRecorded = require('../recordings/' + conf.recordingFileName);
         let logString, lastLogString = "";
         const me = this;
 
-        infoRecorded.forEach(function(element) {
-            //TODO use a map
-            //gb.profits = element.profits;
-            gb.iteration = element.iteration;
-            gb.bidsAverage = element.bidsAverage;
-            //gb.lastBuyPrice = element.lastBuyPrice;
-            gb.asksAverage = element.asksAverage;
-            //gb.lastSellPrice = element.lastSellPrice;
-            gb.currentMarketPrice = element.currentMarketPrice;
-            gb.currentBuyers = element.currentBuyers;
-            gb.currentSellers = element.currentSellers;
-            //gb.lastAction = element.lastAction;
-            //gb.buyOrders = element.buyOrders;
-            //gb.sellOrders = element.sellOrders;
-            gb.errorCount = element.errorCount;
-            //gb.lastOrderWasFilled = element.lastOrderWasFilled;
-            //gb.fills = element.fills;
-            gb.tradeHistory = element.tradeHistory;
-            gb.lastBuySpeed = element.lastBuySpeed; //buyers/sellers
-            gb.currentBuySpeed = element.currentBuySpeed; //buyers/sellers
-            gb.lastSellSpeed = element.lastSellSpeed; //sellers/buyers
-            gb.currentSellSpeed = element.currentSellSpeed; //sellers/buyers
+        const iterations = infoRecorded.reduce((promiseChain, element) => {
+            return promiseChain.then(() => new Promise((resolve) => {
+                //TODO use a map
+                //gb.profits = element.profits;
+                gb.iteration = element.iteration;
+                gb.bidsAverage = element.bidsAverage;
+                //gb.lastBuyPrice = element.lastBuyPrice;
+                gb.asksAverage = element.asksAverage;
+                //gb.lastSellPrice = element.lastSellPrice;
+                gb.currentMarketPrice = element.currentMarketPrice;
+                gb.currentBuyers = element.currentBuyers;
+                gb.currentSellers = element.currentSellers;
+                //gb.lastAction = element.lastAction;
+                //gb.buyOrders = element.buyOrders;
+                //gb.sellOrders = element.sellOrders;
+                gb.errorCount = element.errorCount;
+                //gb.lastOrderWasFilled = element.lastOrderWasFilled;
+                //gb.fills = element.fills;
+                gb.tradeHistory = element.tradeHistory;
+                gb.lastBuySpeed = element.lastBuySpeed; //buyers/sellers
+                gb.currentBuySpeed = element.currentBuySpeed; //buyers/sellers
+                gb.lastSellSpeed = element.lastSellSpeed; //sellers/buyers
+                gb.currentSellSpeed = element.currentSellSpeed; //sellers/buyers
 
-            me.checkFills();
-            strategy.apply();
+                me.checkFills();
+                strategy.apply();
 
-            logString = '\tBuyers:' + gb.currentBuyers+ '\t Sellers:' + gb.currentSellers+ '\t MarketPrice:' +gb.currentMarketPrice + '\t BUYspeed(Buy/Sell):' + gb.currentBuySpeed+ '\t SELLspeed(Sell/Buy):' + gb.currentSellSpeed;
+                logString = '\tBuyers:' + gb.currentBuyers + '\t Sellers:' + gb.currentSellers + '\t MarketPrice:' + gb.currentMarketPrice + '\t BUYspeed(Buy/Sell):' + gb.currentBuySpeed + '\t SELLspeed(Sell/Buy):' + gb.currentSellSpeed;
 
-            if(logString !== lastLogString){
-                //Logger.log(1, 'It#' + gb.iteration + logString);
-            }
-            lastLogString = logString;
+                if (logString !== lastLogString) {
+                    //Logger.log(1, 'It#' + gb.iteration + logString);
+                }
+                lastLogString = logString;
 
-            if (conf.logLvl >= 2) Logger.printReport();
-            me.checkForErrors();
-        });
-        Logger.log(1, "\n Simulation Done!");
-    };
+                if (conf.logLvl >= 2) Logger.printReport();
+                me.checkForErrors();
+                resolve();
+            }));
+        }, Promise.resolve());
 
+        iterations.then(() => console.log('Simulation Done!'))
+    }
 
     checkFills() {
         if (gb.buyOrders > 0) {
