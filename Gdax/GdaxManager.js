@@ -32,7 +32,7 @@ class GdaxManager extends ExchangeManager {
                 .catch(error => {
                     //TODO handle error
                     gb.errorCount++;
-                    Logger.log(4, error);
+                    Logger.log(1, error);
                     reject();
                 });
         });
@@ -42,14 +42,14 @@ class GdaxManager extends ExchangeManager {
         return new Promise(function(resolve, reject) {
             authedClient.cancelOrder(orderId)
                 .then(data => {
-                    Logger.log(1, 'Order: ' + orderId+ ' has been canceled');
+                    Logger.log(1, '\nOrder: ' + orderId+ ' has been canceled');
                     Logger.log(1, data);
                     resolve();
                 })
                 .catch(error => {
                     //TODO handle error
                     gb.errorCount++;
-                    Logger.log(4, error);
+                    Logger.log(1, error);
                     reject();
                 });
         });
@@ -80,7 +80,7 @@ class GdaxManager extends ExchangeManager {
                 .catch(error => {
                     //TODO handle error
                     gb.errorCount++;
-                    Logger.log(4, error);
+                    Logger.log(1, error);
                     reject();
                 });
         });
@@ -97,7 +97,7 @@ class GdaxManager extends ExchangeManager {
                 .catch(error => {
                     //TODO handle error
                     gb.errorCount++;
-                    Logger.log(4, error);
+                    Logger.log(1, error);
                     reject();
                 });
         });
@@ -114,7 +114,7 @@ class GdaxManager extends ExchangeManager {
                 .catch(error => {
                     //TODO handle error
                     gb.errorCount++;
-                    Logger.log(4, error);
+                    Logger.log(1, error);
                     reject();
                 });
         });
@@ -132,7 +132,7 @@ class GdaxManager extends ExchangeManager {
                 .catch(error => {
                     //TODO handle error
                     gb.errorCount++;
-                    Logger.log(4, error);
+                    Logger.log(1, error);
                     reject();
                 });
         });
@@ -151,7 +151,7 @@ class GdaxManager extends ExchangeManager {
                 .catch(error => {
                     //TODO handle error
                     gb.errorCount++;
-                    Logger.log(4, error);
+                    Logger.log(1, error);
                     reject();
                 });
         });
@@ -175,7 +175,7 @@ class GdaxManager extends ExchangeManager {
                 .catch(error => {
                     //TODO handle error
                     gb.errorCount++;
-                    Logger.log(4, error);
+                    Logger.log(1, error);
                     reject();
                 });
         });

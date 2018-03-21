@@ -8,7 +8,7 @@
     "maxPollingInterval": 9,
     "exchange": "GDAX",
     "productType": "ETH-EUR",
-    "strategy": "V12",
+    "strategy": "V13",
     "tradeHistorySize": 31,
     "logLvl": 1,
     "errorTolerance": 400,
@@ -16,5 +16,5 @@
     "recordInfo" : true,
     "simulateFromRecording" : true,
     "simulateOnly" : false,
-    "recordingFileName" : "2018-03-18-09-51-26"
+    "recordingFileName" : "lastTest"
 }

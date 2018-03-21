@@ -38,10 +38,10 @@ class Simulator {
                 me.checkFills();
                 strategy.apply();
 
-                logString = '\tBuyers:' + gb.currentBuyers + '\t Sellers:' + gb.currentSellers + '\t MarketPrice:' + gb.currentMarketPrice + '\t BUYspeed(Buy/Sell):' + gb.currentBuySpeed + '\t SELLspeed(Sell/Buy):' + gb.currentSellSpeed;
+                logString = '\tBuyers:' + gb.currentBuyers + '\t Sellers:' + gb.currentSellers + '\t MarketPrice:' + gb.currentMarketPrice + '\t BUYspeed:' + gb.currentBuySpeed + '\t SELLspeed:' + gb.currentSellSpeed;
 
                 if (logString !== lastLogString) {
-                    //Logger.log(1, 'It#' + gb.iteration + logString);
+                    Logger.log(1, 'It#' + gb.iteration + logString);
                 }
                 lastLogString = logString;
 
