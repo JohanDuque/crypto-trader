@@ -24,7 +24,6 @@ class Strategy_V13 {
         }
 
         if (gb.lastAction === conf.SELL && (!gb.lastOrderWasFilled && gb.buyOrders > 0)) {
-            //if (analyzer.isSellSpeedIncreasing() && gb.currentMarketPrice > gb.lastSellPrice) {
             if (gb.currentMarketPrice > gb.lastSellPrice) {
                 Logger.log(1, "\n\t\t\t\tMarket is Higher than last SELL order placed, I'm improving it!");
                 trader.improveLastSellOrder();
@@ -34,8 +33,7 @@ class Strategy_V13 {
 
         //Cutting losses
         if (gb.lastAction === conf.BUY) {
-            //if (analyzer.isBuySpeedIncreasing() && (gb.currentMarketPrice < gb.lastBuyPrice)) {
-            if (gb.currentMarketPrice < gb.lastBuyPrice - (gb.lastBuyPrice * 0.01)) {
+            if (gb.currentMarketPrice < gb.lastBuyPrice - (gb.lastBuyPrice * 0.01)) { //If current price is 10% less
                 if (!gb.lastOrderWasFilled && gb.buyOrders > 0) {
                     Logger.log(1, "\n\t\t\tMarket is lower than last BUY order, I'm improving my order ");
                     trader.improveLastBuyOrder();
