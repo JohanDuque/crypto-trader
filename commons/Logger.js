@@ -2,7 +2,6 @@ const Conf = require('./Configuration');
 const gb = require('./GlobalVariables');
 const fs = require('fs');
 const moment = require('moment');
-const util = require('util');
 
 const reportFileName = './reports/' + Conf.traderId + "@" + moment().format('YYYYMMDD-hh-mm-ss') + '.log';
 const recordFile = './recordings/' + moment().format('YYYY-MM-DD-hh-mm-ss') + '.json';
@@ -42,7 +41,6 @@ class Logger {
                 info = "\n";
             }
 
-            //info += util.inspect(gb,) + ',';
             info += JSON.stringify(gb) + ',';
 
             fs.appendFile(recordFile, info, (err) => {
@@ -57,7 +55,7 @@ class Logger {
     }
 
     printReport() {
-        if(Conf.logLvl >= 0) {
+        if (Conf.logLvl >= 0) {
             this.log(0, "-------------------------------------------------------------");
             this.log(0, "  " + new Date() + "   " + "Iteration #" + gb.iteration);
             this.log(0, "  Trader# " + Conf.traderId + "        Errors: " + gb.errorCount);
