@@ -21,7 +21,7 @@ class Configuration {
         this.startTime = new Date();
         this.startDelay = params.startDelay;
         this.recordOnly = params.recordOnly;
-        this.simulateFromRecording = params.simulateFromRecording;
+        this.simulateFromRecording = params.recordOnly ? false : params.simulateFromRecording;
         this.recordingFileNames = params.recordingFileNames;
 
         this.SELL = 'sell';
