@@ -2,7 +2,6 @@ const conf = require('./commons/Configuration');
 const gb = require('./commons/GlobalVariables');
 const Logger = require('./commons/Logger');
 const Simulator = require('./actors/Simulator');
-//const Simulator = require('./simulator/SimulatorManager');
 const Exchange = require('./actors/Exchange');
 
 const StrategyFactory = require('./commons/StrategyFactory');
@@ -93,7 +92,7 @@ process.on('exit', function(code) {
 
 //******************* MAIN ********************//
 if (conf.simulateFromRecording) {
-    Simulator.simulateFromRecording();
+    Simulator.simulateFromRecordings();
 } else {
     Logger.log(1, "Start Time: " + conf.startTime);
     Logger.log(1, "Trading will start within " + conf.maxPollingInterval + " seconds...");

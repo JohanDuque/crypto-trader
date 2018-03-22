@@ -57,14 +57,27 @@ class Logger {
     }
 
     printReport() {
-        this.log(0, "-------------------------------------------------------------");
-        this.log(0, "  " + new Date() + "   " + "Iteration #" + gb.iteration);
-        this.log(0, "  Trader# " + Conf.traderId + "        Errors: " + gb.errorCount);
-        this.log(0, "\n  Last Buy Order : " + gb.lastBuyPrice + "(" + Conf.toCurrency + ")        Buy Orders: " + gb.buyOrders);
-        this.log(0, "  Last Sell Order: " + gb.lastSellPrice + "(" + Conf.toCurrency + ")       Sell Orders: " + gb.sellOrders);
-        this.log(0, "  Profits        : " + gb.profits + "(" + Conf.toCurrency + ")   Filled Orders: " + gb.fills);
-        this.log(0, "  Current price  : " + gb.currentMarketPrice + "(" + Conf.toCurrency + ")");
-        this.log(0, "-------------------------------------------------------------");
+        if(Conf.logLvl >= 0) {
+            this.log(0, "-------------------------------------------------------------");
+            this.log(0, "  " + new Date() + "   " + "Iteration #" + gb.iteration);
+            this.log(0, "  Trader# " + Conf.traderId + "        Errors: " + gb.errorCount);
+            this.log(0, "\n  Last Buy Order : " + gb.lastBuyPrice + "(" + Conf.toCurrency + ")        Buy Orders: " + gb.buyOrders);
+            this.log(0, "  Last Sell Order: " + gb.lastSellPrice + "(" + Conf.toCurrency + ")       Sell Orders: " + gb.sellOrders);
+            this.log(0, "  Profits        : " + gb.profits + "(" + Conf.toCurrency + ")   Filled Orders: " + gb.fills);
+            this.log(0, "  Current price  : " + gb.currentMarketPrice + "(" + Conf.toCurrency + ")");
+            this.log(0, "-------------------------------------------------------------");
+        }
+    }
+
+    printLastReport() {
+        this.log(-1, "-------------------------------------------------------------");
+        this.log(-1, "  " + new Date() + "   " + "Iteration #" + gb.iteration);
+        this.log(-1, "  Trader# " + Conf.traderId + "        Errors: " + gb.errorCount);
+        this.log(-1, "\n  Last Buy Order : " + gb.lastBuyPrice + "(" + Conf.toCurrency + ")        Buy Orders: " + gb.buyOrders);
+        this.log(-1, "  Last Sell Order: " + gb.lastSellPrice + "(" + Conf.toCurrency + ")       Sell Orders: " + gb.sellOrders);
+        this.log(-1, "  Profits        : " + gb.profits + "(" + Conf.toCurrency + ")   Filled Orders: " + gb.fills);
+        this.log(-1, "  Current price  : " + gb.currentMarketPrice + "(" + Conf.toCurrency + ")");
+        this.log(-1, "-------------------------------------------------------------");
     }
 }
 

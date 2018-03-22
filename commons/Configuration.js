@@ -22,7 +22,7 @@ class Configuration {
         this.startDelay = params.startDelay;
         this.simulateOnly = params.simulateOnly;
         this.simulateFromRecording = params.simulateFromRecording;
-        this.recordingFileName = params.recordingFileName;
+        this.recordingFileNames = params.recordingFileNames;
 
         this.SELL = 'sell';
         this.BUY = 'buy';
