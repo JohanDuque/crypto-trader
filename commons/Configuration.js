@@ -20,7 +20,7 @@ class Configuration {
         this.postOnlyFactor = params.postOnlyFactor;
         this.startTime = new Date();
         this.startDelay = params.startDelay;
-        this.simulateOnly = params.simulateOnly;
+        this.recordOnly = params.recordOnly;
         this.simulateFromRecording = params.simulateFromRecording;
         this.recordingFileNames = params.recordingFileNames;
 

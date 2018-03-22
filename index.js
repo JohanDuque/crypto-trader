@@ -67,7 +67,10 @@ let doTrade = () => {
         Logger.log(2, "Info received at:   " + new Date() + "\n");
 
         Logger.recordInfo();
-        strategy.apply();
+
+        if (!conf.recordOnly) {
+            strategy.apply();
+        }
 
         if (conf.logLvl >= 2) Logger.printReport();
 
@@ -85,7 +88,7 @@ let doTrade = () => {
 };
 
 //****************** EXIT MESSAGE ***************//
-process.on('exit', function(code) {
+process.on('exit', function (code) {
     Logger.printReport();
     return console.log(`About to exit with code ${code}`);
 });
