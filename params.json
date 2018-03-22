@@ -10,7 +10,7 @@
   "productType": "ETH-EUR",
   "strategy": "V13",
   "tradeHistorySize": 31,
-  "logLvl": -1,
+  "logLvl": 0,
   "errorTolerance": 400,
   "logOnFile": true,
   "recordInfo": true,

@@ -64,7 +64,7 @@ let doTrade = () => {
     Logger.log(2, "\nAsking for info at: " + new Date());
 
     askForInfo().then(() => {
-        Logger.log(2, "Info received at:   " + new Date() + "\n");
+        Logger.log(conf.recordOnly ? 0 : 2, "Info received at: " + new Date());
 
         Logger.recordInfo();
 
