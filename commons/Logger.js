@@ -77,6 +77,10 @@ class Logger {
         this.log(-1, "  Current price  : " + gb.currentMarketPrice + "(" + Conf.toCurrency + ")");
         this.log(-1, "-------------------------------------------------------------");
     }
+
+    printCurrentRecordInfo() {
+        this.log(0, "It#" + gb.iteration + " " + Conf.fromCurrency + ": " + gb.currentMarketPrice + "(" + Conf.toCurrency + ") " + new Date());
+    }
 }
 
 module.exports = new Logger();

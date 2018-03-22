@@ -10,16 +10,23 @@ const strategy = StrategyFactory.getStrategy();
 let nIntervId;
 
 let askForInfo = () => {
-    return Promise.all([
-        //Exchange.getCoinbaseAccounts(),
-        //Exchange.getAccounts(),
-        //Exchange.getAccount(),
-        //Exchange.getAccountHistory(),
-        //Exchange.placeBuyOrder(),
-        Exchange.getFills(),
-        Exchange.getOrderBook(),
-        Exchange.getTradeHistory()
-    ]);
+    if (conf.recordOnly) {
+        return Promise.all([
+            Exchange.getOrderBook(),
+            Exchange.getTradeHistory()
+        ]);
+    } else {
+        return Promise.all([
+            //Exchange.getCoinbaseAccounts(),
+            //Exchange.getAccounts(),
+            //Exchange.getAccount(),
+            //Exchange.getAccountHistory(),
+            //Exchange.placeBuyOrder(),
+            Exchange.getFills(),
+            Exchange.getOrderBook(),
+            Exchange.getTradeHistory()
+        ]);
+    }
 };
 
 let setPollingInterval = (interval) => {
@@ -64,11 +71,13 @@ let doTrade = () => {
     Logger.log(2, "\nAsking for info at: " + new Date());
 
     askForInfo().then(() => {
-        Logger.log(conf.recordOnly ? 0 : 2, "Info received at: " + new Date());
+        Logger.log(2, "Info received at: " + new Date() + "\n");
 
         Logger.recordInfo();
 
-        if (!conf.recordOnly) {
+        if (conf.recordOnly) {
+            Logger.printCurrentRecordInfo();
+        } else {
             strategy.apply();
         }
 
