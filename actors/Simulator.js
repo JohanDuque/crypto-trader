@@ -2,6 +2,7 @@ const conf = require('../commons/Configuration');
 const gb = require('../commons/GlobalVariables');
 const Logger = require('../commons/Logger');
 const StrategyFactory = require('../commons/StrategyFactory');
+const Exchange = require('../actors/Exchange');
 const strategy = StrategyFactory.getStrategy();
 
 class Simulator {
@@ -26,27 +27,19 @@ class Simulator {
 
         const iterations = infoRecorded.reduce((promiseChain, element) => {
             return promiseChain.then(() => new Promise((resolve) => {
-                //TODO use a map
-                //gb.profits = element.profits;
-                gb.iteration = element.iteration;
-                gb.bidsAverage = element.bidsAverage;
-                //gb.lastBuyPrice = element.lastBuyPrice;
-                gb.asksAverage = element.asksAverage;
-                //gb.lastSellPrice = element.lastSellPrice;
-                gb.currentMarketPrice = element.currentMarketPrice;
-                gb.currentBuyers = element.currentBuyers;
-                gb.currentSellers = element.currentSellers;
-                //gb.lastAction = element.lastAction;
-                //gb.buyOrders = element.buyOrders;
-                //gb.sellOrders = element.sellOrders;
-                gb.errorCount = element.errorCount;
-                //gb.lastOrderWasFilled = element.lastOrderWasFilled;
-                //gb.fills = element.fills;
                 gb.tradeHistory = element.tradeHistory;
-                gb.lastBuySpeed = element.lastBuySpeed; //buyers/sellers
-                gb.currentBuySpeed = element.currentBuySpeed; //buyers/sellers
-                gb.lastSellSpeed = element.lastSellSpeed; //sellers/buyers
-                gb.currentSellSpeed = element.currentSellSpeed; //sellers/buyers
+                gb.errorCount = element.errorCount;
+                gb.iteration = element.iteration;
+                Exchange.elaborateTradeHistory();
+
+                //FIXME the following lines can be used only with recent files from 23 March
+                if (gb.orderBook) {
+                    gb.orderBook = element.orderBook;
+                    Exchange.elaborateOrderBook();
+                } else {
+                    gb.bidsAverage = element.bidsAverage;
+                    gb.asksAverage = element.asksAverage;
+                }
 
                 me.checkFills();
                 strategy.apply();
@@ -59,8 +52,8 @@ class Simulator {
                 lastLogString = logString;
 
                 if (conf.logLvl >= 2) Logger.printReport();
-                me.checkForErrors(resolve);
-                //resolve();
+                me.checkForErrors();
+                resolve();
             }));
         }, Promise.resolve());
 
@@ -99,7 +92,7 @@ class Simulator {
         }
     }
 
-    checkForErrors(resolve) {
+    checkForErrors() {
         if (gb.profits <= 0) {
             Logger.log(0, "\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
             process.exit();
@@ -108,7 +101,6 @@ class Simulator {
             Logger.log(0, "\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
             process.exit();
         }
-        resolve();
     }
 
     clearGlobals() {
@@ -128,7 +120,8 @@ class Simulator {
         gb.lastOrderWasFilled = false;
         gb.lastOrderId = null;
         gb.fills = 0;
-        gb.tradeHistory= null;
+        gb.tradeHistory = null;
+        gb.orderBook = null;
         gb.lastBuySpeed = 0; //buyers/sellers
         gb.currentBuySpeed = 0; //buyers/sellers
         gb.lastSellSpeed = 0; //sellers/buyers

@@ -21,7 +21,7 @@ const ETH_ID = GdaxAuthenticator.ETH_ACCOUNT_ID;
 class GdaxManager extends ExchangeManager {
 
     placeOrder(params) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             authedClient.placeOrder(params)
                 .then(data => {
                     Logger.log(3, 'Place Order:');
@@ -39,10 +39,10 @@ class GdaxManager extends ExchangeManager {
     }
 
     cancelOrder(orderId) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             authedClient.cancelOrder(orderId)
                 .then(data => {
-                    Logger.log(1, '\nOrder: ' + orderId+ ' has been canceled');
+                    Logger.log(1, '\nOrder: ' + orderId + ' has been canceled');
                     Logger.log(1, data);
                     resolve();
                 })
@@ -56,15 +56,14 @@ class GdaxManager extends ExchangeManager {
     }
 
     getFills() {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             authedClient.getFills()
                 .then(data => {
                     Logger.log(3, 'Fills:');
                     Logger.log(3, data);
 
                     if (!gb.lastOrderWasFilled) {
-
-                        const lastFilledOrder = data.find(function(element) {
+                        const lastFilledOrder = data.find(function (element) {
                             return element.order_id === gb.lastOrderId;
                         });
 
@@ -87,7 +86,7 @@ class GdaxManager extends ExchangeManager {
     }
 
     getCoinbaseAccounts() {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             authedClient.getCoinbaseAccounts()
                 .then(data => {
                     Logger.log(3, 'Coinbase Accounts:');
@@ -104,7 +103,7 @@ class GdaxManager extends ExchangeManager {
     }
 
     getAccounts() {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             authedClient.getAccounts()
                 .then(data => {
                     Logger.log(3, 'Accounts:');
@@ -121,7 +120,7 @@ class GdaxManager extends ExchangeManager {
     }
 
     getAccount() {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             authedClient.getAccount(ETH_ID)
                 .then(data => {
                     Logger.log(3, 'Account:');
@@ -139,9 +138,9 @@ class GdaxManager extends ExchangeManager {
     }
 
     getAccountHistory() {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             // For pagination, you can include extra page arguments
-            authedClient.getAccountHistory(ETH_ID, { before: 3000 })
+            authedClient.getAccountHistory(ETH_ID, {before: 3000})
                 .then(data => {
                     Logger.log(3, 'Account History:');
                     Logger.log(3, data);
@@ -158,17 +157,13 @@ class GdaxManager extends ExchangeManager {
     }
 
     getOrderBook() {
-        const me = this;
-        return new Promise(function(resolve, reject) {
-            publicClient.getProductOrderBook(conf.productType, { level: 2 })
+        const exchange = this;
+        return new Promise(function (resolve, reject) {
+            publicClient.getProductOrderBook(conf.productType, {level: 2})//level 2 means 50 buys & 50 sells
                 .then(data => {
-                    Logger.log(3, "\nOrder Book:\n" + util.inspect(data, { depth: 2 }) + "\n");
-
-                    gb.bidsAverage = me.getAverage(data.bids);
-                    gb.asksAverage = me.getAverage(data.asks);
-
-                    Logger.log(2, "Bids Average: " + gb.bidsAverage + '');
-                    Logger.log(2, "Asks Average: " + gb.asksAverage + '');
+                    Logger.log(3, "\nOrder Book:\n" + util.inspect(data, {depth: 2}) + "\n");
+                    gb.orderBook = data;
+                    exchange.elaborateOrderBook();
 
                     resolve();
                 })
@@ -182,31 +177,14 @@ class GdaxManager extends ExchangeManager {
     }
 
     getTradeHistory() {
-        return new Promise(function(resolve, reject) {
-            publicClient.getProductTrades(conf.productType, { limit: conf.tradeHistorySize })
+        const exchange = this;
+        return new Promise(function (resolve, reject) {
+            publicClient.getProductTrades(conf.productType, {limit: 50})
                 .then(data => {
-                    gb.lastBuySpeed = gb.currentBuySpeed ? gb.currentBuySpeed : 1;
-                    gb.lastSellSpeed = gb.currentSellSpeed ? gb.currentSellSpeed : 1;
-
-                    Logger.log(3, "\nTrade History:\n" + util.inspect(data, { depth: 2 }) + "\n");
-
+                    Logger.log(3, "\nTrade History:\n" + util.inspect(data, {depth: 2}) + "\n");
                     gb.tradeHistory = data;
-                    gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
-                    gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
-                    gb.currentMarketPrice = Number(data[0].price);
 
-                    Logger.log(2, 'Current Buyers: ' + gb.currentBuyers);
-                    Logger.log(2, 'Current Sellers: ' + gb.currentSellers);
-                    Logger.log(2, 'Current Market Price: ' + gb.currentMarketPrice);
-
-                    gb.currentBuySpeed = gb.currentSellers ? (gb.currentBuyers / gb.currentSellers) : gb.currentBuyers;
-                    Logger.log(2, 'Current BUY Speed (Buyers/Sellers): ' + gb.currentBuySpeed);
-                    Logger.log(2, 'Last BUY Speed (Buyers/Sellers): ' + gb.lastBuySpeed);
-
-                    gb.currentSellSpeed = gb.currentBuyers ? (gb.currentSellers / gb.currentBuyers) : gb.currentSellers;
-                    Logger.log(2, 'Current SELL Speed (Sellers/Buyers): ' + gb.currentSellSpeed);
-                    Logger.log(2, 'Last SELL Speed (Sellers/Buyers): ' + gb.lastSellSpeed);
-
+                    exchange.elaborateTradeHistory();
                     resolve();
                 })
                 .catch(error => {

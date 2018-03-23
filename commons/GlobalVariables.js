@@ -18,7 +18,8 @@ class GlobalVariables {
         this.lastOrderWasFilled = false;
         this.lastOrderId = null;
         this.fills = 0;
-        this.tradeHistory= null;
+        this.tradeHistory = null;
+        this.orderBook = null;
         this.lastBuySpeed = 0; //buyers/sellers
         this.currentBuySpeed = 0; //buyers/sellers
         this.lastSellSpeed = 0; //sellers/buyers
@@ -27,6 +28,3 @@ class GlobalVariables {
 }
 
 module.exports = new GlobalVariables();
-//const gb = new GlobalVariables();
-//console.log(gb);
-// new GlobalVariables();
