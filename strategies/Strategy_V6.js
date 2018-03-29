@@ -92,7 +92,7 @@ class Strategy_V6 {
             }
 
             //While market is constantly going DOWN...
-            if (gb.currenSellers > gb.currentBuyers && !analyzer.isRatioIncreasing()) {
+            if (gb.currenSellers > gb.currentSellers && !analyzer.isRatioIncreasing()) {
                 if (gb.lastAction === conf.SELL) {
                     Logger.log(1, "  >> Market is going down apparenly slowly..");
                     if (gb.lastBuyPrice > gb.currentMarketPrice) {

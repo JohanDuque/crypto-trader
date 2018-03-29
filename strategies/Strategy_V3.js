@@ -7,7 +7,7 @@ module.exports = class Strategy_V3 {
     static apply() {
         let betterAverage;
 
-        if (gb.currentSellers > gb.currentBuyers && gb.sellOrders === 0) {
+        if (gb.currentBuyers > gb.currentSellers && gb.sellOrders === 0) {
             gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
         }
 

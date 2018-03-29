@@ -33,7 +33,7 @@ module.exports = class Strategy_V4 {
 };
 
 const findStartingPoint = () => {
-    if (isStarting && gb.currentSellers < gb.currentBuyers) {
+    if (isStarting && gb.currentBuyers < gb.currentSellers) {
         console.log("!!! Starting point @ " + gb.currentMarketPrice + " !!!!!!!");
         gb.lastSellPrice = gb.currentMarketPrice; //This is only to give a starting point
         isStarting = false;

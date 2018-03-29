@@ -4,6 +4,7 @@ const Logger = require('../commons/Logger');
 const StrategyFactory = require('../commons/StrategyFactory');
 const Exchange = require('../actors/Exchange');
 const strategy = StrategyFactory.getStrategy();
+const util = require('util');
 
 class Simulator {
 
@@ -33,7 +34,7 @@ class Simulator {
                 Exchange.elaborateTradeHistory();
 
                 //FIXME the following lines can be used only with recent files from 23 March
-                if (gb.orderBook) {
+                if (element.orderBook) {
                     gb.orderBook = element.orderBook;
                     Exchange.elaborateOrderBook();
                 } else {
@@ -44,10 +45,23 @@ class Simulator {
                 me.checkFills();
                 strategy.apply();
 
-                logString = '\tBuyers:' + gb.currentBuyers + '\t Sellers:' + gb.currentSellers + '\t MarketPrice:' + gb.currentMarketPrice + '\t BUYspeed:' + gb.currentBuySpeed + '\t SELLspeed:' + gb.currentSellSpeed;
+                logString = '\tSellers:' + gb.currentSellers + '\t Buyers:' + gb.currentBuyers + '\t MarketPrice:' + gb.currentMarketPrice + '\t BUYspeed:' + gb.currentBuySpeed + '\t SELLspeed:' + gb.currentSellSpeed;
+                if (logString !== lastLogString /*&& (
+                    gb.iteration > 71 - 11 && gb.iteration <  71 + 11 ||
+                    gb.iteration > 72 - 11 && gb.iteration <  72 + 11 ||
+                    gb.iteration > 667 - 11 && gb.iteration <  667 + 11 ||
+                    gb.iteration > 668 - 11 && gb.iteration <  668 + 11 ||
+                    gb.iteration > 793 - 11 && gb.iteration <  793 + 11 ||
+                    gb.iteration > 794 - 11 && gb.iteration <  794 + 11 ||
+                    gb.iteration > 1112 - 11 && gb.iteration <  1112 + 11 ||
+                    gb.iteration > 1113 - 11 && gb.iteration <  1113 + 11 ||
+                    gb.iteration > 1493 - 11 && gb.iteration <  1493 + 11 ||
+                    gb.iteration > 1494 - 11 && gb.iteration <  1494 + 11 ||
+                    gb.iteration > 2030 - 11 && gb.iteration <  2030 + 11 )*/) {
 
-                if (logString !== lastLogString) {
-                    //Logger.log(1, 'It#' + gb.iteration + logString);
+                    Logger.log(1, 'It#' + gb.iteration + logString );
+                    //Logger.log(1, '\nHistory: ' + util.inspect(gb.tradeHistory.slice(0,conf.tradeHistorySize), {depth: 2}));
+                    //Logger.log(1, '\nBook: ' +util.inspect(gb.orderBook, {depth: 2}));
                 }
                 lastLogString = logString;
 
@@ -111,8 +125,8 @@ class Simulator {
         gb.asksAverage = 0;
         gb.lastSellPrice = 0;
         gb.currentMarketPrice = 0;
-        gb.currentBuyers = 0;
         gb.currentSellers = 0;
+        gb.currentBuyers = 0;
         gb.lastAction = null;
         gb.buyOrders = 0;
         gb.sellOrders = 0;

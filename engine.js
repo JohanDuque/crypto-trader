@@ -67,13 +67,13 @@ let getTradeHistory = () => {
                     Logger.log("\n");
                 }
                 gb.tradeHistory = data;
-                gb.currentSellers = data.filter(data => data.side === conf.BUY).length;
-                gb.currentBuyers = data.filter(data => data.side === conf.SELL).length;
+                gb.currentBuyers = data.filter(data => data.side === conf.BUY).length;
+                gb.currentSellers = data.filter(data => data.side === conf.SELL).length;
                 //Logger.log('   !! Current Market Price from Histoy: ' + gb.tradeHistory[0].price);
 
                 if (conf.logLvl >= 2) {
-                    Logger.log('Current Buyers: ' + gb.currentBuyers);
-                    Logger.log('Current Sellers: ' + gb.currentSellers);
+                    Logger.log('Current Buyers: ' + gb.currentSellers);
+                    Logger.log('Current Sellers: ' + gb.currentBuyers);
                     Logger.log('   !! Current Market Price from Histoy: ' + data[0].price);
                 }
                 resolve();
