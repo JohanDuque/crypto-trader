@@ -17,9 +17,12 @@
   "recordOnly": false,
   "simulateFromRecording": true,
   "recordingFileNames": [
-    "lastTest",
     "lastSession",
+    "lastTest",
+    "c2018-03-25-10-59-01",
     "prova",
-    "c2018-03-21-09-17-17"
+    "c2018-03-23-08-17-58",
+    "c2018-03-22-11-39-13",
+    "c2018-03-25-07-37-21"
   ]
 }
