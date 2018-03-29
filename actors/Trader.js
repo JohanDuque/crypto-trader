@@ -15,17 +15,13 @@ class Trader {
 
     placeSellOrder(price) {
         const newPrice = this.precisionRound(price, 2);
-/*        if (conf.simulateFromRecording) {
+        this.placeOrderOnExchange(newPrice, conf.SELL).then(() => {
             this.onSellOrderPlaced(newPrice);
-        } else {*/
-            this.placeOrderOnExchange(newPrice, conf.SELL).then(() => {
-                this.onSellOrderPlaced(newPrice);
-            }).catch(err => {
-                //TODO handle error
-                gb.errorCount++;
-                Logger.log(1, err);
-            });
-        //}
+        }).catch(err => {
+            //TODO handle error
+            gb.errorCount++;
+            Logger.log(1, err);
+        });
     }
 
     onSellOrderPlaced(price) {
@@ -50,17 +46,13 @@ class Trader {
 
     placeBuyOrder(price) {
         const newPrice = this.precisionRound(price, 2);
-       /* if (conf.simulateFromRecording) {
+        this.placeOrderOnExchange(newPrice, conf.BUY).then(() => {
             this.onBuyOrderPlaced(newPrice);
-        } else {*/
-            this.placeOrderOnExchange(newPrice, conf.BUY).then(() => {
-                this.onBuyOrderPlaced(newPrice);
-            }).catch(err => {
-                //TODO handle error
-                gb.errorCount++;
-                Logger.log(1, err);
-            });
-        //}
+        }).catch(err => {
+            //TODO handle error
+            gb.errorCount++;
+            Logger.log(1, err);
+        });
     }
 
     onBuyOrderPlaced(price) {
@@ -84,17 +76,13 @@ class Trader {
     }
 
     removeLastSellOrder() {
-/*        if (conf.simulateFromRecording) {
+        this.cancelLastOrder().then(() => {
             this.onRemoveLastSellOrder();
-        } else {*/
-            this.cancelLastOrder().then(() => {
-                this.onRemoveLastSellOrder();
-            }).catch(err => {
-                //TODO handle error
-                gb.errorCount++;
-                Logger.log(1, err);
-            });
-        //}
+        }).catch(err => {
+            //TODO handle error
+            gb.errorCount++;
+            Logger.log(1, err);
+        });
     }
 
     onRemoveLastSellOrder() {
@@ -106,17 +94,13 @@ class Trader {
     }
 
     removeLastBuyOrder() {
-        /*if (conf.simulateFromRecording) {
+        this.cancelLastOrder().then(() => {
             this.onRemoveLastBuyOrder();
-        } else {*/
-            this.cancelLastOrder().then(() => {
-                this.onRemoveLastBuyOrder();
-            }).catch(err => {
-                //TODO handle error
-                gb.errorCount++;
-                Logger.log(1, err);
-            });
-        //}
+        }).catch(err => {
+            //TODO handle error
+            gb.errorCount++;
+            Logger.log(1, err);
+        });
     }
 
     onRemoveLastBuyOrder() {
@@ -146,44 +130,33 @@ class Trader {
     improveLastSellOrder() {
         const newPrice = this.precisionRound(this.improveSellAverage(), 2);
 
-/*        if (conf.simulateFromRecording) {
+        return Promise.all([
+            this.cancelLastOrder(),
+            this.placeOrderOnExchange(newPrice, conf.SELL)
+        ]).then(() => {
             this.onRemoveLastSellOrder();
             this.onSellOrderPlaced(newPrice);
-        } else {*/
-            return Promise.all([
-                this.cancelLastOrder(),
-                this.placeOrderOnExchange(newPrice, conf.SELL)
-            ]).then(() => {
-                this.onRemoveLastSellOrder();
-                this.onSellOrderPlaced(newPrice);
-            }).catch(err => {
-                //TODO handle error
-                gb.errorCount++;
-                Logger.log(1, err);
-            });
-        //}
+        }).catch(err => {
+            //TODO handle error
+            gb.errorCount++;
+            Logger.log(1, err);
+        });
     }
 
     improveLastBuyOrder() {
         const closePrice = gb.currentMarketPrice - (gb.currentMarketPrice * conf.postOnlyFactor);
         const newPrice = this.precisionRound(closePrice, 2);
-
-/*        if (conf.simulateFromRecording) {
+        return Promise.all([
+            this.cancelLastOrder(),
+            this.placeOrderOnExchange(newPrice, conf.BUY)
+        ]).then(() => {
             this.onRemoveLastBuyOrder();
             this.onBuyOrderPlaced(newPrice);
-        } else {*/
-            return Promise.all([
-                this.cancelLastOrder(),
-                this.placeOrderOnExchange(newPrice, conf.BUY)
-            ]).then(() => {
-                this.onRemoveLastBuyOrder();
-                this.onBuyOrderPlaced(newPrice);
-            }).catch(err => {
-                //TODO handle error
-                gb.errorCount++;
-                Logger.log(1, err);
-            });
-        //}
+        }).catch(err => {
+            //TODO handle error
+            gb.errorCount++;
+            Logger.log(1, err);
+        });
     }
 
     calculateTransactionAmount(price) {
@@ -212,7 +185,6 @@ class Trader {
         Logger.log(1, "\nAsking Exchange for cancel last order...");
         return Exchange.cancelOrder(gb.lastOrderId);
     }
-
 
 }
 
