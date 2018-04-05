@@ -15,6 +15,7 @@ strategies.set('V11', require('../strategies/Strategy_V11'));
 strategies.set('V12', require('../strategies/Strategy_V12'));
 strategies.set('V13', require('../strategies/Strategy_V13'));
 strategies.set('V14', require('../strategies/Strategy_V14'));
+strategies.set('V15', require('../strategies/Strategy_V15'));
 
 class StrategyFactory {
     getStrategy() {return strategies.get(config.strategy)}
