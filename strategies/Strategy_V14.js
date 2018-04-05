@@ -38,7 +38,7 @@ class Strategy_V14 {
                     trader.improveLastBuyOrder();
                     return;
                 }
-                else if(analyzer.isLastBuyLowerByFactor(0.005)) {
+                else if(analyzer.isLastBuyLowerByFactor(0.005) && analyzer.isSellSpeedIncreasing()) {
                     Logger.log(1, "\n\t\t\tMarket is lower than last BUY I'm selling now in order to CUT MY LOSSES");
                     trader.placeSellOrderAtCurrentMarketPrice();
                     return;
