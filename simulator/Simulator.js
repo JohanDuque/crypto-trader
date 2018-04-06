@@ -59,7 +59,7 @@ class Simulator {
                     gb.iteration > 1494 - 11 && gb.iteration <  1494 + 11 ||
                     gb.iteration > 2030 - 11 && gb.iteration <  2030 + 11 )*/) {
 
-                    Logger.log(1, 'It#' + gb.iteration + logString );
+                    Logger.log(1, 'It#' + gb.iteration + logString);
                     //Logger.log(1, '\nHistory: ' + util.inspect(gb.tradeHistory.slice(0,conf.tradeHistorySize), {depth: 2}));
                     //Logger.log(1, '\nBook: ' +util.inspect(gb.orderBook, {depth: 2}));
                 }
@@ -80,28 +80,15 @@ class Simulator {
     }
 
     checkFills() {
-        if (gb.buyOrders > 0) {
-            let wasItFilled = undefined;
+        if (gb.buyOrders > 0 && !gb.lastOrderWasFilled) {
+            const wasItFilled = gb.tradeHistory.find((trade) => {//FIXME watch out with the time of the orders
+                return gb.lastBuyPrice <= trade.price && conf.orderSize <= trade.size && gb.lastAction === trade.side;
+            });
 
-            if (!gb.lastOrderWasFilled) {
-                if (gb.lastAction === conf.BUY) {
-                    wasItFilled = gb.tradeHistory.find((trade) => {
-                        //return (gb.lastBuyPrice - trade.price) > 0 || Math.abs(gb.lastBuyPrice - trade.price) <= conf.orderFillError
-                        return (gb.lastBuyPrice - trade.price) >= 0;
-                    });
-                } else { //gb.lastAction === sell
-                    wasItFilled = gb.tradeHistory.find((trade) => {
-                        //return (gb.lastSellPrice - trade.price) <= 0 || Math.abs(gb.lastSellPrice - data.price) <= conf.orderFillError
-                        return (gb.lastSellPrice - trade.price) <= 0;
-                    });
-                }
-
-                gb.lastOrderWasFilled = wasItFilled !== undefined;
-
-                if (gb.lastOrderWasFilled) {
-                    gb.fills++;
-                    Logger.printReport();
-                }
+            if (wasItFilled) {
+                gb.lastOrderWasFilled = true;
+                gb.fills++;
+                Logger.printReport();
             }
         }
     }

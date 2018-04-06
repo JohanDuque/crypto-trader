@@ -1,7 +1,7 @@
 const conf = require('./commons/Configuration');
 const gb = require('./commons/GlobalVariables');
 const Logger = require('./commons/Logger');
-const Simulator = require('./actors/Simulator');
+const Simulator = require('./simulator/Simulator');
 const Exchange = require('./actors/Exchange');
 
 const StrategyFactory = require('./commons/StrategyFactory');
