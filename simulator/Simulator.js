@@ -13,7 +13,6 @@ class Simulator {
         const iterations = conf.recordingFileNames.reduce((promiseChain, filename) => {
             return promiseChain.then(() => new Promise((resolve) => {
                 me.simulateFromFile(require('../recordings/' + filename), filename, resolve);
-                //resolve();
             }));
         }, Promise.resolve());
 
@@ -26,8 +25,13 @@ class Simulator {
         let logString, lastLogString = "";
         const me = this;
 
+        let lastTradeHistory;
+
         const iterations = infoRecorded.reduce((promiseChain, element) => {
             return promiseChain.then(() => new Promise((resolve) => {
+
+                lastTradeHistory = gb.tradeHistory;
+
                 gb.tradeHistory = element.tradeHistory;
                 gb.errorCount = element.errorCount;
                 gb.iteration = element.iteration;
@@ -42,23 +46,12 @@ class Simulator {
                     gb.asksAverage = element.asksAverage;
                 }
 
+                me.filterHistory(lastTradeHistory);
                 me.checkFills();
                 strategy.apply();
 
                 logString = '\tSellers:' + gb.currentSellers + '\t Buyers:' + gb.currentBuyers + '\t MarketPrice:' + gb.currentMarketPrice + '\t BUYspeed:' + gb.currentBuySpeed + '\t SELLspeed:' + gb.currentSellSpeed;
-                if (logString !== lastLogString /*&& (
-                    gb.iteration > 71 - 11 && gb.iteration <  71 + 11 ||
-                    gb.iteration > 72 - 11 && gb.iteration <  72 + 11 ||
-                    gb.iteration > 667 - 11 && gb.iteration <  667 + 11 ||
-                    gb.iteration > 668 - 11 && gb.iteration <  668 + 11 ||
-                    gb.iteration > 793 - 11 && gb.iteration <  793 + 11 ||
-                    gb.iteration > 794 - 11 && gb.iteration <  794 + 11 ||
-                    gb.iteration > 1112 - 11 && gb.iteration <  1112 + 11 ||
-                    gb.iteration > 1113 - 11 && gb.iteration <  1113 + 11 ||
-                    gb.iteration > 1493 - 11 && gb.iteration <  1493 + 11 ||
-                    gb.iteration > 1494 - 11 && gb.iteration <  1494 + 11 ||
-                    gb.iteration > 2030 - 11 && gb.iteration <  2030 + 11 )*/) {
-
+                if (logString !== lastLogString) {
                     Logger.log(1, 'It#' + gb.iteration + logString);
                     //Logger.log(1, '\nHistory: ' + util.inspect(gb.tradeHistory.slice(0,conf.tradeHistorySize), {depth: 2}));
                     //Logger.log(1, '\nBook: ' +util.inspect(gb.orderBook, {depth: 2}));
@@ -67,6 +60,8 @@ class Simulator {
 
                 if (conf.logLvl >= 2) Logger.printReport();
                 me.checkForErrors();
+
+                lastTradeHistory = element.tradeHistory;
                 resolve();
             }));
         }, Promise.resolve());
@@ -77,6 +72,13 @@ class Simulator {
             me.clearGlobals();
             resolveP();
         });
+    }
+
+    filterHistory(lastTradeHistory) {
+        if (lastTradeHistory) {
+            const result = gb.tradeHistory.filter(ele => !lastTradeHistory.find(a => ele.time === a.time));
+            gb.tradeHistory = result;
+        }
     }
 
     checkFills() {
