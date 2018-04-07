@@ -97,11 +97,11 @@ class Simulator {
 
     checkForErrors() {
         if (gb.profits <= 0) {
-            Logger.log(0, "\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
+            Logger.log(-1, "\n   !!!!!!!!  SORRY MAN, YOU'RE BANKRUPT.  !!!!!!!!\n");
             process.exit();
         }
         if (gb.errorCount > conf.errorTolerance || gb.errorCount > gb.iteration) {
-            Logger.log(0, "\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
+            Logger.log(-1, "\n   !!!!!!!!  ERROR TOLERANCE OUT OF LIMIT.  !!!!!!!!\n");
             process.exit();
         }
     }
