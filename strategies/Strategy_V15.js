@@ -18,8 +18,8 @@ class Strategy_V15 {
                     return;
                 }
             } else { //I'm trying to SELL
-                if (analyzer.isLastBuyUpperByFactor(R2)) {
-                    Logger.log(1, "\nMarket is up by " + R2 + " I'm selling now close to current price");
+                if (analyzer.isLastBuyUpperByFactor(R2) && analyzer.isSellSpeedIncreasing()) {
+                    Logger.log(1, "\nMarket is up by " + R2 + " and selling trend is increasing, I'm selling now close to current price");
                     trader.placeSellOrderCloseToCurrentMarketPrice();//TODO verify
                     return;
                 }
