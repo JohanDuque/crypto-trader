@@ -20,7 +20,7 @@ class Strategy_V15 {
             } else { //I'm trying to SELL
                 if (analyzer.isLastBuyUpperByFactor(R2) && analyzer.isSellSpeedIncreasing()) {
                     Logger.log(1, "\nMarket is up by " + R2 + " and selling trend is increasing, I'm selling now close to current price");
-                    trader.placeSellOrderCloseToCurrentMarketPrice();//TODO verify
+                    trader.placeSellOrderCloseToCurrentMarketPrice();//TODO verify now I'm setting it up to current place
                     return;
                 }
             }
