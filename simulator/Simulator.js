@@ -53,7 +53,7 @@ class Simulator {
                 logString = '\tSellers:' + gb.currentSellers + '\t Buyers:' + gb.currentBuyers + '\t MarketPrice:' + gb.currentMarketPrice + '\t BUYspeed:' + gb.currentBuySpeed + '\t SELLspeed:' + gb.currentSellSpeed;
                 if (logString !== lastLogString) {
                     Logger.log(1, 'It#' + gb.iteration + logString);
-                    //Logger.log(1, '\nHistory: ' + util.inspect(gb.tradeHistory.slice(0,conf.tradeHistorySize), {depth: 2}));
+                   // Logger.log(1, '\nHistory: ' + util.inspect(gb.tradeHistory.slice(0,conf.tradeHistorySize), {depth: 2}));
                     //Logger.log(1, '\nBook: ' +util.inspect(gb.orderBook, {depth: 2}));
                 }
                 lastLogString = logString;
@@ -84,7 +84,13 @@ class Simulator {
     checkFills() {
         if (gb.buyOrders > 0 && !gb.lastOrderWasFilled) {
             const wasItFilled = gb.tradeHistory.find((trade) => {//FIXME watch out with the time of the orders
-                return gb.lastBuyPrice <= trade.price && conf.orderSize <= trade.size && gb.lastAction === trade.side;
+                if(gb.lastAction === conf.BUY){
+                    return gb.lastBuyPrice == trade.price && conf.orderSize <= trade.size && gb.lastAction === trade.side;
+                }
+
+                if(gb.lastAction === conf.SELL){
+                    return gb.lastBuyPrice <= trade.price && conf.orderSize <= trade.size && gb.lastAction === trade.side;
+                }
             });
 
             if (wasItFilled) {
