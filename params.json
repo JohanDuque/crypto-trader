@@ -1,5 +1,5 @@
 {
-  "investment": 10,
+  "investment": 5.26,
   "orderSize": 0.01,
   "postOnlyFactor": 0.0001,
   "orderFillError": 0.1,
@@ -10,20 +10,19 @@
   "productType": "ETH-EUR",
   "strategy": "V15",
   "tradeHistorySize": 31,
-  "logLvl": -1,
+  "logLvl": 1,
   "errorTolerance": 500,
   "logOnFile": true,
   "recordInfo": true,
   "recordOnly": false,
-  "simulateFromRecording": true,
+  "simulateFromRecording": false,
   "recordingFileNames": [
+    "c2018-04-19-09-03-42",
     "longestSession",
+    "c2018-03-22-11-39-13",
     "lastSession",
     "lastTest",
-    "c2018-03-25-10-59-01",
     "prova",
-    "c2018-03-23-08-17-58",
-    "c2018-03-22-11-39-13",
-    "c2018-03-25-07-37-21"
+    "c2018-03-23-08-17-58"
   ]
 }
